@@ -1451,6 +1451,15 @@ class $WorkoutSetsTable extends WorkoutSets
     type: DriftSqlType.dateTime,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _notesMeta = const VerificationMeta('notes');
+  @override
+  late final GeneratedColumn<String> notes = GeneratedColumn<String>(
+    'notes',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -1462,6 +1471,7 @@ class $WorkoutSetsTable extends WorkoutSets
     rpe,
     isWarmup,
     completedAt,
+    notes,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -1544,6 +1554,12 @@ class $WorkoutSetsTable extends WorkoutSets
     } else if (isInserting) {
       context.missing(_completedAtMeta);
     }
+    if (data.containsKey('notes')) {
+      context.handle(
+        _notesMeta,
+        notes.isAcceptableOrUnknown(data['notes']!, _notesMeta),
+      );
+    }
     return context;
   }
 
@@ -1589,6 +1605,10 @@ class $WorkoutSetsTable extends WorkoutSets
         DriftSqlType.dateTime,
         data['${effectivePrefix}completed_at'],
       )!,
+      notes: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}notes'],
+      ),
     );
   }
 
@@ -1608,6 +1628,7 @@ class WorkoutSet extends DataClass implements Insertable<WorkoutSet> {
   final double? rpe;
   final bool isWarmup;
   final DateTime completedAt;
+  final String? notes;
   const WorkoutSet({
     required this.id,
     required this.workoutSessionId,
@@ -1618,6 +1639,7 @@ class WorkoutSet extends DataClass implements Insertable<WorkoutSet> {
     this.rpe,
     required this.isWarmup,
     required this.completedAt,
+    this.notes,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -1633,6 +1655,9 @@ class WorkoutSet extends DataClass implements Insertable<WorkoutSet> {
     }
     map['is_warmup'] = Variable<bool>(isWarmup);
     map['completed_at'] = Variable<DateTime>(completedAt);
+    if (!nullToAbsent || notes != null) {
+      map['notes'] = Variable<String>(notes);
+    }
     return map;
   }
 
@@ -1647,6 +1672,9 @@ class WorkoutSet extends DataClass implements Insertable<WorkoutSet> {
       rpe: rpe == null && nullToAbsent ? const Value.absent() : Value(rpe),
       isWarmup: Value(isWarmup),
       completedAt: Value(completedAt),
+      notes: notes == null && nullToAbsent
+          ? const Value.absent()
+          : Value(notes),
     );
   }
 
@@ -1665,6 +1693,7 @@ class WorkoutSet extends DataClass implements Insertable<WorkoutSet> {
       rpe: serializer.fromJson<double?>(json['rpe']),
       isWarmup: serializer.fromJson<bool>(json['isWarmup']),
       completedAt: serializer.fromJson<DateTime>(json['completedAt']),
+      notes: serializer.fromJson<String?>(json['notes']),
     );
   }
   @override
@@ -1680,6 +1709,7 @@ class WorkoutSet extends DataClass implements Insertable<WorkoutSet> {
       'rpe': serializer.toJson<double?>(rpe),
       'isWarmup': serializer.toJson<bool>(isWarmup),
       'completedAt': serializer.toJson<DateTime>(completedAt),
+      'notes': serializer.toJson<String?>(notes),
     };
   }
 
@@ -1693,6 +1723,7 @@ class WorkoutSet extends DataClass implements Insertable<WorkoutSet> {
     Value<double?> rpe = const Value.absent(),
     bool? isWarmup,
     DateTime? completedAt,
+    Value<String?> notes = const Value.absent(),
   }) => WorkoutSet(
     id: id ?? this.id,
     workoutSessionId: workoutSessionId ?? this.workoutSessionId,
@@ -1703,6 +1734,7 @@ class WorkoutSet extends DataClass implements Insertable<WorkoutSet> {
     rpe: rpe.present ? rpe.value : this.rpe,
     isWarmup: isWarmup ?? this.isWarmup,
     completedAt: completedAt ?? this.completedAt,
+    notes: notes.present ? notes.value : this.notes,
   );
   WorkoutSet copyWithCompanion(WorkoutSetsCompanion data) {
     return WorkoutSet(
@@ -1721,6 +1753,7 @@ class WorkoutSet extends DataClass implements Insertable<WorkoutSet> {
       completedAt: data.completedAt.present
           ? data.completedAt.value
           : this.completedAt,
+      notes: data.notes.present ? data.notes.value : this.notes,
     );
   }
 
@@ -1735,7 +1768,8 @@ class WorkoutSet extends DataClass implements Insertable<WorkoutSet> {
           ..write('reps: $reps, ')
           ..write('rpe: $rpe, ')
           ..write('isWarmup: $isWarmup, ')
-          ..write('completedAt: $completedAt')
+          ..write('completedAt: $completedAt, ')
+          ..write('notes: $notes')
           ..write(')'))
         .toString();
   }
@@ -1751,6 +1785,7 @@ class WorkoutSet extends DataClass implements Insertable<WorkoutSet> {
     rpe,
     isWarmup,
     completedAt,
+    notes,
   );
   @override
   bool operator ==(Object other) =>
@@ -1764,7 +1799,8 @@ class WorkoutSet extends DataClass implements Insertable<WorkoutSet> {
           other.reps == this.reps &&
           other.rpe == this.rpe &&
           other.isWarmup == this.isWarmup &&
-          other.completedAt == this.completedAt);
+          other.completedAt == this.completedAt &&
+          other.notes == this.notes);
 }
 
 class WorkoutSetsCompanion extends UpdateCompanion<WorkoutSet> {
@@ -1777,6 +1813,7 @@ class WorkoutSetsCompanion extends UpdateCompanion<WorkoutSet> {
   final Value<double?> rpe;
   final Value<bool> isWarmup;
   final Value<DateTime> completedAt;
+  final Value<String?> notes;
   const WorkoutSetsCompanion({
     this.id = const Value.absent(),
     this.workoutSessionId = const Value.absent(),
@@ -1787,6 +1824,7 @@ class WorkoutSetsCompanion extends UpdateCompanion<WorkoutSet> {
     this.rpe = const Value.absent(),
     this.isWarmup = const Value.absent(),
     this.completedAt = const Value.absent(),
+    this.notes = const Value.absent(),
   });
   WorkoutSetsCompanion.insert({
     this.id = const Value.absent(),
@@ -1798,6 +1836,7 @@ class WorkoutSetsCompanion extends UpdateCompanion<WorkoutSet> {
     this.rpe = const Value.absent(),
     this.isWarmup = const Value.absent(),
     required DateTime completedAt,
+    this.notes = const Value.absent(),
   }) : workoutSessionId = Value(workoutSessionId),
        exerciseId = Value(exerciseId),
        setNumber = Value(setNumber),
@@ -1814,6 +1853,7 @@ class WorkoutSetsCompanion extends UpdateCompanion<WorkoutSet> {
     Expression<double>? rpe,
     Expression<bool>? isWarmup,
     Expression<DateTime>? completedAt,
+    Expression<String>? notes,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -1825,6 +1865,7 @@ class WorkoutSetsCompanion extends UpdateCompanion<WorkoutSet> {
       if (rpe != null) 'rpe': rpe,
       if (isWarmup != null) 'is_warmup': isWarmup,
       if (completedAt != null) 'completed_at': completedAt,
+      if (notes != null) 'notes': notes,
     });
   }
 
@@ -1838,6 +1879,7 @@ class WorkoutSetsCompanion extends UpdateCompanion<WorkoutSet> {
     Value<double?>? rpe,
     Value<bool>? isWarmup,
     Value<DateTime>? completedAt,
+    Value<String?>? notes,
   }) {
     return WorkoutSetsCompanion(
       id: id ?? this.id,
@@ -1849,6 +1891,7 @@ class WorkoutSetsCompanion extends UpdateCompanion<WorkoutSet> {
       rpe: rpe ?? this.rpe,
       isWarmup: isWarmup ?? this.isWarmup,
       completedAt: completedAt ?? this.completedAt,
+      notes: notes ?? this.notes,
     );
   }
 
@@ -1882,6 +1925,9 @@ class WorkoutSetsCompanion extends UpdateCompanion<WorkoutSet> {
     if (completedAt.present) {
       map['completed_at'] = Variable<DateTime>(completedAt.value);
     }
+    if (notes.present) {
+      map['notes'] = Variable<String>(notes.value);
+    }
     return map;
   }
 
@@ -1896,7 +1942,8 @@ class WorkoutSetsCompanion extends UpdateCompanion<WorkoutSet> {
           ..write('reps: $reps, ')
           ..write('rpe: $rpe, ')
           ..write('isWarmup: $isWarmup, ')
-          ..write('completedAt: $completedAt')
+          ..write('completedAt: $completedAt, ')
+          ..write('notes: $notes')
           ..write(')'))
         .toString();
   }
@@ -4960,6 +5007,7 @@ typedef $$WorkoutSetsTableCreateCompanionBuilder =
       Value<double?> rpe,
       Value<bool> isWarmup,
       required DateTime completedAt,
+      Value<String?> notes,
     });
 typedef $$WorkoutSetsTableUpdateCompanionBuilder =
     WorkoutSetsCompanion Function({
@@ -4972,6 +5020,7 @@ typedef $$WorkoutSetsTableUpdateCompanionBuilder =
       Value<double?> rpe,
       Value<bool> isWarmup,
       Value<DateTime> completedAt,
+      Value<String?> notes,
     });
 
 final class $$WorkoutSetsTableReferences
@@ -5055,6 +5104,11 @@ class $$WorkoutSetsTableFilterComposer
 
   ColumnFilters<DateTime> get completedAt => $composableBuilder(
     column: $table.completedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get notes => $composableBuilder(
+    column: $table.notes,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -5149,6 +5203,11 @@ class $$WorkoutSetsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get notes => $composableBuilder(
+    column: $table.notes,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   $$WorkoutSessionsTableOrderingComposer get workoutSessionId {
     final $$WorkoutSessionsTableOrderingComposer composer = $composerBuilder(
       composer: this,
@@ -5227,6 +5286,9 @@ class $$WorkoutSetsTableAnnotationComposer
     column: $table.completedAt,
     builder: (column) => column,
   );
+
+  GeneratedColumn<String> get notes =>
+      $composableBuilder(column: $table.notes, builder: (column) => column);
 
   $$WorkoutSessionsTableAnnotationComposer get workoutSessionId {
     final $$WorkoutSessionsTableAnnotationComposer composer = $composerBuilder(
@@ -5312,6 +5374,7 @@ class $$WorkoutSetsTableTableManager
                 Value<double?> rpe = const Value.absent(),
                 Value<bool> isWarmup = const Value.absent(),
                 Value<DateTime> completedAt = const Value.absent(),
+                Value<String?> notes = const Value.absent(),
               }) => WorkoutSetsCompanion(
                 id: id,
                 workoutSessionId: workoutSessionId,
@@ -5322,6 +5385,7 @@ class $$WorkoutSetsTableTableManager
                 rpe: rpe,
                 isWarmup: isWarmup,
                 completedAt: completedAt,
+                notes: notes,
               ),
           createCompanionCallback:
               ({
@@ -5334,6 +5398,7 @@ class $$WorkoutSetsTableTableManager
                 Value<double?> rpe = const Value.absent(),
                 Value<bool> isWarmup = const Value.absent(),
                 required DateTime completedAt,
+                Value<String?> notes = const Value.absent(),
               }) => WorkoutSetsCompanion.insert(
                 id: id,
                 workoutSessionId: workoutSessionId,
@@ -5344,6 +5409,7 @@ class $$WorkoutSetsTableTableManager
                 rpe: rpe,
                 isWarmup: isWarmup,
                 completedAt: completedAt,
+                notes: notes,
               ),
           withReferenceMapper: (p0) => p0
               .map(

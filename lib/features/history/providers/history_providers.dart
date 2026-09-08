@@ -11,3 +11,8 @@ final sessionDetailProvider =
     StreamProvider.family.autoDispose<List<WorkoutSetWithExercise>, int>((ref, sessionId) {
   return ref.watch(appDatabaseProvider).watchSetsForSession(sessionId);
 });
+
+final sessionByIdProvider =
+    StreamProvider.family.autoDispose<WorkoutSession?, int>((ref, sessionId) {
+  return ref.watch(appDatabaseProvider).watchSessionById(sessionId);
+});

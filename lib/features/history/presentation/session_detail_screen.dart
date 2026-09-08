@@ -1,8 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../common/weight_format.dart';
+import '../../../database/queries/workout_queries.dart';
 import '../../profile/providers/profile_providers.dart';
+import '../../splits/providers/split_providers.dart';
 import '../providers/history_providers.dart';
+
+const _weekdayNames = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+const _monthNames = [
+  'January', 'February', 'March', 'April', 'May', 'June',
+  'July', 'August', 'September', 'October', 'November', 'December',
+];
 
 class SessionDetailScreen extends ConsumerWidget {
   final int sessionId;
@@ -11,34 +19,177 @@ class SessionDetailScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final sessionAsync = ref.watch(sessionByIdProvider(sessionId));
     final setsAsync = ref.watch(sessionDetailProvider(sessionId));
     final unit = ref.watch(preferredWeightUnitProvider);
+    final theme = Theme.of(context);
+
+    final session = sessionAsync.value;
+    final splitDayAsync = session?.splitDayId != null
+        ? ref.watch(splitDayByIdProvider(session!.splitDayId!))
+        : null;
+    final title = splitDayAsync?.value?.name ?? 'Freestyle';
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Workout Detail')),
-      body: setsAsync.when(
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (error, stack) => Center(child: Text('Error: $error')),
-        data: (sets) {
-          if (sets.isEmpty) {
-            return const Center(child: Text('No sets logged'));
-          }
-          return ListView.builder(
-            itemCount: sets.length,
-            itemBuilder: (context, index) {
-              final entry = sets[index];
-              return ListTile(
-                title: Text(entry.exercise.name),
-                subtitle: Text(
-                  'Set ${entry.set.setNumber} • ${formatWeight(entry.set.weight, unit)} × ${entry.set.reps}'
-                  '${entry.set.rpe != null ? ' @ RPE ${entry.set.rpe}' : ''}'
-                  '${entry.set.isWarmup ? ' • warm-up' : ''}',
+      appBar: AppBar(title: Text(title)),
+      body: SafeArea(
+        top: false,
+        child: setsAsync.when(
+          loading: () => const Center(child: CircularProgressIndicator()),
+          error: (error, stack) => Center(child: Text('Error: $error')),
+          data: (sets) {
+            if (sets.isEmpty) {
+              return const Center(child: Text('No sets logged'));
+            }
+
+            final working = sets.where((e) => !e.set.isWarmup);
+            final volume = working.fold(0.0, (sum, e) => sum + e.set.weight * e.set.reps);
+            final exerciseCount = sets.map((e) => e.exercise.id).toSet().length;
+            final duration = session?.endedAt != null
+                ? session!.endedAt!.difference(session.startedAt)
+                : null;
+
+            final groupOrder = <int>[];
+            final groups = <int, List<WorkoutSetWithExercise>>{};
+            for (final entry in sets) {
+              groups.putIfAbsent(entry.exercise.id, () {
+                groupOrder.add(entry.exercise.id);
+                return [];
+              }).add(entry);
+            }
+
+            return ListView(
+              padding: const EdgeInsets.all(16),
+              children: [
+                Card(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      children: [
+                        if (session != null)
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 12),
+                            child: Text(
+                              _formatFullDate(session.startedAt),
+                              style: theme.textTheme.titleMedium,
+                            ),
+                          ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            _SummaryStat(
+                              icon: Icons.timer_outlined,
+                              value: duration != null ? '${duration.inMinutes}' : '-',
+                              label: 'minutes',
+                            ),
+                            _SummaryStat(
+                              icon: Icons.fitness_center,
+                              value: formatWeight(volume, unit, decimals: 0),
+                              label: 'volume',
+                            ),
+                            _SummaryStat(
+                              icon: Icons.list_alt,
+                              value: '$exerciseCount',
+                              label: exerciseCount == 1 ? 'exercise' : 'exercises',
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
-              );
-            },
-          );
-        },
+                const SizedBox(height: 16),
+                ...groupOrder.map((exerciseId) {
+                  final entries = groups[exerciseId]!;
+                  final exercise = entries.first.exercise;
+                  return Card(
+                    margin: const EdgeInsets.only(bottom: 12),
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(12, 12, 12, 4),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(exercise.name, style: theme.textTheme.titleMedium),
+                          const SizedBox(height: 4),
+                          ...entries.map((entry) {
+                            final set = entry.set;
+                            return Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 4),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  SizedBox(
+                                    width: 28,
+                                    child: Text(
+                                      '${set.setNumber}',
+                                      style: theme.textTheme.bodyMedium?.copyWith(
+                                        color: theme.colorScheme.onSurfaceVariant,
+                                      ),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          '${formatWeight(set.weight, unit)} × ${set.reps}'
+                                          '${set.rpe != null ? '  •  RPE ${set.rpe}' : ''}'
+                                          '${set.isWarmup ? '  •  warm-up' : ''}',
+                                        ),
+                                        if (set.notes != null && set.notes!.isNotEmpty)
+                                          Padding(
+                                            padding: const EdgeInsets.only(top: 2),
+                                            child: Text(
+                                              set.notes!,
+                                              style: theme.textTheme.bodySmall?.copyWith(
+                                                fontStyle: FontStyle.italic,
+                                                color: theme.colorScheme.onSurfaceVariant,
+                                              ),
+                                            ),
+                                          ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                          }),
+                          const SizedBox(height: 4),
+                        ],
+                      ),
+                    ),
+                  );
+                }),
+              ],
+            );
+          },
+        ),
       ),
+    );
+  }
+
+  String _formatFullDate(DateTime date) {
+    return '${_weekdayNames[date.weekday - 1]}, ${date.day} ${_monthNames[date.month - 1]}';
+  }
+}
+
+class _SummaryStat extends StatelessWidget {
+  final IconData icon;
+  final String value;
+  final String label;
+
+  const _SummaryStat({required this.icon, required this.value, required this.label});
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Column(
+      children: [
+        Icon(icon, color: theme.colorScheme.primary),
+        const SizedBox(height: 4),
+        Text(value, style: theme.textTheme.titleMedium),
+        Text(label, style: theme.textTheme.bodySmall),
+      ],
     );
   }
 }

@@ -304,6 +304,9 @@ class _ActiveWorkoutScreenState extends ConsumerState<ActiveWorkoutScreen> {
                   '${set.rpe != null ? ' @ RPE ${set.rpe}' : ''}'
                   '${set.isWarmup ? ' (warm-up)' : ''}',
                 ),
+                subtitle: set.notes != null && set.notes!.isNotEmpty
+                    ? Text(set.notes!, style: const TextStyle(fontStyle: FontStyle.italic))
+                    : null,
                 trailing: IconButton(
                   icon: const Icon(Icons.delete_outline, size: 20),
                   onPressed: () => ref

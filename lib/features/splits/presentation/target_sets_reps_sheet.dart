@@ -46,7 +46,9 @@ class _TargetSetsRepsSheetState extends ConsumerState<TargetSetsRepsSheet> {
         left: 16,
         right: 16,
         top: 16,
-        bottom: MediaQuery.of(context).viewInsets.bottom + 16,
+        bottom: MediaQuery.of(context).viewInsets.bottom +
+            MediaQuery.of(context).padding.bottom +
+            16,
       ),
       child: Form(
         key: _formKey,

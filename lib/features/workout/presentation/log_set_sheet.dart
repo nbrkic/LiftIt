@@ -26,6 +26,7 @@ class _LogSetSheetState extends ConsumerState<LogSetSheet> {
   final _weightController = TextEditingController();
   final _repsController = TextEditingController();
   final _rpeController = TextEditingController();
+  final _notesController = TextEditingController();
   bool _isWarmup = false;
 
   @override
@@ -33,6 +34,7 @@ class _LogSetSheetState extends ConsumerState<LogSetSheet> {
     _weightController.dispose();
     _repsController.dispose();
     _rpeController.dispose();
+    _notesController.dispose();
     super.dispose();
   }
 
@@ -41,6 +43,7 @@ class _LogSetSheetState extends ConsumerState<LogSetSheet> {
     final unit = ref.read(preferredWeightUnitProvider);
     final enteredWeight = double.parse(_weightController.text.replaceAll(',', '.'));
     final rpeText = _rpeController.text.trim();
+    final notesText = _notesController.text.trim();
     await ref.read(activeWorkoutControllerProvider).logSet(
           sessionId: widget.sessionId,
           exerciseId: widget.exercise.id,
@@ -49,6 +52,7 @@ class _LogSetSheetState extends ConsumerState<LogSetSheet> {
           reps: int.parse(_repsController.text),
           rpe: rpeText.isEmpty ? null : double.tryParse(rpeText.replaceAll(',', '.')),
           isWarmup: _isWarmup,
+          notes: notesText.isEmpty ? null : notesText,
         );
     if (mounted) Navigator.of(context).pop(true);
   }
@@ -62,7 +66,9 @@ class _LogSetSheetState extends ConsumerState<LogSetSheet> {
         left: 16,
         right: 16,
         top: 16,
-        bottom: MediaQuery.of(context).viewInsets.bottom + 16,
+        bottom: MediaQuery.of(context).viewInsets.bottom +
+            MediaQuery.of(context).padding.bottom +
+            16,
       ),
       child: Form(
         key: _formKey,
@@ -107,6 +113,12 @@ class _LogSetSheetState extends ConsumerState<LogSetSheet> {
                 if (parsed == null || parsed < 1 || parsed > 10) return '1-10';
                 return null;
               },
+            ),
+            const SizedBox(height: 12),
+            TextFormField(
+              controller: _notesController,
+              decoration: const InputDecoration(labelText: 'Note (optional)'),
+              maxLines: 2,
             ),
             SwitchListTile(
               contentPadding: EdgeInsets.zero,

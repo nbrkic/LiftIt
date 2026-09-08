@@ -22,4 +22,5 @@ class WorkoutSets extends Table {
   RealColumn get rpe => real().nullable()();
   BoolColumn get isWarmup => boolean().withDefault(const Constant(false))();
   DateTimeColumn get completedAt => dateTime()();
+  TextColumn get notes => text().nullable()();
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../database/app_database.dart';
+import '../../splits/providers/split_providers.dart';
 import '../providers/history_providers.dart';
 import 'training_calendar.dart';
 
@@ -10,7 +11,18 @@ class HistoryScreen extends ConsumerWidget {
 
   DateTime _dayOf(DateTime date) => DateTime(date.year, date.month, date.day);
 
-  void _onDayTap(BuildContext context, List<WorkoutSession> sessions, DateTime day) {
+  String _sessionTitle(WidgetRef ref, WorkoutSession session) {
+    if (session.splitDayId == null) return 'Freestyle';
+    final day = ref.watch(splitDayByIdProvider(session.splitDayId!)).value;
+    return day?.name ?? 'Freestyle';
+  }
+
+  void _onDayTap(
+    BuildContext context,
+    WidgetRef ref,
+    List<WorkoutSession> sessions,
+    DateTime day,
+  ) {
     final matches = sessions.where((s) => _dayOf(s.startedAt) == day).toList();
     if (matches.isEmpty) return;
     if (matches.length == 1) {
@@ -24,7 +36,8 @@ class HistoryScreen extends ConsumerWidget {
           shrinkWrap: true,
           children: matches
               .map((session) => ListTile(
-                    title: Text(_formatDate(session.startedAt)),
+                    title: Text(_sessionTitle(ref, session)),
+                    subtitle: Text(_formatDate(session.startedAt)),
                     onTap: () {
                       Navigator.of(context).pop();
                       context.push('/history/session/${session.id}');
@@ -60,7 +73,7 @@ class HistoryScreen extends ConsumerWidget {
                 padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
                 child: TrainingCalendar(
                   workoutDays: workoutDays,
-                  onDayTap: (day) => _onDayTap(context, sessions, day),
+                  onDayTap: (day) => _onDayTap(context, ref, sessions, day),
                 ),
               ),
               const Divider(height: 1),
@@ -73,8 +86,8 @@ class HistoryScreen extends ConsumerWidget {
                 ...sessions.map((session) {
                   final duration = session.endedAt!.difference(session.startedAt);
                   return ListTile(
-                    title: Text(_formatDate(session.startedAt)),
-                    subtitle: Text('${duration.inMinutes} min'),
+                    title: Text(_sessionTitle(ref, session)),
+                    subtitle: Text('${_formatDate(session.startedAt)} • ${duration.inMinutes} min'),
                     trailing: const Icon(Icons.chevron_right),
                     onTap: () => context.push('/history/session/${session.id}'),
                   );

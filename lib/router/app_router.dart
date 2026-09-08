@@ -13,6 +13,7 @@ import '../features/splits/presentation/split_day_detail_screen.dart';
 import '../features/profile/presentation/profile_screen.dart';
 import '../features/stats/presentation/stats_screen.dart';
 import '../features/settings/presentation/settings_screen.dart';
+import '../features/bodyweight/presentation/bodyweight_screen.dart';
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
 
@@ -75,6 +76,11 @@ final appRouter = GoRouter(
       path: '/settings',
       parentNavigatorKey: _rootNavigatorKey,
       builder: (c, s) => const SettingsScreen(),
+    ),
+    GoRoute(
+      path: '/bodyweight',
+      parentNavigatorKey: _rootNavigatorKey,
+      builder: (c, s) => const BodyweightScreen(),
     ),
     GoRoute(
       path: '/splits',

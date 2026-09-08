@@ -28,6 +28,7 @@ class ActiveWorkoutController {
     required int reps,
     double? rpe,
     bool isWarmup = false,
+    String? notes,
   }) {
     return _db.logSet(
       sessionId: sessionId,
@@ -37,6 +38,7 @@ class ActiveWorkoutController {
       reps: reps,
       rpe: rpe,
       isWarmup: isWarmup,
+      notes: notes,
     );
   }
 

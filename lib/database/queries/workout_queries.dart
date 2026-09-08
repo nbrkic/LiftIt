@@ -54,6 +54,7 @@ extension WorkoutQueries on AppDatabase {
     required int reps,
     double? rpe,
     bool isWarmup = false,
+    String? notes,
   }) {
     return into(workoutSets).insert(
       WorkoutSetsCompanion.insert(
@@ -65,6 +66,7 @@ extension WorkoutQueries on AppDatabase {
         rpe: Value(rpe),
         isWarmup: Value(isWarmup),
         completedAt: DateTime.now(),
+        notes: Value(notes),
       ),
     );
   }
@@ -78,5 +80,10 @@ extension WorkoutQueries on AppDatabase {
           ..where((s) => s.endedAt.isNotNull())
           ..orderBy([(s) => OrderingTerm.desc(s.startedAt)]))
         .watch();
+  }
+
+  Stream<WorkoutSession?> watchSessionById(int sessionId) {
+    return (select(workoutSessions)..where((s) => s.id.equals(sessionId)))
+        .watchSingleOrNull();
   }
 }

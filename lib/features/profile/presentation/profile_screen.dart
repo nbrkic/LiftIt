@@ -1,14 +1,8 @@
-import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../common/weight_format.dart';
-import '../../../database/app_database.dart';
 import '../../../database/enums.dart';
 import '../providers/profile_providers.dart';
-import '../providers/stats_providers.dart';
-import '../utils/volume_stats.dart';
 import 'edit_profile_sheet.dart';
-import 'log_bodyweight_sheet.dart';
 
 class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({super.key});
@@ -27,9 +21,6 @@ class ProfileScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final profileAsync = ref.watch(userProfileProvider);
-    final latestWeightAsync = ref.watch(latestBodyweightProvider);
-    final historyAsync = ref.watch(bodyweightHistoryProvider);
-    final sessionVolumesAsync = ref.watch(sessionVolumesProvider);
     final unit = ref.watch(preferredWeightUnitProvider);
 
     return Scaffold(
@@ -89,216 +80,9 @@ class ProfileScreen extends ConsumerWidget {
                   ),
                 ),
               ),
-              const SizedBox(height: 24),
-              Text('Training Volume (weekly)', style: Theme.of(context).textTheme.titleMedium),
-              const SizedBox(height: 12),
-              sessionVolumesAsync.when(
-                loading: () => const SizedBox.shrink(),
-                error: (error, stack) => const SizedBox.shrink(),
-                data: (sessions) {
-                  final weeks = computeWeeklyVolume(sessions);
-                  if (weeks.every((w) => w.volume == 0)) {
-                    return const Text('No completed workouts yet');
-                  }
-                  return SizedBox(height: 160, child: _VolumeChart(weeks: weeks, unit: unit));
-                },
-              ),
-              const SizedBox(height: 24),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text('Bodyweight', style: Theme.of(context).textTheme.titleMedium),
-                  FilledButton.tonalIcon(
-                    onPressed: () => showModalBottomSheet(
-                      context: context,
-                      isScrollControlled: true,
-                      builder: (_) => const LogBodyweightSheet(),
-                    ),
-                    icon: const Icon(Icons.add),
-                    label: const Text('Log Weigh-in'),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 8),
-              latestWeightAsync.when(
-                loading: () => const SizedBox.shrink(),
-                error: (error, stack) => const SizedBox.shrink(),
-                data: (latest) => Text(
-                  latest == null ? 'No weigh-ins yet' : 'Current: ${formatWeight(latest.weightKg, unit)}',
-                  style: Theme.of(context).textTheme.bodyLarge,
-                ),
-              ),
-              const SizedBox(height: 12),
-              historyAsync.when(
-                loading: () => const SizedBox.shrink(),
-                error: (error, stack) => const SizedBox.shrink(),
-                data: (history) {
-                  if (history.length < 2) return const SizedBox.shrink();
-                  final ascending = history.reversed.toList();
-                  return Padding(
-                    padding: const EdgeInsets.only(bottom: 16),
-                    child: SizedBox(height: 180, child: _BodyweightChart(entries: ascending, unit: unit)),
-                  );
-                },
-              ),
-              historyAsync.when(
-                loading: () => const SizedBox.shrink(),
-                error: (error, stack) => const SizedBox.shrink(),
-                data: (history) {
-                  if (history.isEmpty) return const SizedBox.shrink();
-                  return Column(
-                    children: history
-                        .map((entry) => ListTile(
-                              contentPadding: EdgeInsets.zero,
-                              title: Text(formatWeight(entry.weightKg, unit)),
-                              subtitle: Text(_formatDate(entry.loggedAt)),
-                              trailing: IconButton(
-                                icon: const Icon(Icons.delete_outline),
-                                onPressed: () => ref
-                                    .read(profileControllerProvider)
-                                    .deleteBodyweightLog(entry.id),
-                              ),
-                            ))
-                        .toList(),
-                  );
-                },
-              ),
             ],
           );
         },
-      ),
-    );
-  }
-
-  String _formatDate(DateTime date) {
-    return '${date.day.toString().padLeft(2, '0')}.${date.month.toString().padLeft(2, '0')}.${date.year}';
-  }
-}
-
-class _VolumeChart extends StatelessWidget {
-  final List<WeeklyVolume> weeks;
-  final WeightUnit unit;
-
-  const _VolumeChart({required this.weeks, required this.unit});
-
-  @override
-  Widget build(BuildContext context) {
-    final displayVolumes = weeks.map((w) => displayWeight(w.volume, unit)).toList();
-    final maxVolume = displayVolumes.fold(0.0, (a, b) => a > b ? a : b);
-
-    return BarChart(
-      BarChartData(
-        gridData: const FlGridData(show: true, drawVerticalLine: false),
-        borderData: FlBorderData(show: false),
-        maxY: maxVolume == 0 ? 1 : maxVolume * 1.2,
-        titlesData: FlTitlesData(
-          topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-          rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-          leftTitles: AxisTitles(sideTitles: SideTitles(showTitles: true, reservedSize: 40)),
-          bottomTitles: AxisTitles(
-            sideTitles: SideTitles(
-              showTitles: true,
-              reservedSize: 24,
-              getTitlesWidget: (value, meta) {
-                final index = value.round();
-                if (index < 0 || index >= weeks.length) return const SizedBox.shrink();
-                final date = weeks[index].weekStart;
-                return Padding(
-                  padding: const EdgeInsets.only(top: 4),
-                  child: Text('${date.day}.${date.month}.', style: const TextStyle(fontSize: 10)),
-                );
-              },
-            ),
-          ),
-        ),
-        barGroups: displayVolumes
-            .asMap()
-            .entries
-            .map((e) => BarChartGroupData(
-                  x: e.key,
-                  barRods: [
-                    BarChartRodData(
-                      toY: e.value,
-                      color: Theme.of(context).colorScheme.primary,
-                      width: 16,
-                      borderRadius: const BorderRadius.vertical(top: Radius.circular(4)),
-                    ),
-                  ],
-                ))
-            .toList(),
-      ),
-    );
-  }
-}
-
-class _BodyweightChart extends StatelessWidget {
-  final List<BodyweightLog> entries; // ascending by loggedAt — one point per entry
-  final WeightUnit unit;
-
-  const _BodyweightChart({required this.entries, required this.unit});
-
-  @override
-  Widget build(BuildContext context) {
-    final displayWeights = entries.map((e) => displayWeight(e.weightKg, unit)).toList();
-    final spots = displayWeights
-        .asMap()
-        .entries
-        .map((e) => FlSpot(e.key.toDouble(), e.value))
-        .toList();
-    final minWeight = displayWeights.reduce((a, b) => a < b ? a : b);
-    final maxWeight = displayWeights.reduce((a, b) => a > b ? a : b);
-    final padding = ((maxWeight - minWeight) * 0.15).clamp(1.0, double.infinity);
-
-    return LineChart(
-      LineChartData(
-        minY: minWeight - padding,
-        maxY: maxWeight + padding,
-        gridData: const FlGridData(show: true, drawVerticalLine: false),
-        borderData: FlBorderData(show: false),
-        titlesData: FlTitlesData(
-          topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-          rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-          leftTitles: AxisTitles(sideTitles: SideTitles(showTitles: true, reservedSize: 40)),
-          bottomTitles: AxisTitles(
-            sideTitles: SideTitles(
-              showTitles: true,
-              reservedSize: 24,
-              interval: (entries.length / 4).clamp(1, double.infinity).roundToDouble(),
-              getTitlesWidget: (value, meta) {
-                final index = value.round();
-                if (index < 0 || index >= entries.length) return const SizedBox.shrink();
-                final date = entries[index].loggedAt;
-                return Padding(
-                  padding: const EdgeInsets.only(top: 4),
-                  child: Text('${date.day}.${date.month}.', style: const TextStyle(fontSize: 10)),
-                );
-              },
-            ),
-          ),
-        ),
-        lineTouchData: LineTouchData(
-          touchTooltipData: LineTouchTooltipData(
-            getTooltipItems: (touchedSpots) => touchedSpots
-                .map((spot) => LineTooltipItem(
-                      formatWeight(entries[spot.x.toInt()].weightKg, unit),
-                      const TextStyle(fontWeight: FontWeight.bold),
-                    ))
-                .toList(),
-          ),
-        ),
-        lineBarsData: [
-          LineChartBarData(
-            spots: spots,
-            isCurved: true,
-            barWidth: 3,
-            color: Theme.of(context).colorScheme.primary,
-            dotData: const FlDotData(show: true),
-            belowBarData: BarAreaData(
-              show: true,
-              color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.15),
-            ),
-          ),
-        ],
       ),
     );
   }

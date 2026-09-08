@@ -28,6 +28,14 @@ class AppDrawer extends StatelessWidget {
               },
             ),
             ListTile(
+              leading: const Icon(Icons.monitor_weight_outlined),
+              title: const Text('Bodyweight'),
+              onTap: () {
+                Navigator.of(context).pop();
+                context.push('/bodyweight');
+              },
+            ),
+            ListTile(
               leading: const Icon(Icons.settings_outlined),
               title: const Text('Settings'),
               onTap: () {

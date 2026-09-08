@@ -7,6 +7,8 @@ import '../../../database/enums.dart';
 import '../../../database/queries/stats_queries.dart';
 import '../../history/providers/history_providers.dart';
 import '../../profile/providers/profile_providers.dart';
+import '../../profile/providers/stats_providers.dart';
+import '../../profile/utils/volume_stats.dart';
 import '../providers/dashboard_providers.dart';
 import '../utils/dashboard_stats.dart';
 
@@ -24,6 +26,7 @@ class StatsScreen extends ConsumerWidget {
     final sessionsAsync = ref.watch(pastSessionsProvider);
     final allSetsAsync = ref.watch(allWorkingSetsProvider);
     final muscleVolumeAsync = ref.watch(muscleGroupVolumeProvider);
+    final sessionVolumesAsync = ref.watch(sessionVolumesProvider);
     final unit = ref.watch(preferredWeightUnitProvider);
 
     return Scaffold(
@@ -65,6 +68,20 @@ class StatsScreen extends ConsumerWidget {
                     value: avgDuration == null ? '-' : '${avgDuration.inMinutes} min',
                   ),
                 ],
+              ),
+              const SizedBox(height: 24),
+              Text('Training Volume (weekly)', style: Theme.of(context).textTheme.titleMedium),
+              const SizedBox(height: 12),
+              sessionVolumesAsync.when(
+                loading: () => const SizedBox.shrink(),
+                error: (error, stack) => const SizedBox.shrink(),
+                data: (sessions) {
+                  final weeks = computeWeeklyVolume(sessions);
+                  if (weeks.every((w) => w.volume == 0)) {
+                    return const Text('No completed workouts yet');
+                  }
+                  return SizedBox(height: 160, child: _VolumeChart(weeks: weeks, unit: unit));
+                },
               ),
               const SizedBox(height: 24),
               Text('Personal Records', style: Theme.of(context).textTheme.titleMedium),
@@ -156,6 +173,62 @@ class _StatTile extends StatelessWidget {
             Text(label, style: Theme.of(context).textTheme.bodySmall),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class _VolumeChart extends StatelessWidget {
+  final List<WeeklyVolume> weeks;
+  final WeightUnit unit;
+
+  const _VolumeChart({required this.weeks, required this.unit});
+
+  @override
+  Widget build(BuildContext context) {
+    final displayVolumes = weeks.map((w) => displayWeight(w.volume, unit)).toList();
+    final maxVolume = displayVolumes.fold(0.0, (a, b) => a > b ? a : b);
+
+    return BarChart(
+      BarChartData(
+        gridData: const FlGridData(show: true, drawVerticalLine: false),
+        borderData: FlBorderData(show: false),
+        maxY: maxVolume == 0 ? 1 : maxVolume * 1.2,
+        titlesData: FlTitlesData(
+          topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+          rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+          leftTitles: AxisTitles(sideTitles: SideTitles(showTitles: true, reservedSize: 40)),
+          bottomTitles: AxisTitles(
+            sideTitles: SideTitles(
+              showTitles: true,
+              reservedSize: 24,
+              getTitlesWidget: (value, meta) {
+                final index = value.round();
+                if (index < 0 || index >= weeks.length) return const SizedBox.shrink();
+                final date = weeks[index].weekStart;
+                return Padding(
+                  padding: const EdgeInsets.only(top: 4),
+                  child: Text('${date.day}.${date.month}.', style: const TextStyle(fontSize: 10)),
+                );
+              },
+            ),
+          ),
+        ),
+        barGroups: displayVolumes
+            .asMap()
+            .entries
+            .map((e) => BarChartGroupData(
+                  x: e.key,
+                  barRods: [
+                    BarChartRodData(
+                      toY: e.value,
+                      color: Theme.of(context).colorScheme.primary,
+                      width: 16,
+                      borderRadius: const BorderRadius.vertical(top: Radius.circular(4)),
+                    ),
+                  ],
+                ))
+            .toList(),
       ),
     );
   }
