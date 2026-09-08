@@ -1,0 +1,13 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../database/app_database.dart';
+import '../../../database/queries/workout_queries.dart';
+import '../../../providers/database_provider.dart';
+
+final pastSessionsProvider = StreamProvider<List<WorkoutSession>>((ref) {
+  return ref.watch(appDatabaseProvider).watchPastSessions();
+});
+
+final sessionDetailProvider =
+    StreamProvider.family.autoDispose<List<WorkoutSetWithExercise>, int>((ref, sessionId) {
+  return ref.watch(appDatabaseProvider).watchSetsForSession(sessionId);
+});
