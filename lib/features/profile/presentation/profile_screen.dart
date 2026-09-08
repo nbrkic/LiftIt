@@ -1,6 +1,7 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../database/app_database.dart';
 import '../../../database/enums.dart';
 import '../providers/profile_providers.dart';
 import '../providers/stats_providers.dart';
@@ -127,6 +128,18 @@ class ProfileScreen extends ConsumerWidget {
                 loading: () => const SizedBox.shrink(),
                 error: (error, stack) => const SizedBox.shrink(),
                 data: (history) {
+                  if (history.length < 2) return const SizedBox.shrink();
+                  final ascending = history.reversed.toList();
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: 16),
+                    child: SizedBox(height: 180, child: _BodyweightChart(entries: ascending)),
+                  );
+                },
+              ),
+              historyAsync.when(
+                loading: () => const SizedBox.shrink(),
+                error: (error, stack) => const SizedBox.shrink(),
+                data: (history) {
                   if (history.isEmpty) return const SizedBox.shrink();
                   return Column(
                     children: history
@@ -206,6 +219,77 @@ class _VolumeChart extends StatelessWidget {
                   ],
                 ))
             .toList(),
+      ),
+    );
+  }
+}
+
+class _BodyweightChart extends StatelessWidget {
+  final List<BodyweightLog> entries; // ascending by loggedAt — one point per entry
+
+  const _BodyweightChart({required this.entries});
+
+  @override
+  Widget build(BuildContext context) {
+    final spots = entries
+        .asMap()
+        .entries
+        .map((e) => FlSpot(e.key.toDouble(), e.value.weightKg))
+        .toList();
+    final minWeight = entries.map((e) => e.weightKg).reduce((a, b) => a < b ? a : b);
+    final maxWeight = entries.map((e) => e.weightKg).reduce((a, b) => a > b ? a : b);
+    final padding = ((maxWeight - minWeight) * 0.15).clamp(1.0, double.infinity);
+
+    return LineChart(
+      LineChartData(
+        minY: minWeight - padding,
+        maxY: maxWeight + padding,
+        gridData: const FlGridData(show: true, drawVerticalLine: false),
+        borderData: FlBorderData(show: false),
+        titlesData: FlTitlesData(
+          topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+          rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+          leftTitles: AxisTitles(sideTitles: SideTitles(showTitles: true, reservedSize: 40)),
+          bottomTitles: AxisTitles(
+            sideTitles: SideTitles(
+              showTitles: true,
+              reservedSize: 24,
+              interval: (entries.length / 4).clamp(1, double.infinity).roundToDouble(),
+              getTitlesWidget: (value, meta) {
+                final index = value.round();
+                if (index < 0 || index >= entries.length) return const SizedBox.shrink();
+                final date = entries[index].loggedAt;
+                return Padding(
+                  padding: const EdgeInsets.only(top: 4),
+                  child: Text('${date.day}.${date.month}.', style: const TextStyle(fontSize: 10)),
+                );
+              },
+            ),
+          ),
+        ),
+        lineTouchData: LineTouchData(
+          touchTooltipData: LineTouchTooltipData(
+            getTooltipItems: (touchedSpots) => touchedSpots
+                .map((spot) => LineTooltipItem(
+                      '${entries[spot.x.toInt()].weightKg} kg',
+                      const TextStyle(fontWeight: FontWeight.bold),
+                    ))
+                .toList(),
+          ),
+        ),
+        lineBarsData: [
+          LineChartBarData(
+            spots: spots,
+            isCurved: true,
+            barWidth: 3,
+            color: Theme.of(context).colorScheme.primary,
+            dotData: const FlDotData(show: true),
+            belowBarData: BarAreaData(
+              show: true,
+              color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.15),
+            ),
+          ),
+        ],
       ),
     );
   }
