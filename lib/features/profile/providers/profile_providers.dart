@@ -16,6 +16,12 @@ final bodyweightHistoryProvider = StreamProvider<List<BodyweightLog>>((ref) {
   return ref.watch(appDatabaseProvider).watchBodyweightHistory();
 });
 
+// Derived, synchronous convenience so widgets don't each need to unwrap
+// userProfileProvider's AsyncValue just to read the unit preference.
+final preferredWeightUnitProvider = Provider<WeightUnit>((ref) {
+  return ref.watch(userProfileProvider).value?.preferredWeightUnit ?? WeightUnit.kg;
+});
+
 class ProfileController {
   final AppDatabase _db;
   ProfileController(this._db);

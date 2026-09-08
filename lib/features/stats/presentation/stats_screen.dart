@@ -2,9 +2,11 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import '../../../common/weight_format.dart';
 import '../../../database/enums.dart';
 import '../../../database/queries/stats_queries.dart';
 import '../../history/providers/history_providers.dart';
+import '../../profile/providers/profile_providers.dart';
 import '../providers/dashboard_providers.dart';
 import '../utils/dashboard_stats.dart';
 
@@ -22,6 +24,7 @@ class StatsScreen extends ConsumerWidget {
     final sessionsAsync = ref.watch(pastSessionsProvider);
     final allSetsAsync = ref.watch(allWorkingSetsProvider);
     final muscleVolumeAsync = ref.watch(muscleGroupVolumeProvider);
+    final unit = ref.watch(preferredWeightUnitProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -80,9 +83,11 @@ class StatsScreen extends ConsumerWidget {
                         .map((pr) => ListTile(
                               contentPadding: EdgeInsets.zero,
                               title: Text(pr.exerciseName),
-                              subtitle: Text('${pr.bestSet.set.weight} kg × ${pr.bestSet.set.reps}'),
+                              subtitle: Text(
+                                '${formatWeight(pr.bestSet.set.weight, unit)} × ${pr.bestSet.set.reps}',
+                              ),
                               trailing: Text(
-                                '${pr.bestSet.estimated1Rm.toStringAsFixed(1)} kg',
+                                formatWeight(pr.bestSet.estimated1Rm, unit),
                                 style: Theme.of(context).textTheme.titleSmall,
                               ),
                               onTap: () => context.push('/exercises/${pr.exerciseId}'),

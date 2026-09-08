@@ -1,7 +1,10 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../common/weight_format.dart';
 import '../../../database/app_database.dart';
+import '../../../database/enums.dart';
+import '../../profile/providers/profile_providers.dart';
 import '../providers/exercise_providers.dart';
 import '../providers/exercise_stats_providers.dart';
 import '../utils/exercise_stats.dart';
@@ -15,6 +18,7 @@ class ExerciseDetailScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final exercisesAsync = ref.watch(exerciseListProvider);
     final setsAsync = ref.watch(exerciseSetsProvider(exerciseId));
+    final unit = ref.watch(preferredWeightUnitProvider);
 
     Exercise? exercise;
     for (final e in exercisesAsync.value ?? const <Exercise>[]) {
@@ -48,10 +52,11 @@ class ExerciseDetailScreen extends ConsumerWidget {
                       Text('Personal Record', style: Theme.of(context).textTheme.labelLarge),
                       const SizedBox(height: 4),
                       Text(
-                        '${best.set.weight} kg × ${best.set.reps}',
+                        '${formatWeight(best.set.weight, unit)} × ${best.set.reps}'
+                        '${best.set.rpe != null ? ' @ RPE ${best.set.rpe}' : ''}',
                         style: Theme.of(context).textTheme.headlineSmall,
                       ),
-                      Text('Estimated 1RM: ${best.estimated1Rm.toStringAsFixed(1)} kg'),
+                      Text('Estimated 1RM: ${formatWeight(best.estimated1Rm, unit)}'),
                     ],
                   ),
                 ),
@@ -60,14 +65,17 @@ class ExerciseDetailScreen extends ConsumerWidget {
                 const SizedBox(height: 24),
                 Text('Progress (est. 1RM)', style: Theme.of(context).textTheme.titleMedium),
                 const SizedBox(height: 12),
-                SizedBox(height: 200, child: _ProgressChart(points: points)),
+                SizedBox(height: 200, child: _ProgressChart(points: points, unit: unit)),
               ],
               const SizedBox(height: 24),
               Text('History', style: Theme.of(context).textTheme.titleMedium),
               const SizedBox(height: 8),
               ...sets.reversed.map((set) => ListTile(
                     contentPadding: EdgeInsets.zero,
-                    title: Text('${set.weight} kg × ${set.reps}'),
+                    title: Text(
+                      '${formatWeight(set.weight, unit)} × ${set.reps}'
+                      '${set.rpe != null ? ' @ RPE ${set.rpe}' : ''}',
+                    ),
                     subtitle: Text(_formatDate(set.completedAt)),
                   )),
             ],
@@ -84,15 +92,16 @@ class ExerciseDetailScreen extends ConsumerWidget {
 
 class _ProgressChart extends StatelessWidget {
   final List<ProgressPoint> points;
+  final WeightUnit unit;
 
-  const _ProgressChart({required this.points});
+  const _ProgressChart({required this.points, required this.unit});
 
   @override
   Widget build(BuildContext context) {
     final spots = points
         .asMap()
         .entries
-        .map((e) => FlSpot(e.key.toDouble(), e.value.estimated1Rm))
+        .map((e) => FlSpot(e.key.toDouble(), displayWeight(e.value.estimated1Rm, unit)))
         .toList();
 
     return LineChart(

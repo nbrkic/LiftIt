@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+
 import '../../../database/app_database.dart';
 import '../../workout/presentation/exercise_picker_sheet.dart';
 import '../providers/split_providers.dart';
@@ -21,7 +22,8 @@ class SplitDayDetailScreen extends ConsumerWidget {
     await showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      builder: (_) => TargetSetsRepsSheet(exercise: exercise, splitDayId: splitDayId),
+      builder: (_) =>
+          TargetSetsRepsSheet(exercise: exercise, splitDayId: splitDayId),
     );
   }
 
@@ -36,54 +38,66 @@ class SplitDayDetailScreen extends ConsumerWidget {
         onPressed: () => _addExercise(context, ref),
         child: const Icon(Icons.add),
       ),
-      body: plannedAsync.when(
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (error, stack) => Center(child: Text('Error: $error')),
-        data: (planned) {
-          return Column(
-            children: [
-              Expanded(
-                child: planned.isEmpty
-                    ? const Center(child: Text('No exercises yet — tap + to add one.'))
-                    : ListView.builder(
-                        itemCount: planned.length,
-                        itemBuilder: (context, index) {
-                          final entry = planned[index];
-                          final repsRange = entry.planned.targetRepsLow != null && entry.planned.targetRepsHigh != null
-                              ? '${entry.planned.targetRepsLow}-${entry.planned.targetRepsHigh} reps'
-                              : 'reps not set';
-                          return Dismissible(
-                            key: ValueKey(entry.planned.id),
-                            direction: DismissDirection.endToStart,
-                            background: Container(
-                              color: Theme.of(context).colorScheme.errorContainer,
-                              alignment: Alignment.centerRight,
-                              padding: const EdgeInsets.only(right: 20),
-                              child: const Icon(Icons.delete_outline),
-                            ),
-                            onDismissed: (_) => ref
-                                .read(splitControllerProvider)
-                                .removeExerciseFromDay(entry.planned.id),
-                            child: ListTile(
-                              title: Text(entry.exercise.name),
-                              subtitle: Text('${entry.planned.targetSets} sets • $repsRange'),
-                            ),
-                          );
-                        },
-                      ),
-              ),
-              if (planned.isNotEmpty)
-                Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: FilledButton.icon(
-                    onPressed: () => context.push('/active-workout', extra: splitDayId),
-                    icon: const Icon(Icons.play_arrow),
-                    label: const Text('Start Workout From This Day'),
-                  ),
+      body: SafeArea(
+        top: false,
+        child: plannedAsync.when(
+          loading: () => const Center(child: CircularProgressIndicator()),
+          error: (error, stack) => Center(child: Text('Error: $error')),
+          data: (planned) {
+            return Column(
+              children: [
+                Expanded(
+                  child: planned.isEmpty
+                      ? const Center(
+                          child: Text('No exercises yet — tap + to add one.'),
+                        )
+                      : ListView.builder(
+                          itemCount: planned.length,
+                          itemBuilder: (context, index) {
+                            final entry = planned[index];
+                            final repsRange =
+                                entry.planned.targetRepsLow != null &&
+                                    entry.planned.targetRepsHigh != null
+                                ? '${entry.planned.targetRepsLow}-${entry.planned.targetRepsHigh} reps'
+                                : 'reps not set';
+                            return Dismissible(
+                              key: ValueKey(entry.planned.id),
+                              direction: DismissDirection.endToStart,
+                              background: Container(
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .errorContainer,
+                                alignment: Alignment.centerRight,
+                                padding: const EdgeInsets.only(right: 20),
+                                child: const Icon(Icons.delete_outline),
+                              ),
+                              onDismissed: (_) => ref
+                                  .read(splitControllerProvider)
+                                  .removeExerciseFromDay(entry.planned.id),
+                              child: ListTile(
+                                title: Text(entry.exercise.name),
+                                subtitle: Text(
+                                  '${entry.planned.targetSets} sets • $repsRange',
+                                ),
+                              ),
+                            );
+                          },
+                        ),
                 ),
-            ],
-          );
-        },
+                if (planned.isNotEmpty)
+                  Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: FilledButton.icon(
+                      onPressed: () =>
+                          context.push('/active-workout', extra: splitDayId),
+                      icon: const Icon(Icons.play_arrow),
+                      label: const Text('Start Workout From This Day'),
+                    ),
+                  ),
+              ],
+            );
+          },
+        ),
       ),
     );
   }

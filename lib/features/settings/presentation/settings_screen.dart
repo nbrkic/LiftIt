@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:share_plus/share_plus.dart';
+
 import '../../../database/backup_service.dart';
 import '../../../providers/database_provider.dart';
 import '../../../providers/theme_provider.dart';
@@ -64,7 +65,9 @@ class SettingsScreen extends ConsumerWidget {
         barrierDismissible: false,
         builder: (dialogContext) => AlertDialog(
           title: const Text('Restore complete'),
-          content: const Text('LiftIt will now close. Reopen the app to see your restored data.'),
+          content: const Text(
+            'LiftIt will now close. Reopen the app to see your restored data.',
+          ),
           actions: [
             FilledButton(
               onPressed: () => SystemNavigator.pop(),
@@ -82,59 +85,83 @@ class SettingsScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(title: const Text('Settings')),
-      body: ListView(
-        padding: const EdgeInsets.all(16),
-        children: [
-          Text('Appearance', style: Theme.of(context).textTheme.titleMedium),
-          const SizedBox(height: 12),
-          SegmentedButton<ThemeMode>(
-            segments: const [
-              ButtonSegment(value: ThemeMode.system, label: Text('System'), icon: Icon(Icons.brightness_auto)),
-              ButtonSegment(value: ThemeMode.light, label: Text('Light'), icon: Icon(Icons.light_mode)),
-              ButtonSegment(value: ThemeMode.dark, label: Text('Dark'), icon: Icon(Icons.dark_mode)),
-            ],
-            selected: {themeMode},
-            onSelectionChanged: (selection) =>
-                ref.read(themeModeProvider.notifier).setThemeMode(selection.first),
-          ),
-          const SizedBox(height: 32),
-          Text('Backup & Restore', style: Theme.of(context).textTheme.titleMedium),
-          const SizedBox(height: 4),
-          Text(
-            'All your data lives only on this device. Export a backup regularly so you never lose your training history.',
-            style: Theme.of(context).textTheme.bodySmall,
-          ),
-          const SizedBox(height: 12),
-          FilledButton.icon(
-            onPressed: () => _exportBackup(context, ref),
-            icon: const Icon(Icons.upload_outlined),
-            label: const Text('Export Backup'),
-          ),
-          const SizedBox(height: 8),
-          OutlinedButton.icon(
-            onPressed: () => _restoreBackup(context, ref),
-            icon: const Icon(Icons.download_outlined),
-            label: const Text('Restore from Backup'),
-          ),
-          const SizedBox(height: 32),
-          Text('About', style: Theme.of(context).textTheme.titleMedium),
-          const SizedBox(height: 12),
-          Card(
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('LiftIt', style: Theme.of(context).textTheme.titleLarge),
-                  const SizedBox(height: 4),
-                  const Text('Version $_appVersion'),
-                  const SizedBox(height: 8),
-                  const Text('A free, no-nonsense gym tracker. All your data stays on this device.'),
-                ],
+      body: SafeArea(
+        top: false,
+        child: ListView(
+          padding: const EdgeInsets.all(16),
+          children: [
+            Text('Appearance', style: Theme.of(context).textTheme.titleMedium),
+            const SizedBox(height: 12),
+            SegmentedButton<ThemeMode>(
+              segments: const [
+                ButtonSegment(
+                  value: ThemeMode.system,
+                  label: Text('System'),
+                  icon: Icon(Icons.brightness_auto),
+                ),
+                ButtonSegment(
+                  value: ThemeMode.light,
+                  label: Text('Light'),
+                  icon: Icon(Icons.light_mode),
+                ),
+                ButtonSegment(
+                  value: ThemeMode.dark,
+                  label: Text('Dark'),
+                  icon: Icon(Icons.dark_mode),
+                ),
+              ],
+              selected: {themeMode},
+              onSelectionChanged: (selection) => ref
+                  .read(themeModeProvider.notifier)
+                  .setThemeMode(selection.first),
+            ),
+            const SizedBox(height: 32),
+            Text(
+              'Backup & Restore',
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+            const SizedBox(height: 4),
+            Text(
+              'All your data lives only on this device. Export a backup regularly so you never lose your training history.',
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
+            const SizedBox(height: 12),
+            FilledButton.icon(
+              onPressed: () => _exportBackup(context, ref),
+              icon: const Icon(Icons.upload_outlined),
+              label: const Text('Export Backup'),
+            ),
+            const SizedBox(height: 8),
+            OutlinedButton.icon(
+              onPressed: () => _restoreBackup(context, ref),
+              icon: const Icon(Icons.download_outlined),
+              label: const Text('Restore from Backup'),
+            ),
+            const SizedBox(height: 32),
+            Text('About', style: Theme.of(context).textTheme.titleMedium),
+            const SizedBox(height: 12),
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'LiftIt',
+                      style: Theme.of(context).textTheme.titleLarge,
+                    ),
+                    const SizedBox(height: 4),
+                    const Text('Version $_appVersion'),
+                    const SizedBox(height: 8),
+                    const Text(
+                      'A free, no-nonsense gym tracker. All your data stays on this device.',
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

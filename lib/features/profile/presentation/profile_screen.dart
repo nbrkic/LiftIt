@@ -1,6 +1,7 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../common/weight_format.dart';
 import '../../../database/app_database.dart';
 import '../../../database/enums.dart';
 import '../providers/profile_providers.dart';
@@ -29,6 +30,7 @@ class ProfileScreen extends ConsumerWidget {
     final latestWeightAsync = ref.watch(latestBodyweightProvider);
     final historyAsync = ref.watch(bodyweightHistoryProvider);
     final sessionVolumesAsync = ref.watch(sessionVolumesProvider);
+    final unit = ref.watch(preferredWeightUnitProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -53,7 +55,6 @@ class ProfileScreen extends ConsumerWidget {
         error: (error, stack) => Center(child: Text('Error: $error')),
         data: (profile) {
           final age = _ageFrom(profile?.birthDate);
-          final unit = profile?.preferredWeightUnit;
 
           return ListView(
             padding: const EdgeInsets.all(16),
@@ -78,7 +79,7 @@ class ProfileScreen extends ConsumerWidget {
                         Text('Goal: ${profile!.primaryGoal!.label}'),
                       if (profile?.weeklyTrainingGoal != null)
                         Text('Weekly goal: ${profile!.weeklyTrainingGoal} days'),
-                      if (unit != null) Text('Preferred unit: ${unit.label}'),
+                      Text('Preferred unit: ${unit.label}'),
                       if (profile == null)
                         const Padding(
                           padding: EdgeInsets.only(top: 8),
@@ -99,7 +100,7 @@ class ProfileScreen extends ConsumerWidget {
                   if (weeks.every((w) => w.volume == 0)) {
                     return const Text('No completed workouts yet');
                   }
-                  return SizedBox(height: 160, child: _VolumeChart(weeks: weeks));
+                  return SizedBox(height: 160, child: _VolumeChart(weeks: weeks, unit: unit));
                 },
               ),
               const SizedBox(height: 24),
@@ -123,7 +124,7 @@ class ProfileScreen extends ConsumerWidget {
                 loading: () => const SizedBox.shrink(),
                 error: (error, stack) => const SizedBox.shrink(),
                 data: (latest) => Text(
-                  latest == null ? 'No weigh-ins yet' : 'Current: ${latest.weightKg} kg',
+                  latest == null ? 'No weigh-ins yet' : 'Current: ${formatWeight(latest.weightKg, unit)}',
                   style: Theme.of(context).textTheme.bodyLarge,
                 ),
               ),
@@ -136,7 +137,7 @@ class ProfileScreen extends ConsumerWidget {
                   final ascending = history.reversed.toList();
                   return Padding(
                     padding: const EdgeInsets.only(bottom: 16),
-                    child: SizedBox(height: 180, child: _BodyweightChart(entries: ascending)),
+                    child: SizedBox(height: 180, child: _BodyweightChart(entries: ascending, unit: unit)),
                   );
                 },
               ),
@@ -149,7 +150,7 @@ class ProfileScreen extends ConsumerWidget {
                     children: history
                         .map((entry) => ListTile(
                               contentPadding: EdgeInsets.zero,
-                              title: Text('${entry.weightKg} kg'),
+                              title: Text(formatWeight(entry.weightKg, unit)),
                               subtitle: Text(_formatDate(entry.loggedAt)),
                               trailing: IconButton(
                                 icon: const Icon(Icons.delete_outline),
@@ -176,12 +177,14 @@ class ProfileScreen extends ConsumerWidget {
 
 class _VolumeChart extends StatelessWidget {
   final List<WeeklyVolume> weeks;
+  final WeightUnit unit;
 
-  const _VolumeChart({required this.weeks});
+  const _VolumeChart({required this.weeks, required this.unit});
 
   @override
   Widget build(BuildContext context) {
-    final maxVolume = weeks.map((w) => w.volume).fold(0.0, (a, b) => a > b ? a : b);
+    final displayVolumes = weeks.map((w) => displayWeight(w.volume, unit)).toList();
+    final maxVolume = displayVolumes.fold(0.0, (a, b) => a > b ? a : b);
 
     return BarChart(
       BarChartData(
@@ -208,14 +211,14 @@ class _VolumeChart extends StatelessWidget {
             ),
           ),
         ),
-        barGroups: weeks
+        barGroups: displayVolumes
             .asMap()
             .entries
             .map((e) => BarChartGroupData(
                   x: e.key,
                   barRods: [
                     BarChartRodData(
-                      toY: e.value.volume,
+                      toY: e.value,
                       color: Theme.of(context).colorScheme.primary,
                       width: 16,
                       borderRadius: const BorderRadius.vertical(top: Radius.circular(4)),
@@ -230,18 +233,20 @@ class _VolumeChart extends StatelessWidget {
 
 class _BodyweightChart extends StatelessWidget {
   final List<BodyweightLog> entries; // ascending by loggedAt — one point per entry
+  final WeightUnit unit;
 
-  const _BodyweightChart({required this.entries});
+  const _BodyweightChart({required this.entries, required this.unit});
 
   @override
   Widget build(BuildContext context) {
-    final spots = entries
+    final displayWeights = entries.map((e) => displayWeight(e.weightKg, unit)).toList();
+    final spots = displayWeights
         .asMap()
         .entries
-        .map((e) => FlSpot(e.key.toDouble(), e.value.weightKg))
+        .map((e) => FlSpot(e.key.toDouble(), e.value))
         .toList();
-    final minWeight = entries.map((e) => e.weightKg).reduce((a, b) => a < b ? a : b);
-    final maxWeight = entries.map((e) => e.weightKg).reduce((a, b) => a > b ? a : b);
+    final minWeight = displayWeights.reduce((a, b) => a < b ? a : b);
+    final maxWeight = displayWeights.reduce((a, b) => a > b ? a : b);
     final padding = ((maxWeight - minWeight) * 0.15).clamp(1.0, double.infinity);
 
     return LineChart(
@@ -275,7 +280,7 @@ class _BodyweightChart extends StatelessWidget {
           touchTooltipData: LineTouchTooltipData(
             getTooltipItems: (touchedSpots) => touchedSpots
                 .map((spot) => LineTooltipItem(
-                      '${entries[spot.x.toInt()].weightKg} kg',
+                      formatWeight(entries[spot.x.toInt()].weightKg, unit),
                       const TextStyle(fontWeight: FontWeight.bold),
                     ))
                 .toList(),

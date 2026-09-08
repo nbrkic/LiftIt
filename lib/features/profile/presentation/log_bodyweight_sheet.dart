@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../common/weight_format.dart';
 import '../providers/profile_providers.dart';
 
 class LogBodyweightSheet extends ConsumerStatefulWidget {
@@ -23,8 +24,10 @@ class _LogBodyweightSheetState extends ConsumerState<LogBodyweightSheet> {
 
   Future<void> _submit() async {
     if (!_formKey.currentState!.validate()) return;
+    final unit = ref.read(preferredWeightUnitProvider);
+    final entered = double.parse(_weightController.text.replaceAll(',', '.'));
     await ref.read(profileControllerProvider).logBodyweight(
-          weightKg: double.parse(_weightController.text.replaceAll(',', '.')),
+          weightKg: toCanonicalKg(entered, unit),
           notes: _notesController.text.trim().isEmpty ? null : _notesController.text.trim(),
         );
     if (mounted) Navigator.of(context).pop();
@@ -32,6 +35,8 @@ class _LogBodyweightSheetState extends ConsumerState<LogBodyweightSheet> {
 
   @override
   Widget build(BuildContext context) {
+    final unit = ref.watch(preferredWeightUnitProvider);
+
     return Padding(
       padding: EdgeInsets.only(
         left: 16,
@@ -51,7 +56,7 @@ class _LogBodyweightSheetState extends ConsumerState<LogBodyweightSheet> {
               controller: _weightController,
               autofocus: true,
               keyboardType: const TextInputType.numberWithOptions(decimal: true),
-              decoration: const InputDecoration(labelText: 'Weight (kg)'),
+              decoration: InputDecoration(labelText: 'Weight (${unitLabel(unit)})'),
               validator: (value) =>
                   double.tryParse((value ?? '').replaceAll(',', '.')) == null ? 'Invalid' : null,
             ),

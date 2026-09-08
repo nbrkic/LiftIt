@@ -2,10 +2,14 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../../../common/weight_format.dart';
 import '../../../database/app_database.dart';
+import '../../../database/enums.dart';
 import '../../../database/queries/split_queries.dart';
 import '../../../database/queries/workout_queries.dart';
 import '../../../providers/database_provider.dart';
+import '../../profile/providers/profile_providers.dart';
 import '../../splits/providers/split_providers.dart';
 import '../providers/active_workout_providers.dart';
 import 'exercise_picker_sheet.dart';
@@ -24,7 +28,8 @@ class ActiveWorkoutScreen extends ConsumerStatefulWidget {
   const ActiveWorkoutScreen({super.key, this.startFromSplitDayId});
 
   @override
-  ConsumerState<ActiveWorkoutScreen> createState() => _ActiveWorkoutScreenState();
+  ConsumerState<ActiveWorkoutScreen> createState() =>
+      _ActiveWorkoutScreenState();
 }
 
 class _ActiveWorkoutScreenState extends ConsumerState<ActiveWorkoutScreen> {
@@ -51,10 +56,11 @@ class _ActiveWorkoutScreenState extends ConsumerState<ActiveWorkoutScreen> {
   Future<void> _init() async {
     final db = ref.read(appDatabaseProvider);
     final existing = await db.watchActiveSession().first;
-    final id = existing?.id ??
-        await ref.read(activeWorkoutControllerProvider).startWorkout(
-              splitDayId: widget.startFromSplitDayId,
-            );
+    final id =
+        existing?.id ??
+        await ref
+            .read(activeWorkoutControllerProvider)
+            .startWorkout(splitDayId: widget.startFromSplitDayId);
     if (mounted) {
       setState(() {
         _sessionId = id;
@@ -65,7 +71,8 @@ class _ActiveWorkoutScreenState extends ConsumerState<ActiveWorkoutScreen> {
 
   Future<void> _logSetFor(Exercise exercise) async {
     final currentSets = ref.read(activeSessionSetsProvider).value ?? [];
-    final nextSetNumber = currentSets.where((s) => s.exercise.id == exercise.id).length + 1;
+    final nextSetNumber =
+        currentSets.where((s) => s.exercise.id == exercise.id).length + 1;
     final logged = await showModalBottomSheet<bool>(
       context: context,
       isScrollControlled: true,
@@ -102,15 +109,21 @@ class _ActiveWorkoutScreenState extends ConsumerState<ActiveWorkoutScreen> {
 
     if (planned != null) {
       for (final p in planned) {
-        groups[p.exercise.id] = _ExerciseGroup(exercise: p.exercise, planned: p.planned);
+        groups[p.exercise.id] = _ExerciseGroup(
+          exercise: p.exercise,
+          planned: p.planned,
+        );
         order.add(p.exercise.id);
       }
     }
     for (final entry in sets) {
-      groups.putIfAbsent(entry.exercise.id, () {
-        order.add(entry.exercise.id);
-        return _ExerciseGroup(exercise: entry.exercise);
-      }).sets.add(entry.set);
+      groups
+          .putIfAbsent(entry.exercise.id, () {
+            order.add(entry.exercise.id);
+            return _ExerciseGroup(exercise: entry.exercise);
+          })
+          .sets
+          .add(entry.set);
     }
     return order.map((id) => groups[id]!).toList();
   }
@@ -132,13 +145,19 @@ class _ActiveWorkoutScreenState extends ConsumerState<ActiveWorkoutScreen> {
     }
 
     final theme = Theme.of(context);
+    final unit = ref.watch(preferredWeightUnitProvider);
     final session = ref.watch(activeSessionProvider).value;
     final setsAsync = ref.watch(activeSessionSetsProvider);
-    final plannedAsync =
-        _splitDayId != null ? ref.watch(splitDayExercisesProvider(_splitDayId!)) : null;
+    final plannedAsync = _splitDayId != null
+        ? ref.watch(splitDayExercisesProvider(_splitDayId!))
+        : null;
 
-    final elapsed = session != null ? DateTime.now().difference(session.startedAt) : Duration.zero;
-    final restElapsed = _lastSetLoggedAt != null ? DateTime.now().difference(_lastSetLoggedAt!) : null;
+    final elapsed = session != null
+        ? DateTime.now().difference(session.startedAt)
+        : Duration.zero;
+    final restElapsed = _lastSetLoggedAt != null
+        ? DateTime.now().difference(_lastSetLoggedAt!)
+        : null;
 
     return Scaffold(
       appBar: AppBar(
@@ -147,54 +166,64 @@ class _ActiveWorkoutScreenState extends ConsumerState<ActiveWorkoutScreen> {
           icon: const Icon(Icons.close),
           onPressed: () => Navigator.of(context).pop(),
         ),
-        actions: [
-          TextButton(onPressed: _finish, child: const Text('Finish')),
-        ],
+        actions: [TextButton(onPressed: _finish, child: const Text('Finish'))],
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: _addNewExercise,
         icon: const Icon(Icons.add),
         label: const Text('Add Exercise'),
       ),
-      body: setsAsync.when(
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (error, stack) => Center(child: Text('Error: $error')),
-        data: (sets) {
-          final volume = sets
-              .where((s) => !s.set.isWarmup)
-              .fold(0.0, (sum, s) => sum + s.set.weight * s.set.reps);
+      body: SafeArea(
+        top: false,
+        child: setsAsync.when(
+          loading: () => const Center(child: CircularProgressIndicator()),
+          error: (error, stack) => Center(child: Text('Error: $error')),
+          data: (sets) {
+            final volume = sets
+                .where((s) => !s.set.isWarmup)
+                .fold(0.0, (sum, s) => sum + s.set.weight * s.set.reps);
 
-          final planned = plannedAsync?.value;
-          final groups = _buildGroups(planned, sets);
+            final planned = plannedAsync?.value;
+            final groups = _buildGroups(planned, sets);
 
-          return Column(
-            children: [
-              Container(
-                padding: const EdgeInsets.symmetric(vertical: 12),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    _StatChip(icon: Icons.timer_outlined, label: _formatElapsed(elapsed)),
-                    _StatChip(
-                      icon: Icons.fitness_center,
-                      label: '${volume.toStringAsFixed(0)} kg',
-                    ),
-                  ],
-                ),
-              ),
-              if (restElapsed != null) _buildRestBanner(theme, restElapsed),
-              const Divider(height: 1),
-              Expanded(
-                child: groups.isEmpty
-                    ? const Center(child: Text('No sets logged yet — tap "Add Exercise" to start.'))
-                    : ListView(
-                        padding: const EdgeInsets.symmetric(vertical: 8),
-                        children: groups.map((g) => _buildGroupCard(theme, g)).toList(),
+            return Column(
+              children: [
+                Container(
+                  padding: const EdgeInsets.symmetric(vertical: 12),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      _StatChip(
+                        icon: Icons.timer_outlined,
+                        label: _formatElapsed(elapsed),
                       ),
-              ),
-            ],
-          );
-        },
+                      _StatChip(
+                        icon: Icons.fitness_center,
+                        label: formatWeight(volume, unit, decimals: 0),
+                      ),
+                    ],
+                  ),
+                ),
+                if (restElapsed != null) _buildRestBanner(theme, restElapsed),
+                const Divider(height: 1),
+                Expanded(
+                  child: groups.isEmpty
+                      ? const Center(
+                          child: Text(
+                            'No sets logged yet — tap "Add Exercise" to start.',
+                          ),
+                        )
+                      : ListView(
+                          padding: const EdgeInsets.symmetric(vertical: 8),
+                          children: groups
+                              .map((g) => _buildGroupCard(theme, unit, g))
+                              .toList(),
+                        ),
+                ),
+              ],
+            );
+          },
+        ),
       ),
     );
   }
@@ -209,15 +238,23 @@ class _ActiveWorkoutScreenState extends ConsumerState<ActiveWorkoutScreen> {
           const SizedBox(width: 8),
           Text(
             'Rest: ${_formatElapsed(restElapsed)}',
-            style: theme.textTheme.titleMedium?.copyWith(color: theme.colorScheme.onPrimaryContainer),
+            style: theme.textTheme.titleMedium?.copyWith(
+              color: theme.colorScheme.onPrimaryContainer,
+            ),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildGroupCard(ThemeData theme, _ExerciseGroup group) {
-    final repsRange = group.planned?.targetRepsLow != null && group.planned?.targetRepsHigh != null
+  Widget _buildGroupCard(
+    ThemeData theme,
+    WeightUnit unit,
+    _ExerciseGroup group,
+  ) {
+    final repsRange =
+        group.planned?.targetRepsLow != null &&
+            group.planned?.targetRepsHigh != null
         ? '${group.planned!.targetRepsLow}-${group.planned!.targetRepsHigh} reps'
         : null;
 
@@ -234,7 +271,10 @@ class _ActiveWorkoutScreenState extends ConsumerState<ActiveWorkoutScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(group.exercise.name, style: theme.textTheme.titleMedium),
+                      Text(
+                        group.exercise.name,
+                        style: theme.textTheme.titleMedium,
+                      ),
                       if (group.planned != null)
                         Text(
                           '${group.sets.length}/${group.planned!.targetSets} sets'
@@ -242,7 +282,10 @@ class _ActiveWorkoutScreenState extends ConsumerState<ActiveWorkoutScreen> {
                           style: theme.textTheme.bodySmall,
                         )
                       else if (group.sets.isNotEmpty)
-                        Text('${group.sets.length} sets', style: theme.textTheme.bodySmall),
+                        Text(
+                          '${group.sets.length} sets',
+                          style: theme.textTheme.bodySmall,
+                        ),
                     ],
                   ),
                 ),
@@ -252,18 +295,23 @@ class _ActiveWorkoutScreenState extends ConsumerState<ActiveWorkoutScreen> {
                 ),
               ],
             ),
-            ...group.sets.map((set) => ListTile(
-                  dense: true,
-                  contentPadding: EdgeInsets.zero,
-                  title: Text(
-                    'Set ${set.setNumber}  •  ${set.weight} kg × ${set.reps}'
-                    '${set.isWarmup ? ' (warm-up)' : ''}',
-                  ),
-                  trailing: IconButton(
-                    icon: const Icon(Icons.delete_outline, size: 20),
-                    onPressed: () => ref.read(activeWorkoutControllerProvider).deleteSet(set.id),
-                  ),
-                )),
+            ...group.sets.map(
+              (set) => ListTile(
+                dense: true,
+                contentPadding: EdgeInsets.zero,
+                title: Text(
+                  'Set ${set.setNumber}  •  ${formatWeight(set.weight, unit)} × ${set.reps}'
+                  '${set.rpe != null ? ' @ RPE ${set.rpe}' : ''}'
+                  '${set.isWarmup ? ' (warm-up)' : ''}',
+                ),
+                trailing: IconButton(
+                  icon: const Icon(Icons.delete_outline, size: 20),
+                  onPressed: () => ref
+                      .read(activeWorkoutControllerProvider)
+                      .deleteSet(set.id),
+                ),
+              ),
+            ),
           ],
         ),
       ),
