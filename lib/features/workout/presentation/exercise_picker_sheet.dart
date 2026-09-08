@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../database/app_database.dart';
 import '../../../database/enums.dart';
+import '../../../l10n/app_localizations.dart';
 import '../../exercises/providers/exercise_providers.dart';
 
 class ExercisePickerSheet extends ConsumerStatefulWidget {
@@ -17,6 +18,7 @@ class _ExercisePickerSheetState extends ConsumerState<ExercisePickerSheet> {
   @override
   Widget build(BuildContext context) {
     final exercisesAsync = ref.watch(exerciseListProvider);
+    final l10n = AppLocalizations.of(context)!;
 
     return DraggableScrollableSheet(
       initialChildSize: 0.85,
@@ -30,10 +32,10 @@ class _ExercisePickerSheetState extends ConsumerState<ExercisePickerSheet> {
               padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
               child: TextField(
                 autofocus: true,
-                decoration: const InputDecoration(
-                  prefixIcon: Icon(Icons.search),
-                  hintText: 'Search exercises',
-                  border: OutlineInputBorder(),
+                decoration: InputDecoration(
+                  prefixIcon: const Icon(Icons.search),
+                  hintText: l10n.searchExercises,
+                  border: const OutlineInputBorder(),
                   isDense: true,
                 ),
                 onChanged: (value) => setState(() => _query = value.trim().toLowerCase()),
@@ -42,7 +44,7 @@ class _ExercisePickerSheetState extends ConsumerState<ExercisePickerSheet> {
             Expanded(
               child: exercisesAsync.when(
                 loading: () => const Center(child: CircularProgressIndicator()),
-                error: (error, stack) => Center(child: Text('Error: $error')),
+                error: (error, stack) => Center(child: Text(l10n.errorMessage('$error'))),
                 data: (exercises) {
                   final filtered = _query.isEmpty
                       ? exercises
@@ -54,7 +56,10 @@ class _ExercisePickerSheetState extends ConsumerState<ExercisePickerSheet> {
                       final exercise = filtered[index];
                       return ListTile(
                         title: Text(exercise.name),
-                        subtitle: Text('${exercise.primaryMuscleGroup.label} • ${exercise.equipment.label}'),
+                        subtitle: Text(l10n.exerciseSubtitle(
+                          exercise.primaryMuscleGroup.label(context),
+                          exercise.equipment.label(context),
+                        )),
                         onTap: () => Navigator.of(context).pop<Exercise>(exercise),
                       );
                     },

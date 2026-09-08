@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../l10n/app_localizations.dart';
 import '../providers/split_providers.dart';
 
 class CreateSplitSheet extends ConsumerStatefulWidget {
@@ -33,6 +34,7 @@ class _CreateSplitSheetState extends ConsumerState<CreateSplitSheet> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Padding(
       padding: EdgeInsets.only(
         left: 16,
@@ -48,22 +50,22 @@ class _CreateSplitSheetState extends ConsumerState<CreateSplitSheet> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text('Create Split', style: Theme.of(context).textTheme.titleLarge),
+            Text(l10n.createSplitTitle, style: Theme.of(context).textTheme.titleLarge),
             const SizedBox(height: 16),
             TextFormField(
               controller: _nameController,
               autofocus: true,
-              decoration: const InputDecoration(labelText: 'Name (e.g. Push Pull Legs)'),
+              decoration: InputDecoration(labelText: l10n.splitNameLabel),
               validator: (value) =>
-                  (value == null || value.trim().isEmpty) ? 'Enter a name' : null,
+                  (value == null || value.trim().isEmpty) ? l10n.enterAName : null,
             ),
             const SizedBox(height: 12),
             TextFormField(
               controller: _descriptionController,
-              decoration: const InputDecoration(labelText: 'Description (optional)'),
+              decoration: InputDecoration(labelText: l10n.descriptionOptionalLabel),
             ),
             const SizedBox(height: 20),
-            FilledButton(onPressed: _submit, child: const Text('Create')),
+            FilledButton(onPressed: _submit, child: Text(l10n.createButton)),
           ],
         ),
       ),

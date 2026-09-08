@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../l10n/app_localizations.dart';
 import '../providers/split_providers.dart';
 
 class AddSplitDaySheet extends ConsumerStatefulWidget {
@@ -32,6 +33,7 @@ class _AddSplitDaySheetState extends ConsumerState<AddSplitDaySheet> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Padding(
       padding: EdgeInsets.only(
         left: 16,
@@ -47,17 +49,17 @@ class _AddSplitDaySheetState extends ConsumerState<AddSplitDaySheet> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text('Add Day', style: Theme.of(context).textTheme.titleLarge),
+            Text(l10n.addDayTitle, style: Theme.of(context).textTheme.titleLarge),
             const SizedBox(height: 16),
             TextFormField(
               controller: _nameController,
               autofocus: true,
-              decoration: const InputDecoration(labelText: 'Day name (e.g. Push Day)'),
+              decoration: InputDecoration(labelText: l10n.dayNameLabel),
               validator: (value) =>
-                  (value == null || value.trim().isEmpty) ? 'Enter a name' : null,
+                  (value == null || value.trim().isEmpty) ? l10n.enterAName : null,
             ),
             const SizedBox(height: 20),
-            FilledButton(onPressed: _submit, child: const Text('Add Day')),
+            FilledButton(onPressed: _submit, child: Text(l10n.addDayButton)),
           ],
         ),
       ),

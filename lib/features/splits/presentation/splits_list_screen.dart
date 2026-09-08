@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../l10n/app_localizations.dart';
 import '../providers/split_providers.dart';
 import 'create_split_sheet.dart';
 
@@ -11,9 +12,10 @@ class SplitsListScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final splitsAsync = ref.watch(splitListProvider);
+    final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Splits')),
+      appBar: AppBar(title: Text(l10n.splitsTitle)),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
           final id = await showModalBottomSheet<int>(
@@ -29,11 +31,11 @@ class SplitsListScreen extends ConsumerWidget {
         top: false,
         child: splitsAsync.when(
           loading: () => const Center(child: CircularProgressIndicator()),
-          error: (error, stack) => Center(child: Text('Error: $error')),
+          error: (error, stack) => Center(child: Text(l10n.errorMessage('$error'))),
           data: (splitList) {
             if (splitList.isEmpty) {
-              return const Center(
-                child: Text('No splits yet — tap + to create one.'),
+              return Center(
+                child: Text(l10n.noSplitsYetTapToCreate),
               );
             }
             return ListView.builder(

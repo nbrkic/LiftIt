@@ -25,6 +25,30 @@ BestSet? computeBestSet(List<WorkoutSet> sets) {
   return BestSet(set: best, estimated1Rm: bestE1rm);
 }
 
+class OneRepMax {
+  final WorkoutSet set;
+  final double weight; // kg — actual weight if tested, Epley estimate otherwise
+  final bool isTested; // true when a real 1-rep set was logged, not just estimated
+  OneRepMax({required this.set, required this.weight, required this.isTested});
+}
+
+// Prefers a genuinely tested 1RM (the heaviest set the user has ever logged
+// with exactly 1 rep — that IS their 1RM, no formula needed) over the Epley
+// estimate. Falls back to the estimate only when no single-rep set exists.
+OneRepMax? computeOneRepMax(List<WorkoutSet> sets) {
+  if (sets.isEmpty) return null;
+
+  final trueMaxAttempts = sets.where((s) => s.reps == 1).toList();
+  if (trueMaxAttempts.isNotEmpty) {
+    trueMaxAttempts.sort((a, b) => b.weight.compareTo(a.weight));
+    final best = trueMaxAttempts.first;
+    return OneRepMax(set: best, weight: best.weight, isTested: true);
+  }
+
+  final best = computeBestSet(sets)!;
+  return OneRepMax(set: best.set, weight: best.estimated1Rm, isTested: false);
+}
+
 class ProgressPoint {
   final DateTime date;
   final double estimated1Rm;

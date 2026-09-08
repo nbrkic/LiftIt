@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../database/enums.dart';
+import '../../../l10n/app_localizations.dart';
 import '../providers/exercise_providers.dart';
 
 class AddExerciseSheet extends ConsumerStatefulWidget {
@@ -34,6 +35,7 @@ class _AddExerciseSheetState extends ConsumerState<AddExerciseSheet> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Padding(
       padding: EdgeInsets.only(
         left: 16,
@@ -49,34 +51,34 @@ class _AddExerciseSheetState extends ConsumerState<AddExerciseSheet> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text('Add Custom Exercise', style: Theme.of(context).textTheme.titleLarge),
+            Text(l10n.addExerciseTitle, style: Theme.of(context).textTheme.titleLarge),
             const SizedBox(height: 16),
             TextFormField(
               controller: _nameController,
-              decoration: const InputDecoration(labelText: 'Name'),
+              decoration: InputDecoration(labelText: l10n.nameLabel),
               validator: (value) =>
-                  (value == null || value.trim().isEmpty) ? 'Enter a name' : null,
+                  (value == null || value.trim().isEmpty) ? l10n.enterAName : null,
             ),
             const SizedBox(height: 12),
             DropdownButtonFormField<MuscleGroup>(
               initialValue: _muscleGroup,
-              decoration: const InputDecoration(labelText: 'Muscle group'),
+              decoration: InputDecoration(labelText: l10n.muscleGroupLabel),
               items: MuscleGroup.values
-                  .map((m) => DropdownMenuItem(value: m, child: Text(m.label)))
+                  .map((m) => DropdownMenuItem(value: m, child: Text(m.label(context))))
                   .toList(),
               onChanged: (value) => setState(() => _muscleGroup = value!),
             ),
             const SizedBox(height: 12),
             DropdownButtonFormField<Equipment>(
               initialValue: _equipment,
-              decoration: const InputDecoration(labelText: 'Equipment'),
+              decoration: InputDecoration(labelText: l10n.equipmentLabel),
               items: Equipment.values
-                  .map((e) => DropdownMenuItem(value: e, child: Text(e.label)))
+                  .map((e) => DropdownMenuItem(value: e, child: Text(e.label(context))))
                   .toList(),
               onChanged: (value) => setState(() => _equipment = value!),
             ),
             const SizedBox(height: 20),
-            FilledButton(onPressed: _submit, child: const Text('Add Exercise')),
+            FilledButton(onPressed: _submit, child: Text(l10n.addExerciseButton)),
           ],
         ),
       ),

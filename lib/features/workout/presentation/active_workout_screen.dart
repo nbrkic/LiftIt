@@ -8,6 +8,7 @@ import '../../../database/app_database.dart';
 import '../../../database/enums.dart';
 import '../../../database/queries/split_queries.dart';
 import '../../../database/queries/workout_queries.dart';
+import '../../../l10n/app_localizations.dart';
 import '../../../providers/database_provider.dart';
 import '../../profile/providers/profile_providers.dart';
 import '../../splits/providers/split_providers.dart';
@@ -145,6 +146,7 @@ class _ActiveWorkoutScreenState extends ConsumerState<ActiveWorkoutScreen> {
     }
 
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
     final unit = ref.watch(preferredWeightUnitProvider);
     final session = ref.watch(activeSessionProvider).value;
     final setsAsync = ref.watch(activeSessionSetsProvider);
@@ -161,23 +163,23 @@ class _ActiveWorkoutScreenState extends ConsumerState<ActiveWorkoutScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Active Workout'),
+        title: Text(l10n.activeWorkoutTitle),
         leading: IconButton(
           icon: const Icon(Icons.close),
           onPressed: () => Navigator.of(context).pop(),
         ),
-        actions: [TextButton(onPressed: _finish, child: const Text('Finish'))],
+        actions: [TextButton(onPressed: _finish, child: Text(l10n.finishButton))],
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: _addNewExercise,
         icon: const Icon(Icons.add),
-        label: const Text('Add Exercise'),
+        label: Text(l10n.addExerciseFabLabel),
       ),
       body: SafeArea(
         top: false,
         child: setsAsync.when(
           loading: () => const Center(child: CircularProgressIndicator()),
-          error: (error, stack) => Center(child: Text('Error: $error')),
+          error: (error, stack) => Center(child: Text(l10n.errorMessage('$error'))),
           data: (sets) {
             final volume = sets
                 .where((s) => !s.set.isWarmup)
@@ -208,15 +210,13 @@ class _ActiveWorkoutScreenState extends ConsumerState<ActiveWorkoutScreen> {
                 const Divider(height: 1),
                 Expanded(
                   child: groups.isEmpty
-                      ? const Center(
-                          child: Text(
-                            'No sets logged yet — tap "Add Exercise" to start.',
-                          ),
+                      ? Center(
+                          child: Text(l10n.noSetsLoggedTapAddExercise),
                         )
                       : ListView(
                           padding: const EdgeInsets.symmetric(vertical: 8),
                           children: groups
-                              .map((g) => _buildGroupCard(theme, unit, g))
+                              .map((g) => _buildGroupCard(theme, l10n, unit, g))
                               .toList(),
                         ),
                 ),
@@ -229,6 +229,7 @@ class _ActiveWorkoutScreenState extends ConsumerState<ActiveWorkoutScreen> {
   }
 
   Widget _buildRestBanner(ThemeData theme, Duration restElapsed) {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       color: theme.colorScheme.primaryContainer,
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -237,7 +238,7 @@ class _ActiveWorkoutScreenState extends ConsumerState<ActiveWorkoutScreen> {
           Icon(Icons.timer, color: theme.colorScheme.onPrimaryContainer),
           const SizedBox(width: 8),
           Text(
-            'Rest: ${_formatElapsed(restElapsed)}',
+            l10n.restLabel(_formatElapsed(restElapsed)),
             style: theme.textTheme.titleMedium?.copyWith(
               color: theme.colorScheme.onPrimaryContainer,
             ),
@@ -249,13 +250,14 @@ class _ActiveWorkoutScreenState extends ConsumerState<ActiveWorkoutScreen> {
 
   Widget _buildGroupCard(
     ThemeData theme,
+    AppLocalizations l10n,
     WeightUnit unit,
     _ExerciseGroup group,
   ) {
     final repsRange =
         group.planned?.targetRepsLow != null &&
             group.planned?.targetRepsHigh != null
-        ? '${group.planned!.targetRepsLow}-${group.planned!.targetRepsHigh} reps'
+        ? l10n.repsRange(group.planned!.targetRepsLow!, group.planned!.targetRepsHigh!)
         : null;
 
     return Card(
@@ -277,13 +279,13 @@ class _ActiveWorkoutScreenState extends ConsumerState<ActiveWorkoutScreen> {
                       ),
                       if (group.planned != null)
                         Text(
-                          '${group.sets.length}/${group.planned!.targetSets} sets'
-                          '${repsRange != null ? ' • $repsRange' : ''}',
+                          l10n.setsProgress(group.sets.length, group.planned!.targetSets) +
+                              (repsRange != null ? ' • $repsRange' : ''),
                           style: theme.textTheme.bodySmall,
                         )
                       else if (group.sets.isNotEmpty)
                         Text(
-                          '${group.sets.length} sets',
+                          l10n.setsCount(group.sets.length),
                           style: theme.textTheme.bodySmall,
                         ),
                     ],
@@ -300,9 +302,9 @@ class _ActiveWorkoutScreenState extends ConsumerState<ActiveWorkoutScreen> {
                 dense: true,
                 contentPadding: EdgeInsets.zero,
                 title: Text(
-                  'Set ${set.setNumber}  •  ${formatWeight(set.weight, unit)} × ${set.reps}'
-                  '${set.rpe != null ? ' @ RPE ${set.rpe}' : ''}'
-                  '${set.isWarmup ? ' (warm-up)' : ''}',
+                  l10n.setRowLabel(set.setNumber, formatWeight(set.weight, unit), set.reps) +
+                      (set.rpe != null ? l10n.rpeSuffix('${set.rpe}') : '') +
+                      (set.isWarmup ? l10n.warmupSuffix : ''),
                 ),
                 subtitle: set.notes != null && set.notes!.isNotEmpty
                     ? Text(set.notes!, style: const TextStyle(fontStyle: FontStyle.italic))

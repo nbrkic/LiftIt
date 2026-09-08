@@ -42,11 +42,12 @@ Duration? computeAverageDuration(List<WorkoutSession> sessions) {
 class ExercisePr {
   final String exerciseName;
   final int exerciseId;
-  final BestSet bestSet;
-  ExercisePr({required this.exerciseName, required this.exerciseId, required this.bestSet});
+  final OneRepMax oneRepMax;
+  ExercisePr({required this.exerciseName, required this.exerciseId, required this.oneRepMax});
 }
 
-// One PR (best estimated-1RM set) per exercise, sorted strongest-first.
+// One PR (tested 1RM if the user has ever logged a genuine 1-rep set,
+// otherwise the best estimate) per exercise, sorted strongest-first.
 List<ExercisePr> computeAllPrs(List<WorkoutSetWithExercise> allSets) {
   final byExercise = <int, List<WorkoutSet>>{};
   final names = <int, String>{};
@@ -58,9 +59,9 @@ List<ExercisePr> computeAllPrs(List<WorkoutSetWithExercise> allSets) {
       .map((e) => ExercisePr(
             exerciseId: e.key,
             exerciseName: names[e.key]!,
-            bestSet: computeBestSet(e.value)!,
+            oneRepMax: computeOneRepMax(e.value)!,
           ))
       .toList();
-  prs.sort((a, b) => b.bestSet.estimated1Rm.compareTo(a.bestSet.estimated1Rm));
+  prs.sort((a, b) => b.oneRepMax.weight.compareTo(a.oneRepMax.weight));
   return prs;
 }

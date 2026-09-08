@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class TrainingCalendar extends StatefulWidget {
   final Set<DateTime> workoutDays; // day-truncated (y, m, d), local time
@@ -13,11 +14,9 @@ class TrainingCalendar extends StatefulWidget {
 class _TrainingCalendarState extends State<TrainingCalendar> {
   late DateTime _displayedMonth;
 
-  static const _weekdayLabels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-  static const _monthNames = [
-    'January', 'February', 'March', 'April', 'May', 'June',
-    'July', 'August', 'September', 'October', 'November', 'December',
-  ];
+  // 2024-01-01 was a Monday — used only as an anchor to derive locale-correct
+  // abbreviated weekday names Mon..Sun, not a real displayed date.
+  static final _mondayAnchor = DateTime(2024, 1, 1);
 
   @override
   void initState() {
@@ -39,10 +38,16 @@ class _TrainingCalendarState extends State<TrainingCalendar> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final locale = Localizations.localeOf(context).toString();
     final today = DateTime.now();
     final firstOfMonth = DateTime(_displayedMonth.year, _displayedMonth.month, 1);
     final daysInMonth = DateTime(_displayedMonth.year, _displayedMonth.month + 1, 0).day;
     final leadingBlanks = firstOfMonth.weekday - 1; // Monday-first grid
+
+    final weekdayLabels = List.generate(
+      7,
+      (i) => DateFormat.E(locale).format(_mondayAnchor.add(Duration(days: i))),
+    );
 
     final cells = <Widget>[
       for (var i = 0; i < leadingBlanks; i++) const SizedBox.shrink(),
@@ -56,14 +61,14 @@ class _TrainingCalendarState extends State<TrainingCalendar> {
           children: [
             IconButton(icon: const Icon(Icons.chevron_left), onPressed: _goToPreviousMonth),
             Text(
-              '${_monthNames[_displayedMonth.month - 1]} ${_displayedMonth.year}',
+              '${DateFormat.MMMM(locale).format(_displayedMonth)} ${_displayedMonth.year}',
               style: theme.textTheme.titleMedium,
             ),
             IconButton(icon: const Icon(Icons.chevron_right), onPressed: _goToNextMonth),
           ],
         ),
         Row(
-          children: _weekdayLabels
+          children: weekdayLabels
               .map((label) => Expanded(
                     child: Center(child: Text(label, style: theme.textTheme.labelSmall)),
                   ))

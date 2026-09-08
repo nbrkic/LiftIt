@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../l10n/app_localizations.dart';
 import '../providers/split_providers.dart';
 import 'add_split_day_sheet.dart';
 
@@ -14,9 +15,10 @@ class SplitDetailScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final splitAsync = ref.watch(splitByIdProvider(splitId));
     final daysAsync = ref.watch(splitDaysProvider(splitId));
+    final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
-      appBar: AppBar(title: Text(splitAsync.value?.name ?? 'Split')),
+      appBar: AppBar(title: Text(splitAsync.value?.name ?? l10n.splitFallbackTitle)),
       floatingActionButton: FloatingActionButton(
         onPressed: () => showModalBottomSheet(
           context: context,
@@ -29,11 +31,11 @@ class SplitDetailScreen extends ConsumerWidget {
         top: false,
         child: daysAsync.when(
           loading: () => const Center(child: CircularProgressIndicator()),
-          error: (error, stack) => Center(child: Text('Error: $error')),
+          error: (error, stack) => Center(child: Text(l10n.errorMessage('$error'))),
           data: (days) {
             if (days.isEmpty) {
-              return const Center(
-                child: Text('No days yet — tap + to add one.'),
+              return Center(
+                child: Text(l10n.noDaysYetTapToAdd),
               );
             }
             return ListView.builder(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../common/weight_format.dart';
+import '../../../l10n/app_localizations.dart';
 import '../providers/profile_providers.dart';
 
 class LogBodyweightSheet extends ConsumerStatefulWidget {
@@ -36,6 +37,7 @@ class _LogBodyweightSheetState extends ConsumerState<LogBodyweightSheet> {
   @override
   Widget build(BuildContext context) {
     final unit = ref.watch(preferredWeightUnitProvider);
+    final l10n = AppLocalizations.of(context)!;
 
     return Padding(
       padding: EdgeInsets.only(
@@ -52,23 +54,23 @@ class _LogBodyweightSheetState extends ConsumerState<LogBodyweightSheet> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text('Log Weigh-in', style: Theme.of(context).textTheme.titleLarge),
+            Text(l10n.logWeighInTitle, style: Theme.of(context).textTheme.titleLarge),
             const SizedBox(height: 16),
             TextFormField(
               controller: _weightController,
               autofocus: true,
               keyboardType: const TextInputType.numberWithOptions(decimal: true),
-              decoration: InputDecoration(labelText: 'Weight (${unitLabel(unit)})'),
+              decoration: InputDecoration(labelText: l10n.weightLabelWithUnit(unitLabel(unit))),
               validator: (value) =>
-                  double.tryParse((value ?? '').replaceAll(',', '.')) == null ? 'Invalid' : null,
+                  double.tryParse((value ?? '').replaceAll(',', '.')) == null ? l10n.invalid : null,
             ),
             const SizedBox(height: 12),
             TextFormField(
               controller: _notesController,
-              decoration: const InputDecoration(labelText: 'Notes (optional)'),
+              decoration: InputDecoration(labelText: l10n.notesOptionalLabel),
             ),
             const SizedBox(height: 20),
-            FilledButton(onPressed: _submit, child: const Text('Log Weight')),
+            FilledButton(onPressed: _submit, child: Text(l10n.logWeightButton)),
           ],
         ),
       ),

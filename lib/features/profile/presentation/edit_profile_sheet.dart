@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../database/app_database.dart';
 import '../../../database/enums.dart';
+import '../../../l10n/app_localizations.dart';
 import '../providers/profile_providers.dart';
 
 class EditProfileSheet extends ConsumerStatefulWidget {
@@ -74,6 +75,7 @@ class _EditProfileSheetState extends ConsumerState<EditProfileSheet> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Padding(
       padding: EdgeInsets.only(
         left: 16,
@@ -90,20 +92,20 @@ class _EditProfileSheetState extends ConsumerState<EditProfileSheet> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Text('Edit Profile', style: Theme.of(context).textTheme.titleLarge),
+              Text(l10n.editProfileTitle, style: Theme.of(context).textTheme.titleLarge),
               const SizedBox(height: 16),
               TextFormField(
                 controller: _nameController,
-                decoration: const InputDecoration(labelText: 'Name'),
+                decoration: InputDecoration(labelText: l10n.nameLabel),
               ),
               const SizedBox(height: 12),
               InkWell(
                 onTap: _pickBirthDate,
                 child: InputDecorator(
-                  decoration: const InputDecoration(labelText: 'Date of birth'),
+                  decoration: InputDecoration(labelText: l10n.dateOfBirthLabel),
                   child: Text(
                     _birthDate == null
-                        ? 'Not set'
+                        ? l10n.notSet
                         : '${_birthDate!.day.toString().padLeft(2, '0')}.${_birthDate!.month.toString().padLeft(2, '0')}.${_birthDate!.year}',
                   ),
                 ),
@@ -111,9 +113,9 @@ class _EditProfileSheetState extends ConsumerState<EditProfileSheet> {
               const SizedBox(height: 12),
               DropdownButtonFormField<Gender>(
                 initialValue: _gender,
-                decoration: const InputDecoration(labelText: 'Gender'),
+                decoration: InputDecoration(labelText: l10n.genderLabel),
                 items: Gender.values
-                    .map((g) => DropdownMenuItem(value: g, child: Text(g.label)))
+                    .map((g) => DropdownMenuItem(value: g, child: Text(g.label(context))))
                     .toList(),
                 onChanged: (value) => setState(() => _gender = value),
               ),
@@ -121,32 +123,32 @@ class _EditProfileSheetState extends ConsumerState<EditProfileSheet> {
               TextFormField(
                 controller: _heightController,
                 keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                decoration: const InputDecoration(labelText: 'Height (cm)'),
+                decoration: InputDecoration(labelText: l10n.heightLabel),
               ),
               const SizedBox(height: 12),
               DropdownButtonFormField<ExperienceLevel>(
                 initialValue: _experienceLevel,
-                decoration: const InputDecoration(labelText: 'Experience level'),
+                decoration: InputDecoration(labelText: l10n.experienceLevelLabel),
                 items: ExperienceLevel.values
-                    .map((e) => DropdownMenuItem(value: e, child: Text(e.label)))
+                    .map((e) => DropdownMenuItem(value: e, child: Text(e.label(context))))
                     .toList(),
                 onChanged: (value) => setState(() => _experienceLevel = value),
               ),
               const SizedBox(height: 12),
               DropdownButtonFormField<TrainingGoal>(
                 initialValue: _primaryGoal,
-                decoration: const InputDecoration(labelText: 'Primary goal'),
+                decoration: InputDecoration(labelText: l10n.primaryGoalLabel),
                 items: TrainingGoal.values
-                    .map((g) => DropdownMenuItem(value: g, child: Text(g.label)))
+                    .map((g) => DropdownMenuItem(value: g, child: Text(g.label(context))))
                     .toList(),
                 onChanged: (value) => setState(() => _primaryGoal = value),
               ),
               const SizedBox(height: 12),
               DropdownButtonFormField<WeightUnit>(
                 initialValue: _weightUnit,
-                decoration: const InputDecoration(labelText: 'Preferred weight unit'),
+                decoration: InputDecoration(labelText: l10n.preferredWeightUnitLabel),
                 items: WeightUnit.values
-                    .map((u) => DropdownMenuItem(value: u, child: Text(u.label)))
+                    .map((u) => DropdownMenuItem(value: u, child: Text(u.label(context))))
                     .toList(),
                 onChanged: (value) => setState(() => _weightUnit = value!),
               ),
@@ -154,10 +156,10 @@ class _EditProfileSheetState extends ConsumerState<EditProfileSheet> {
               TextFormField(
                 controller: _weeklyGoalController,
                 keyboardType: TextInputType.number,
-                decoration: const InputDecoration(labelText: 'Weekly training goal (days)'),
+                decoration: InputDecoration(labelText: l10n.weeklyTrainingGoalLabel),
               ),
               const SizedBox(height: 20),
-              FilledButton(onPressed: _submit, child: const Text('Save')),
+              FilledButton(onPressed: _submit, child: Text(l10n.saveButton)),
             ],
           ),
         ),

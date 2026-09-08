@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../common/weight_format.dart';
 import '../../../database/app_database.dart';
+import '../../../l10n/app_localizations.dart';
 import '../../profile/providers/profile_providers.dart';
 import '../providers/active_workout_providers.dart';
 
@@ -60,6 +61,7 @@ class _LogSetSheetState extends ConsumerState<LogSetSheet> {
   @override
   Widget build(BuildContext context) {
     final unit = ref.watch(preferredWeightUnitProvider);
+    final l10n = AppLocalizations.of(context)!;
 
     return Padding(
       padding: EdgeInsets.only(
@@ -77,7 +79,7 @@ class _LogSetSheetState extends ConsumerState<LogSetSheet> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Text(widget.exercise.name, style: Theme.of(context).textTheme.titleLarge),
-            Text('Set ${widget.nextSetNumber}', style: Theme.of(context).textTheme.bodyMedium),
+            Text(l10n.setNumberLabel(widget.nextSetNumber), style: Theme.of(context).textTheme.bodyMedium),
             const SizedBox(height: 16),
             Row(
               children: [
@@ -86,9 +88,9 @@ class _LogSetSheetState extends ConsumerState<LogSetSheet> {
                     controller: _weightController,
                     autofocus: true,
                     keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                    decoration: InputDecoration(labelText: 'Weight (${unitLabel(unit)})'),
+                    decoration: InputDecoration(labelText: l10n.weightLabelWithUnit(unitLabel(unit))),
                     validator: (value) =>
-                        double.tryParse((value ?? '').replaceAll(',', '.')) == null ? 'Invalid' : null,
+                        double.tryParse((value ?? '').replaceAll(',', '.')) == null ? l10n.invalid : null,
                   ),
                 ),
                 const SizedBox(width: 12),
@@ -96,8 +98,8 @@ class _LogSetSheetState extends ConsumerState<LogSetSheet> {
                   child: TextFormField(
                     controller: _repsController,
                     keyboardType: TextInputType.number,
-                    decoration: const InputDecoration(labelText: 'Reps'),
-                    validator: (value) => int.tryParse(value ?? '') == null ? 'Invalid' : null,
+                    decoration: InputDecoration(labelText: l10n.repsLabel),
+                    validator: (value) => int.tryParse(value ?? '') == null ? l10n.invalid : null,
                   ),
                 ),
               ],
@@ -106,28 +108,28 @@ class _LogSetSheetState extends ConsumerState<LogSetSheet> {
             TextFormField(
               controller: _rpeController,
               keyboardType: const TextInputType.numberWithOptions(decimal: true),
-              decoration: const InputDecoration(labelText: 'RPE (optional, 1-10)'),
+              decoration: InputDecoration(labelText: l10n.rpeOptionalLabel),
               validator: (value) {
                 if (value == null || value.trim().isEmpty) return null;
                 final parsed = double.tryParse(value.replaceAll(',', '.'));
-                if (parsed == null || parsed < 1 || parsed > 10) return '1-10';
+                if (parsed == null || parsed < 1 || parsed > 10) return l10n.rpeRangeError;
                 return null;
               },
             ),
             const SizedBox(height: 12),
             TextFormField(
               controller: _notesController,
-              decoration: const InputDecoration(labelText: 'Note (optional)'),
+              decoration: InputDecoration(labelText: l10n.noteOptionalLabel),
               maxLines: 2,
             ),
             SwitchListTile(
               contentPadding: EdgeInsets.zero,
-              title: const Text('Warm-up set'),
+              title: Text(l10n.warmupSetLabel),
               value: _isWarmup,
               onChanged: (value) => setState(() => _isWarmup = value),
             ),
             const SizedBox(height: 8),
-            FilledButton(onPressed: _submit, child: const Text('Log Set')),
+            FilledButton(onPressed: _submit, child: Text(l10n.logSetButton)),
           ],
         ),
       ),

@@ -7,7 +7,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:share_plus/share_plus.dart';
 
 import '../../../database/backup_service.dart';
+import '../../../l10n/app_localizations.dart';
 import '../../../providers/database_provider.dart';
+import '../../../providers/locale_provider.dart';
 import '../../../providers/theme_provider.dart';
 
 const _appVersion = '1.0.0';
@@ -17,38 +19,38 @@ class SettingsScreen extends ConsumerWidget {
 
   Future<void> _exportBackup(BuildContext context, WidgetRef ref) async {
     final messenger = ScaffoldMessenger.of(context);
+    final l10n = AppLocalizations.of(context)!;
     try {
       final db = ref.read(appDatabaseProvider);
       final file = await BackupService(db).exportBackup();
       await SharePlus.instance.share(
-        ShareParams(files: [XFile(file.path)], text: 'LiftIt backup'),
+        ShareParams(files: [XFile(file.path)], text: l10n.backupShareText),
       );
     } catch (e) {
-      messenger.showSnackBar(SnackBar(content: Text('Export failed: $e')));
+      messenger.showSnackBar(SnackBar(content: Text(l10n.exportFailed('$e'))));
     }
   }
 
   Future<void> _restoreBackup(BuildContext context, WidgetRef ref) async {
+    final l10n = AppLocalizations.of(context)!;
     final picked = await FilePicker.pickFile(
-      dialogTitle: 'Select LiftIt backup file',
+      dialogTitle: l10n.selectBackupFileTitle,
     );
     if (picked?.path == null || !context.mounted) return;
 
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        title: const Text('Restore backup?'),
-        content: const Text(
-          'This will replace all current data on this device with the backup. This cannot be undone.',
-        ),
+        title: Text(l10n.restoreBackupDialogTitle),
+        content: Text(l10n.restoreBackupDialogContent),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(dialogContext).pop(false),
-            child: const Text('Cancel'),
+            child: Text(l10n.cancelButton),
           ),
           FilledButton(
             onPressed: () => Navigator.of(dialogContext).pop(true),
-            child: const Text('Restore'),
+            child: Text(l10n.restoreButton),
           ),
         ],
       ),
@@ -64,14 +66,12 @@ class SettingsScreen extends ConsumerWidget {
         context: context,
         barrierDismissible: false,
         builder: (dialogContext) => AlertDialog(
-          title: const Text('Restore complete'),
-          content: const Text(
-            'LiftIt will now close. Reopen the app to see your restored data.',
-          ),
+          title: Text(l10n.restoreCompleteTitle),
+          content: Text(l10n.restoreCompleteContent),
           actions: [
             FilledButton(
               onPressed: () => SystemNavigator.pop(),
-              child: const Text('Close App'),
+              child: Text(l10n.closeAppButton),
             ),
           ],
         ),
@@ -82,32 +82,34 @@ class SettingsScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final themeMode = ref.watch(themeModeProvider);
+    final locale = ref.watch(localeProvider);
+    final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Settings')),
+      appBar: AppBar(title: Text(l10n.settingsTitle)),
       body: SafeArea(
         top: false,
         child: ListView(
           padding: const EdgeInsets.all(16),
           children: [
-            Text('Appearance', style: Theme.of(context).textTheme.titleMedium),
+            Text(l10n.appearanceLabel, style: Theme.of(context).textTheme.titleMedium),
             const SizedBox(height: 12),
             SegmentedButton<ThemeMode>(
-              segments: const [
+              segments: [
                 ButtonSegment(
                   value: ThemeMode.system,
-                  label: Text('System'),
-                  icon: Icon(Icons.brightness_auto),
+                  label: Text(l10n.themeSystem),
+                  icon: const Icon(Icons.brightness_auto),
                 ),
                 ButtonSegment(
                   value: ThemeMode.light,
-                  label: Text('Light'),
-                  icon: Icon(Icons.light_mode),
+                  label: Text(l10n.themeLight),
+                  icon: const Icon(Icons.light_mode),
                 ),
                 ButtonSegment(
                   value: ThemeMode.dark,
-                  label: Text('Dark'),
-                  icon: Icon(Icons.dark_mode),
+                  label: Text(l10n.themeDark),
+                  icon: const Icon(Icons.dark_mode),
                 ),
               ],
               selected: {themeMode},
@@ -116,29 +118,41 @@ class SettingsScreen extends ConsumerWidget {
                   .setThemeMode(selection.first),
             ),
             const SizedBox(height: 32),
+            Text(l10n.languageLabel, style: Theme.of(context).textTheme.titleMedium),
+            const SizedBox(height: 12),
+            SegmentedButton<Locale>(
+              segments: [
+                ButtonSegment(value: const Locale('en'), label: Text(l10n.languageEnglish)),
+                ButtonSegment(value: const Locale('sr'), label: Text(l10n.languageSerbian)),
+              ],
+              selected: {locale ?? Localizations.localeOf(context)},
+              onSelectionChanged: (selection) =>
+                  ref.read(localeProvider.notifier).setLocale(selection.first),
+            ),
+            const SizedBox(height: 32),
             Text(
-              'Backup & Restore',
+              l10n.backupRestoreLabel,
               style: Theme.of(context).textTheme.titleMedium,
             ),
             const SizedBox(height: 4),
             Text(
-              'All your data lives only on this device. Export a backup regularly so you never lose your training history.',
+              l10n.backupDescription,
               style: Theme.of(context).textTheme.bodySmall,
             ),
             const SizedBox(height: 12),
             FilledButton.icon(
               onPressed: () => _exportBackup(context, ref),
               icon: const Icon(Icons.upload_outlined),
-              label: const Text('Export Backup'),
+              label: Text(l10n.exportBackupButton),
             ),
             const SizedBox(height: 8),
             OutlinedButton.icon(
               onPressed: () => _restoreBackup(context, ref),
               icon: const Icon(Icons.download_outlined),
-              label: const Text('Restore from Backup'),
+              label: Text(l10n.restoreFromBackupButton),
             ),
             const SizedBox(height: 32),
-            Text('About', style: Theme.of(context).textTheme.titleMedium),
+            Text(l10n.aboutLabel, style: Theme.of(context).textTheme.titleMedium),
             const SizedBox(height: 12),
             Card(
               child: Padding(
@@ -147,15 +161,13 @@ class SettingsScreen extends ConsumerWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'LiftIt',
+                      l10n.appTitle,
                       style: Theme.of(context).textTheme.titleLarge,
                     ),
                     const SizedBox(height: 4),
-                    const Text('Version $_appVersion'),
+                    Text(l10n.versionLabel(_appVersion)),
                     const SizedBox(height: 8),
-                    const Text(
-                      'A free, no-nonsense gym tracker. All your data stays on this device.',
-                    ),
+                    Text(l10n.aboutDescription),
                   ],
                 ),
               ),

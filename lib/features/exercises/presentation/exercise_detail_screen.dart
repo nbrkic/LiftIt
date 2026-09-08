@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../common/weight_format.dart';
 import '../../../database/app_database.dart';
 import '../../../database/enums.dart';
+import '../../../l10n/app_localizations.dart';
 import '../../profile/providers/profile_providers.dart';
 import '../providers/exercise_providers.dart';
 import '../providers/exercise_stats_providers.dart';
@@ -19,6 +20,7 @@ class ExerciseDetailScreen extends ConsumerWidget {
     final exercisesAsync = ref.watch(exerciseListProvider);
     final setsAsync = ref.watch(exerciseSetsProvider(exerciseId));
     final unit = ref.watch(preferredWeightUnitProvider);
+    final l10n = AppLocalizations.of(context)!;
 
     Exercise? exercise;
     for (final e in exercisesAsync.value ?? const <Exercise>[]) {
@@ -29,15 +31,15 @@ class ExerciseDetailScreen extends ConsumerWidget {
     }
 
     return Scaffold(
-      appBar: AppBar(title: Text(exercise?.name ?? 'Exercise')),
+      appBar: AppBar(title: Text(exercise?.name ?? l10n.exerciseFallbackTitle)),
       body: setsAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (error, stack) => Center(child: Text('Error: $error')),
+        error: (error, stack) => Center(child: Text(l10n.errorMessage('$error'))),
         data: (sets) {
           if (sets.isEmpty) {
-            return const Center(child: Text('No sets logged for this exercise yet.'));
+            return Center(child: Text(l10n.noSetsLoggedForExercise));
           }
-          final best = computeBestSet(sets)!;
+          final oneRm = computeOneRepMax(sets)!;
           final points = computeProgressPoints(sets);
 
           return ListView(
@@ -49,32 +51,35 @@ class ExerciseDetailScreen extends ConsumerWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('Personal Record', style: Theme.of(context).textTheme.labelLarge),
+                      Text(l10n.personalRecord, style: Theme.of(context).textTheme.labelLarge),
                       const SizedBox(height: 4),
                       Text(
-                        '${formatWeight(best.set.weight, unit)} × ${best.set.reps}'
-                        '${best.set.rpe != null ? ' @ RPE ${best.set.rpe}' : ''}',
+                        l10n.timesReps(formatWeight(oneRm.set.weight, unit), oneRm.set.reps) +
+                            (oneRm.set.rpe != null ? l10n.rpeSuffix('${oneRm.set.rpe}') : ''),
                         style: Theme.of(context).textTheme.headlineSmall,
                       ),
-                      Text('Estimated 1RM: ${formatWeight(best.estimated1Rm, unit)}'),
+                      Text(
+                        '${oneRm.isTested ? l10n.oneRepMaxTested : l10n.estimatedOneRepMax}: '
+                        '${formatWeight(oneRm.weight, unit)}',
+                      ),
                     ],
                   ),
                 ),
               ),
               if (points.length > 1) ...[
                 const SizedBox(height: 24),
-                Text('Progress (est. 1RM)', style: Theme.of(context).textTheme.titleMedium),
+                Text(l10n.progressChartTitle, style: Theme.of(context).textTheme.titleMedium),
                 const SizedBox(height: 12),
                 SizedBox(height: 200, child: _ProgressChart(points: points, unit: unit)),
               ],
               const SizedBox(height: 24),
-              Text('History', style: Theme.of(context).textTheme.titleMedium),
+              Text(l10n.historyLabel, style: Theme.of(context).textTheme.titleMedium),
               const SizedBox(height: 8),
               ...sets.reversed.map((set) => ListTile(
                     contentPadding: EdgeInsets.zero,
                     title: Text(
-                      '${formatWeight(set.weight, unit)} × ${set.reps}'
-                      '${set.rpe != null ? ' @ RPE ${set.rpe}' : ''}',
+                      l10n.timesReps(formatWeight(set.weight, unit), set.reps) +
+                          (set.rpe != null ? l10n.rpeSuffix('${set.rpe}') : ''),
                     ),
                     subtitle: Text(_formatDate(set.completedAt)),
                   )),

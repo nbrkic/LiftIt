@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../database/enums.dart';
+import '../../../l10n/app_localizations.dart';
 import '../providers/profile_providers.dart';
 import 'edit_profile_sheet.dart';
 
@@ -22,10 +23,11 @@ class ProfileScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final profileAsync = ref.watch(userProfileProvider);
     final unit = ref.watch(preferredWeightUnitProvider);
+    final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Profile'),
+        title: Text(l10n.profileTitle),
         leading: IconButton(
           icon: const Icon(Icons.menu),
           onPressed: () => Scaffold.of(context).openDrawer(),
@@ -43,7 +45,7 @@ class ProfileScreen extends ConsumerWidget {
       ),
       body: profileAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (error, stack) => Center(child: Text('Error: $error')),
+        error: (error, stack) => Center(child: Text(l10n.errorMessage('$error'))),
         data: (profile) {
           final age = _ageFrom(profile?.birthDate);
 
@@ -57,24 +59,24 @@ class ProfileScreen extends ConsumerWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        profile?.name?.isNotEmpty == true ? profile!.name! : 'No name set',
+                        profile?.name?.isNotEmpty == true ? profile!.name! : l10n.noNameSet,
                         style: Theme.of(context).textTheme.titleLarge,
                       ),
                       const SizedBox(height: 8),
-                      if (age != null) Text('Age: $age'),
-                      if (profile?.gender != null) Text('Gender: ${profile!.gender!.label}'),
-                      if (profile?.heightCm != null) Text('Height: ${profile!.heightCm} cm'),
+                      if (age != null) Text(l10n.ageLabel(age)),
+                      if (profile?.gender != null) Text(l10n.genderValueLabel(profile!.gender!.label(context))),
+                      if (profile?.heightCm != null) Text(l10n.heightValueLabel('${profile!.heightCm}')),
                       if (profile?.experienceLevel != null)
-                        Text('Experience: ${profile!.experienceLevel!.label}'),
+                        Text(l10n.experienceValueLabel(profile!.experienceLevel!.label(context))),
                       if (profile?.primaryGoal != null)
-                        Text('Goal: ${profile!.primaryGoal!.label}'),
+                        Text(l10n.goalValueLabel(profile!.primaryGoal!.label(context))),
                       if (profile?.weeklyTrainingGoal != null)
-                        Text('Weekly goal: ${profile!.weeklyTrainingGoal} days'),
-                      Text('Preferred unit: ${unit.label}'),
+                        Text(l10n.weeklyGoalValueLabel(profile!.weeklyTrainingGoal!)),
+                      Text(l10n.preferredUnitValueLabel(unit.label(context))),
                       if (profile == null)
-                        const Padding(
-                          padding: EdgeInsets.only(top: 8),
-                          child: Text('Tap the edit icon to fill in your profile.'),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 8),
+                          child: Text(l10n.tapEditToFillProfile),
                         ),
                     ],
                   ),

@@ -1,3 +1,6 @@
+import 'package:flutter/widgets.dart';
+import '../l10n/app_localizations.dart';
+
 enum MuscleGroup {
   chest,
   back,
@@ -33,65 +36,83 @@ enum TrainingGoal { strength, hypertrophy, endurance, weightLoss, generalFitness
 enum WeightUnit { kg, lb }
 
 extension GenderLabel on Gender {
-  String get label => switch (this) {
-        Gender.male => 'Male',
-        Gender.female => 'Female',
-        Gender.other => 'Other',
-        Gender.preferNotToSay => 'Prefer not to say',
-      };
+  String label(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    return switch (this) {
+      Gender.male => l10n.genderMale,
+      Gender.female => l10n.genderFemale,
+      Gender.other => l10n.genderOther,
+      Gender.preferNotToSay => l10n.genderPreferNotToSay,
+    };
+  }
 }
 
 extension ExperienceLevelLabel on ExperienceLevel {
-  String get label => switch (this) {
-        ExperienceLevel.beginner => 'Beginner',
-        ExperienceLevel.intermediate => 'Intermediate',
-        ExperienceLevel.advanced => 'Advanced',
-      };
+  String label(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    return switch (this) {
+      ExperienceLevel.beginner => l10n.experienceBeginner,
+      ExperienceLevel.intermediate => l10n.experienceIntermediate,
+      ExperienceLevel.advanced => l10n.experienceAdvanced,
+    };
+  }
 }
 
 extension TrainingGoalLabel on TrainingGoal {
-  String get label => switch (this) {
-        TrainingGoal.strength => 'Strength',
-        TrainingGoal.hypertrophy => 'Hypertrophy',
-        TrainingGoal.endurance => 'Endurance',
-        TrainingGoal.weightLoss => 'Weight Loss',
-        TrainingGoal.generalFitness => 'General Fitness',
-      };
+  String label(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    return switch (this) {
+      TrainingGoal.strength => l10n.goalStrength,
+      TrainingGoal.hypertrophy => l10n.goalHypertrophy,
+      TrainingGoal.endurance => l10n.goalEndurance,
+      TrainingGoal.weightLoss => l10n.goalWeightLoss,
+      TrainingGoal.generalFitness => l10n.goalGeneralFitness,
+    };
+  }
 }
 
 extension WeightUnitLabel on WeightUnit {
-  String get label => switch (this) {
-        WeightUnit.kg => 'Kilograms (kg)',
-        WeightUnit.lb => 'Pounds (lb)',
-      };
+  String label(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    return switch (this) {
+      WeightUnit.kg => l10n.weightUnitKg,
+      WeightUnit.lb => l10n.weightUnitLb,
+    };
+  }
 }
 
 extension MuscleGroupLabel on MuscleGroup {
-  String get label => switch (this) {
-        MuscleGroup.chest => 'Chest',
-        MuscleGroup.back => 'Back',
-        MuscleGroup.shoulders => 'Shoulders',
-        MuscleGroup.biceps => 'Biceps',
-        MuscleGroup.triceps => 'Triceps',
-        MuscleGroup.legs => 'Legs',
-        MuscleGroup.glutes => 'Glutes',
-        MuscleGroup.core => 'Core',
-        MuscleGroup.calves => 'Calves',
-        MuscleGroup.forearms => 'Forearms',
-        MuscleGroup.fullBody => 'Full Body',
-        MuscleGroup.cardio => 'Cardio',
-      };
+  String label(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    return switch (this) {
+      MuscleGroup.chest => l10n.muscleChest,
+      MuscleGroup.back => l10n.muscleBack,
+      MuscleGroup.shoulders => l10n.muscleShoulders,
+      MuscleGroup.biceps => l10n.muscleBiceps,
+      MuscleGroup.triceps => l10n.muscleTriceps,
+      MuscleGroup.legs => l10n.muscleLegs,
+      MuscleGroup.glutes => l10n.muscleGlutes,
+      MuscleGroup.core => l10n.muscleCore,
+      MuscleGroup.calves => l10n.muscleCalves,
+      MuscleGroup.forearms => l10n.muscleForearms,
+      MuscleGroup.fullBody => l10n.muscleFullBody,
+      MuscleGroup.cardio => l10n.muscleCardio,
+    };
+  }
 }
 
 extension EquipmentLabel on Equipment {
-  String get label => switch (this) {
-        Equipment.barbell => 'Barbell',
-        Equipment.dumbbell => 'Dumbbell',
-        Equipment.machine => 'Machine',
-        Equipment.cable => 'Cable',
-        Equipment.bodyweight => 'Bodyweight',
-        Equipment.kettlebell => 'Kettlebell',
-        Equipment.band => 'Band',
-        Equipment.other => 'Other',
-      };
+  String label(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    return switch (this) {
+      Equipment.barbell => l10n.equipmentBarbell,
+      Equipment.dumbbell => l10n.equipmentDumbbell,
+      Equipment.machine => l10n.equipmentMachine,
+      Equipment.cable => l10n.equipmentCable,
+      Equipment.bodyweight => l10n.equipmentBodyweight,
+      Equipment.kettlebell => l10n.equipmentKettlebell,
+      Equipment.band => l10n.equipmentBand,
+      Equipment.other => l10n.equipmentOther,
+    };
+  }
 }

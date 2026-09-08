@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../../common/weight_format.dart';
 import '../../../database/enums.dart';
 import '../../../database/queries/stats_queries.dart';
+import '../../../l10n/app_localizations.dart';
 import '../../history/providers/history_providers.dart';
 import '../../profile/providers/profile_providers.dart';
 import '../../profile/providers/stats_providers.dart';
@@ -28,10 +29,11 @@ class StatsScreen extends ConsumerWidget {
     final muscleVolumeAsync = ref.watch(muscleGroupVolumeProvider);
     final sessionVolumesAsync = ref.watch(sessionVolumesProvider);
     final unit = ref.watch(preferredWeightUnitProvider);
+    final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Stats'),
+        title: Text(l10n.statsTitle),
         leading: IconButton(
           icon: const Icon(Icons.menu),
           onPressed: () => Scaffold.of(context).openDrawer(),
@@ -39,10 +41,10 @@ class StatsScreen extends ConsumerWidget {
       ),
       body: sessionsAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (error, stack) => Center(child: Text('Error: $error')),
+        error: (error, stack) => Center(child: Text(l10n.errorMessage('$error'))),
         data: (sessions) {
           if (sessions.isEmpty) {
-            return const Center(child: Text('Finish a workout to see stats here.'));
+            return Center(child: Text(l10n.finishWorkoutToSeeStats));
           }
 
           final streak = computeStreakWeeks(sessions);
@@ -60,17 +62,17 @@ class StatsScreen extends ConsumerWidget {
                 crossAxisSpacing: 12,
                 childAspectRatio: 1.6,
                 children: [
-                  _StatTile(label: 'Total Workouts', value: '${sessions.length}'),
-                  _StatTile(label: 'Current Streak', value: '$streak wk'),
-                  _StatTile(label: 'Avg / Week', value: avgPerWeek.toStringAsFixed(1)),
+                  _StatTile(label: l10n.totalWorkouts, value: '${sessions.length}'),
+                  _StatTile(label: l10n.currentStreak, value: l10n.streakWeeks(streak)),
+                  _StatTile(label: l10n.avgPerWeek, value: avgPerWeek.toStringAsFixed(1)),
                   _StatTile(
-                    label: 'Avg Duration',
-                    value: avgDuration == null ? '-' : '${avgDuration.inMinutes} min',
+                    label: l10n.avgDuration,
+                    value: avgDuration == null ? '-' : l10n.durationMinutes(avgDuration.inMinutes),
                   ),
                 ],
               ),
               const SizedBox(height: 24),
-              Text('Training Volume (weekly)', style: Theme.of(context).textTheme.titleMedium),
+              Text(l10n.trainingVolumeWeekly, style: Theme.of(context).textTheme.titleMedium),
               const SizedBox(height: 12),
               sessionVolumesAsync.when(
                 loading: () => const SizedBox.shrink(),
@@ -78,33 +80,33 @@ class StatsScreen extends ConsumerWidget {
                 data: (sessions) {
                   final weeks = computeWeeklyVolume(sessions);
                   if (weeks.every((w) => w.volume == 0)) {
-                    return const Text('No completed workouts yet');
+                    return Text(l10n.noCompletedWorkoutsYet);
                   }
                   return SizedBox(height: 160, child: _VolumeChart(weeks: weeks, unit: unit));
                 },
               ),
               const SizedBox(height: 24),
-              Text('Personal Records', style: Theme.of(context).textTheme.titleMedium),
+              Text(l10n.personalRecords, style: Theme.of(context).textTheme.titleMedium),
               const SizedBox(height: 8),
               allSetsAsync.when(
                 loading: () => const Padding(
                   padding: EdgeInsets.all(16),
                   child: Center(child: CircularProgressIndicator()),
                 ),
-                error: (error, stack) => Text('Error: $error'),
+                error: (error, stack) => Text(l10n.errorMessage('$error')),
                 data: (allSets) {
                   final prs = computeAllPrs(allSets);
-                  if (prs.isEmpty) return const Text('No sets logged yet.');
+                  if (prs.isEmpty) return Text(l10n.noSetsLoggedYet);
                   return Column(
                     children: prs
                         .map((pr) => ListTile(
                               contentPadding: EdgeInsets.zero,
                               title: Text(pr.exerciseName),
                               subtitle: Text(
-                                '${formatWeight(pr.bestSet.set.weight, unit)} × ${pr.bestSet.set.reps}',
+                                l10n.timesReps(formatWeight(pr.oneRepMax.set.weight, unit), pr.oneRepMax.set.reps),
                               ),
                               trailing: Text(
-                                formatWeight(pr.bestSet.estimated1Rm, unit),
+                                '${pr.oneRepMax.isTested ? '' : '~'}${formatWeight(pr.oneRepMax.weight, unit)}',
                                 style: Theme.of(context).textTheme.titleSmall,
                               ),
                               onTap: () => context.push('/exercises/${pr.exerciseId}'),
@@ -114,13 +116,13 @@ class StatsScreen extends ConsumerWidget {
                 },
               ),
               const SizedBox(height: 24),
-              Text('Volume by Muscle Group', style: Theme.of(context).textTheme.titleMedium),
+              Text(l10n.volumeByMuscleGroup, style: Theme.of(context).textTheme.titleMedium),
               const SizedBox(height: 12),
               muscleVolumeAsync.when(
                 loading: () => const SizedBox.shrink(),
                 error: (error, stack) => const SizedBox.shrink(),
                 data: (groups) {
-                  if (groups.isEmpty) return const Text('No sets logged yet.');
+                  if (groups.isEmpty) return Text(l10n.noSetsLoggedYet);
                   final sorted = [...groups]..sort((a, b) => b.volume.compareTo(a.volume));
                   final total = sorted.fold(0.0, (sum, g) => sum + g.volume);
                   return Column(
@@ -136,8 +138,8 @@ class StatsScreen extends ConsumerWidget {
                             children: [
                               Container(width: 12, height: 12, color: color),
                               const SizedBox(width: 8),
-                              Expanded(child: Text(e.value.muscleGroup.label)),
-                              Text('${pct.toStringAsFixed(0)}%'),
+                              Expanded(child: Text(e.value.muscleGroup.label(context))),
+                              Text(l10n.percentValue(pct.toStringAsFixed(0))),
                             ],
                           ),
                         );

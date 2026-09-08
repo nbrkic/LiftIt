@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../common/weight_format.dart';
 import '../../../database/app_database.dart';
 import '../../../database/enums.dart';
+import '../../../l10n/app_localizations.dart';
 import '../../profile/presentation/log_bodyweight_sheet.dart';
 import '../../profile/providers/profile_providers.dart';
 
@@ -15,9 +16,10 @@ class BodyweightScreen extends ConsumerWidget {
     final latestWeightAsync = ref.watch(latestBodyweightProvider);
     final historyAsync = ref.watch(bodyweightHistoryProvider);
     final unit = ref.watch(preferredWeightUnitProvider);
+    final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Bodyweight')),
+      appBar: AppBar(title: Text(l10n.bodyweightTitle)),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => showModalBottomSheet(
           context: context,
@@ -25,7 +27,7 @@ class BodyweightScreen extends ConsumerWidget {
           builder: (_) => const LogBodyweightSheet(),
         ),
         icon: const Icon(Icons.add),
-        label: const Text('Log Weigh-in'),
+        label: Text(l10n.bodyweightLogWeighIn),
       ),
       body: SafeArea(
         top: false,
@@ -36,7 +38,9 @@ class BodyweightScreen extends ConsumerWidget {
               loading: () => const SizedBox.shrink(),
               error: (error, stack) => const SizedBox.shrink(),
               data: (latest) => Text(
-                latest == null ? 'No weigh-ins yet' : 'Current: ${formatWeight(latest.weightKg, unit)}',
+                latest == null
+                    ? l10n.bodyweightNoWeighInsYet
+                    : l10n.bodyweightCurrent(formatWeight(latest.weightKg, unit)),
                 style: Theme.of(context).textTheme.headlineSmall,
               ),
             ),
@@ -53,13 +57,13 @@ class BodyweightScreen extends ConsumerWidget {
                 );
               },
             ),
-            Text('History', style: Theme.of(context).textTheme.titleMedium),
+            Text(l10n.historyLabel, style: Theme.of(context).textTheme.titleMedium),
             const SizedBox(height: 8),
             historyAsync.when(
               loading: () => const Center(child: CircularProgressIndicator()),
-              error: (error, stack) => Text('Error: $error'),
+              error: (error, stack) => Text(l10n.errorMessage('$error')),
               data: (history) {
-                if (history.isEmpty) return const Text('No weigh-ins yet — tap + to log one.');
+                if (history.isEmpty) return Text(l10n.bodyweightNoWeighInsYetTapToLog);
                 return Column(
                   children: history
                       .map((entry) => ListTile(
@@ -67,7 +71,7 @@ class BodyweightScreen extends ConsumerWidget {
                             title: Text(formatWeight(entry.weightKg, unit)),
                             subtitle: Text(
                               entry.notes != null && entry.notes!.isNotEmpty
-                                  ? '${_formatDate(entry.loggedAt)} • ${entry.notes}'
+                                  ? l10n.bodyweightHistoryRow(_formatDate(entry.loggedAt), entry.notes!)
                                   : _formatDate(entry.loggedAt),
                             ),
                             trailing: IconButton(

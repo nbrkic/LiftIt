@@ -1,16 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 import '../../../common/weight_format.dart';
 import '../../../database/queries/workout_queries.dart';
+import '../../../l10n/app_localizations.dart';
 import '../../profile/providers/profile_providers.dart';
 import '../../splits/providers/split_providers.dart';
 import '../providers/history_providers.dart';
-
-const _weekdayNames = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
-const _monthNames = [
-  'January', 'February', 'March', 'April', 'May', 'June',
-  'July', 'August', 'September', 'October', 'November', 'December',
-];
 
 class SessionDetailScreen extends ConsumerWidget {
   final int sessionId;
@@ -23,12 +19,13 @@ class SessionDetailScreen extends ConsumerWidget {
     final setsAsync = ref.watch(sessionDetailProvider(sessionId));
     final unit = ref.watch(preferredWeightUnitProvider);
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
 
     final session = sessionAsync.value;
     final splitDayAsync = session?.splitDayId != null
         ? ref.watch(splitDayByIdProvider(session!.splitDayId!))
         : null;
-    final title = splitDayAsync?.value?.name ?? 'Freestyle';
+    final title = splitDayAsync?.value?.name ?? l10n.freestyle;
 
     return Scaffold(
       appBar: AppBar(title: Text(title)),
@@ -36,10 +33,10 @@ class SessionDetailScreen extends ConsumerWidget {
         top: false,
         child: setsAsync.when(
           loading: () => const Center(child: CircularProgressIndicator()),
-          error: (error, stack) => Center(child: Text('Error: $error')),
+          error: (error, stack) => Center(child: Text(l10n.errorMessage('$error'))),
           data: (sets) {
             if (sets.isEmpty) {
-              return const Center(child: Text('No sets logged'));
+              return Center(child: Text(l10n.noSetsLogged));
             }
 
             final working = sets.where((e) => !e.set.isWarmup);
@@ -70,7 +67,7 @@ class SessionDetailScreen extends ConsumerWidget {
                           Padding(
                             padding: const EdgeInsets.only(bottom: 12),
                             child: Text(
-                              _formatFullDate(session.startedAt),
+                              _formatFullDate(context, session.startedAt),
                               style: theme.textTheme.titleMedium,
                             ),
                           ),
@@ -80,17 +77,17 @@ class SessionDetailScreen extends ConsumerWidget {
                             _SummaryStat(
                               icon: Icons.timer_outlined,
                               value: duration != null ? '${duration.inMinutes}' : '-',
-                              label: 'minutes',
+                              label: l10n.minutesLabel,
                             ),
                             _SummaryStat(
                               icon: Icons.fitness_center,
                               value: formatWeight(volume, unit, decimals: 0),
-                              label: 'volume',
+                              label: l10n.volumeLabel,
                             ),
                             _SummaryStat(
                               icon: Icons.list_alt,
                               value: '$exerciseCount',
-                              label: exerciseCount == 1 ? 'exercise' : 'exercises',
+                              label: exerciseCount == 1 ? l10n.exerciseLabelSingular : l10n.exerciseLabelPlural,
                             ),
                           ],
                         ),
@@ -132,9 +129,9 @@ class SessionDetailScreen extends ConsumerWidget {
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                          '${formatWeight(set.weight, unit)} × ${set.reps}'
-                                          '${set.rpe != null ? '  •  RPE ${set.rpe}' : ''}'
-                                          '${set.isWarmup ? '  •  warm-up' : ''}',
+                                          l10n.timesReps(formatWeight(set.weight, unit), set.reps) +
+                                              (set.rpe != null ? '  •  RPE ${set.rpe}' : '') +
+                                              (set.isWarmup ? '  •  ${l10n.warmupSetLabel}' : ''),
                                         ),
                                         if (set.notes != null && set.notes!.isNotEmpty)
                                           Padding(
@@ -168,8 +165,11 @@ class SessionDetailScreen extends ConsumerWidget {
     );
   }
 
-  String _formatFullDate(DateTime date) {
-    return '${_weekdayNames[date.weekday - 1]}, ${date.day} ${_monthNames[date.month - 1]}';
+  String _formatFullDate(BuildContext context, DateTime date) {
+    final locale = Localizations.localeOf(context).toString();
+    final weekday = DateFormat.EEEE(locale).format(date);
+    final month = DateFormat.MMMM(locale).format(date);
+    return '$weekday, ${date.day} $month';
   }
 }
 

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../database/app_database.dart';
+import '../../../l10n/app_localizations.dart';
 import '../providers/split_providers.dart';
 
 class TargetSetsRepsSheet extends ConsumerStatefulWidget {
@@ -41,6 +42,7 @@ class _TargetSetsRepsSheetState extends ConsumerState<TargetSetsRepsSheet> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Padding(
       padding: EdgeInsets.only(
         left: 16,
@@ -62,8 +64,8 @@ class _TargetSetsRepsSheetState extends ConsumerState<TargetSetsRepsSheet> {
               controller: _setsController,
               autofocus: true,
               keyboardType: TextInputType.number,
-              decoration: const InputDecoration(labelText: 'Target sets'),
-              validator: (value) => int.tryParse(value ?? '') == null ? 'Invalid' : null,
+              decoration: InputDecoration(labelText: l10n.targetSetsLabel),
+              validator: (value) => int.tryParse(value ?? '') == null ? l10n.invalid : null,
             ),
             const SizedBox(height: 12),
             Row(
@@ -72,7 +74,7 @@ class _TargetSetsRepsSheetState extends ConsumerState<TargetSetsRepsSheet> {
                   child: TextFormField(
                     controller: _repsLowController,
                     keyboardType: TextInputType.number,
-                    decoration: const InputDecoration(labelText: 'Reps from (optional)'),
+                    decoration: InputDecoration(labelText: l10n.repsFromOptionalLabel),
                   ),
                 ),
                 const SizedBox(width: 12),
@@ -80,13 +82,13 @@ class _TargetSetsRepsSheetState extends ConsumerState<TargetSetsRepsSheet> {
                   child: TextFormField(
                     controller: _repsHighController,
                     keyboardType: TextInputType.number,
-                    decoration: const InputDecoration(labelText: 'Reps to (optional)'),
+                    decoration: InputDecoration(labelText: l10n.repsToOptionalLabel),
                   ),
                 ),
               ],
             ),
             const SizedBox(height: 20),
-            FilledButton(onPressed: _submit, child: const Text('Add to Day')),
+            FilledButton(onPressed: _submit, child: Text(l10n.addToDayButton)),
           ],
         ),
       ),

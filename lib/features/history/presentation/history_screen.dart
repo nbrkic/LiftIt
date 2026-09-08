@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../database/app_database.dart';
+import '../../../l10n/app_localizations.dart';
 import '../../splits/providers/split_providers.dart';
 import '../providers/history_providers.dart';
 import 'training_calendar.dart';
@@ -11,10 +12,11 @@ class HistoryScreen extends ConsumerWidget {
 
   DateTime _dayOf(DateTime date) => DateTime(date.year, date.month, date.day);
 
-  String _sessionTitle(WidgetRef ref, WorkoutSession session) {
-    if (session.splitDayId == null) return 'Freestyle';
+  String _sessionTitle(BuildContext context, WidgetRef ref, WorkoutSession session) {
+    final l10n = AppLocalizations.of(context)!;
+    if (session.splitDayId == null) return l10n.freestyle;
     final day = ref.watch(splitDayByIdProvider(session.splitDayId!)).value;
-    return day?.name ?? 'Freestyle';
+    return day?.name ?? l10n.freestyle;
   }
 
   void _onDayTap(
@@ -36,7 +38,7 @@ class HistoryScreen extends ConsumerWidget {
           shrinkWrap: true,
           children: matches
               .map((session) => ListTile(
-                    title: Text(_sessionTitle(ref, session)),
+                    title: Text(_sessionTitle(context, ref, session)),
                     subtitle: Text(_formatDate(session.startedAt)),
                     onTap: () {
                       Navigator.of(context).pop();
@@ -52,10 +54,11 @@ class HistoryScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final sessionsAsync = ref.watch(pastSessionsProvider);
+    final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('History'),
+        title: Text(l10n.historyTitle),
         leading: IconButton(
           icon: const Icon(Icons.menu),
           onPressed: () => Scaffold.of(context).openDrawer(),
@@ -63,7 +66,7 @@ class HistoryScreen extends ConsumerWidget {
       ),
       body: sessionsAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (error, stack) => Center(child: Text('Error: $error')),
+        error: (error, stack) => Center(child: Text(l10n.errorMessage('$error'))),
         data: (sessions) {
           final workoutDays = sessions.map((s) => _dayOf(s.startedAt)).toSet();
 
@@ -78,16 +81,16 @@ class HistoryScreen extends ConsumerWidget {
               ),
               const Divider(height: 1),
               if (sessions.isEmpty)
-                const Padding(
-                  padding: EdgeInsets.all(32),
-                  child: Center(child: Text('No workouts yet')),
+                Padding(
+                  padding: const EdgeInsets.all(32),
+                  child: Center(child: Text(l10n.noWorkoutsYet)),
                 )
               else
                 ...sessions.map((session) {
                   final duration = session.endedAt!.difference(session.startedAt);
                   return ListTile(
-                    title: Text(_sessionTitle(ref, session)),
-                    subtitle: Text('${_formatDate(session.startedAt)} • ${duration.inMinutes} min'),
+                    title: Text(_sessionTitle(context, ref, session)),
+                    subtitle: Text(l10n.historyRowSubtitle(_formatDate(session.startedAt), duration.inMinutes)),
                     trailing: const Icon(Icons.chevron_right),
                     onTap: () => context.push('/history/session/${session.id}'),
                   );
