@@ -9,6 +9,6 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('LiftIt'), findsOneWidget);
-    expect(find.text('Start Workout'), findsOneWidget);
+    expect(find.text('Start Freestyle Workout'), findsOneWidget);
   });
 }

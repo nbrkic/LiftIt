@@ -13,10 +13,23 @@ class HomeScreen extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(title: const Text('LiftIt')),
       body: Center(
-        child: FilledButton.icon(
-          onPressed: () => context.push('/active-workout'),
-          icon: Icon(activeSession != null ? Icons.play_arrow : Icons.add),
-          label: Text(activeSession != null ? 'Resume Workout' : 'Start Workout'),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            FilledButton.icon(
+              onPressed: () => context.push('/active-workout'),
+              icon: Icon(activeSession != null ? Icons.play_arrow : Icons.add),
+              label: Text(activeSession != null ? 'Resume Workout' : 'Start Freestyle Workout'),
+            ),
+            if (activeSession == null) ...[
+              const SizedBox(height: 12),
+              OutlinedButton.icon(
+                onPressed: () => context.push('/splits'),
+                icon: const Icon(Icons.calendar_view_week_outlined),
+                label: const Text('Start From a Split'),
+              ),
+            ],
+          ],
         ),
       ),
     );

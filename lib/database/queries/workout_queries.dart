@@ -16,9 +16,12 @@ extension WorkoutQueries on AppDatabase {
         .watchSingleOrNull();
   }
 
-  Future<int> startWorkoutSession() {
+  Future<int> startWorkoutSession({int? splitDayId}) {
     return into(workoutSessions).insert(
-      WorkoutSessionsCompanion.insert(startedAt: DateTime.now()),
+      WorkoutSessionsCompanion.insert(
+        startedAt: DateTime.now(),
+        splitDayId: Value(splitDayId),
+      ),
     );
   }
 

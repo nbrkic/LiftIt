@@ -17,7 +17,8 @@ class ActiveWorkoutController {
   final AppDatabase _db;
   ActiveWorkoutController(this._db);
 
-  Future<int> startWorkout() => _db.startWorkoutSession();
+  Future<int> startWorkout({int? splitDayId}) =>
+      _db.startWorkoutSession(splitDayId: splitDayId);
 
   Future<int> logSet({
     required int sessionId,
