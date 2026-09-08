@@ -2386,6 +2386,917 @@ class SplitDayExercisesCompanion extends UpdateCompanion<SplitDayExercise> {
   }
 }
 
+class $UserProfilesTable extends UserProfiles
+    with TableInfo<$UserProfilesTable, UserProfile> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $UserProfilesTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _nameMeta = const VerificationMeta('name');
+  @override
+  late final GeneratedColumn<String> name = GeneratedColumn<String>(
+    'name',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _birthDateMeta = const VerificationMeta(
+    'birthDate',
+  );
+  @override
+  late final GeneratedColumn<DateTime> birthDate = GeneratedColumn<DateTime>(
+    'birth_date',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
+  @override
+  late final GeneratedColumnWithTypeConverter<Gender?, String> gender =
+      GeneratedColumn<String>(
+        'gender',
+        aliasedName,
+        true,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+      ).withConverter<Gender?>($UserProfilesTable.$convertergendern);
+  static const VerificationMeta _heightCmMeta = const VerificationMeta(
+    'heightCm',
+  );
+  @override
+  late final GeneratedColumn<double> heightCm = GeneratedColumn<double>(
+    'height_cm',
+    aliasedName,
+    true,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+  );
+  @override
+  late final GeneratedColumnWithTypeConverter<ExperienceLevel?, String>
+  experienceLevel =
+      GeneratedColumn<String>(
+        'experience_level',
+        aliasedName,
+        true,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+      ).withConverter<ExperienceLevel?>(
+        $UserProfilesTable.$converterexperienceLeveln,
+      );
+  @override
+  late final GeneratedColumnWithTypeConverter<TrainingGoal?, String>
+  primaryGoal = GeneratedColumn<String>(
+    'primary_goal',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  ).withConverter<TrainingGoal?>($UserProfilesTable.$converterprimaryGoaln);
+  @override
+  late final GeneratedColumnWithTypeConverter<WeightUnit, String>
+  preferredWeightUnit = GeneratedColumn<String>(
+    'preferred_weight_unit',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('kg'),
+  ).withConverter<WeightUnit>($UserProfilesTable.$converterpreferredWeightUnit);
+  static const VerificationMeta _weeklyTrainingGoalMeta =
+      const VerificationMeta('weeklyTrainingGoal');
+  @override
+  late final GeneratedColumn<int> weeklyTrainingGoal = GeneratedColumn<int>(
+    'weekly_training_goal',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    name,
+    birthDate,
+    gender,
+    heightCm,
+    experienceLevel,
+    primaryGoal,
+    preferredWeightUnit,
+    weeklyTrainingGoal,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'user_profiles';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<UserProfile> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('name')) {
+      context.handle(
+        _nameMeta,
+        name.isAcceptableOrUnknown(data['name']!, _nameMeta),
+      );
+    }
+    if (data.containsKey('birth_date')) {
+      context.handle(
+        _birthDateMeta,
+        birthDate.isAcceptableOrUnknown(data['birth_date']!, _birthDateMeta),
+      );
+    }
+    if (data.containsKey('height_cm')) {
+      context.handle(
+        _heightCmMeta,
+        heightCm.isAcceptableOrUnknown(data['height_cm']!, _heightCmMeta),
+      );
+    }
+    if (data.containsKey('weekly_training_goal')) {
+      context.handle(
+        _weeklyTrainingGoalMeta,
+        weeklyTrainingGoal.isAcceptableOrUnknown(
+          data['weekly_training_goal']!,
+          _weeklyTrainingGoalMeta,
+        ),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  UserProfile map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return UserProfile(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      name: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}name'],
+      ),
+      birthDate: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}birth_date'],
+      ),
+      gender: $UserProfilesTable.$convertergendern.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}gender'],
+        ),
+      ),
+      heightCm: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}height_cm'],
+      ),
+      experienceLevel: $UserProfilesTable.$converterexperienceLeveln.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}experience_level'],
+        ),
+      ),
+      primaryGoal: $UserProfilesTable.$converterprimaryGoaln.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}primary_goal'],
+        ),
+      ),
+      preferredWeightUnit: $UserProfilesTable.$converterpreferredWeightUnit
+          .fromSql(
+            attachedDatabase.typeMapping.read(
+              DriftSqlType.string,
+              data['${effectivePrefix}preferred_weight_unit'],
+            )!,
+          ),
+      weeklyTrainingGoal: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}weekly_training_goal'],
+      ),
+    );
+  }
+
+  @override
+  $UserProfilesTable createAlias(String alias) {
+    return $UserProfilesTable(attachedDatabase, alias);
+  }
+
+  static JsonTypeConverter2<Gender, String, String> $convertergender =
+      const EnumNameConverter<Gender>(Gender.values);
+  static JsonTypeConverter2<Gender?, String?, String?> $convertergendern =
+      JsonTypeConverter2.asNullable($convertergender);
+  static JsonTypeConverter2<ExperienceLevel, String, String>
+  $converterexperienceLevel = const EnumNameConverter<ExperienceLevel>(
+    ExperienceLevel.values,
+  );
+  static JsonTypeConverter2<ExperienceLevel?, String?, String?>
+  $converterexperienceLeveln = JsonTypeConverter2.asNullable(
+    $converterexperienceLevel,
+  );
+  static JsonTypeConverter2<TrainingGoal, String, String>
+  $converterprimaryGoal = const EnumNameConverter<TrainingGoal>(
+    TrainingGoal.values,
+  );
+  static JsonTypeConverter2<TrainingGoal?, String?, String?>
+  $converterprimaryGoaln = JsonTypeConverter2.asNullable($converterprimaryGoal);
+  static JsonTypeConverter2<WeightUnit, String, String>
+  $converterpreferredWeightUnit = const EnumNameConverter<WeightUnit>(
+    WeightUnit.values,
+  );
+}
+
+class UserProfile extends DataClass implements Insertable<UserProfile> {
+  final int id;
+  final String? name;
+  final DateTime? birthDate;
+  final Gender? gender;
+  final double? heightCm;
+  final ExperienceLevel? experienceLevel;
+  final TrainingGoal? primaryGoal;
+  final WeightUnit preferredWeightUnit;
+  final int? weeklyTrainingGoal;
+  const UserProfile({
+    required this.id,
+    this.name,
+    this.birthDate,
+    this.gender,
+    this.heightCm,
+    this.experienceLevel,
+    this.primaryGoal,
+    required this.preferredWeightUnit,
+    this.weeklyTrainingGoal,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    if (!nullToAbsent || name != null) {
+      map['name'] = Variable<String>(name);
+    }
+    if (!nullToAbsent || birthDate != null) {
+      map['birth_date'] = Variable<DateTime>(birthDate);
+    }
+    if (!nullToAbsent || gender != null) {
+      map['gender'] = Variable<String>(
+        $UserProfilesTable.$convertergendern.toSql(gender),
+      );
+    }
+    if (!nullToAbsent || heightCm != null) {
+      map['height_cm'] = Variable<double>(heightCm);
+    }
+    if (!nullToAbsent || experienceLevel != null) {
+      map['experience_level'] = Variable<String>(
+        $UserProfilesTable.$converterexperienceLeveln.toSql(experienceLevel),
+      );
+    }
+    if (!nullToAbsent || primaryGoal != null) {
+      map['primary_goal'] = Variable<String>(
+        $UserProfilesTable.$converterprimaryGoaln.toSql(primaryGoal),
+      );
+    }
+    {
+      map['preferred_weight_unit'] = Variable<String>(
+        $UserProfilesTable.$converterpreferredWeightUnit.toSql(
+          preferredWeightUnit,
+        ),
+      );
+    }
+    if (!nullToAbsent || weeklyTrainingGoal != null) {
+      map['weekly_training_goal'] = Variable<int>(weeklyTrainingGoal);
+    }
+    return map;
+  }
+
+  UserProfilesCompanion toCompanion(bool nullToAbsent) {
+    return UserProfilesCompanion(
+      id: Value(id),
+      name: name == null && nullToAbsent ? const Value.absent() : Value(name),
+      birthDate: birthDate == null && nullToAbsent
+          ? const Value.absent()
+          : Value(birthDate),
+      gender: gender == null && nullToAbsent
+          ? const Value.absent()
+          : Value(gender),
+      heightCm: heightCm == null && nullToAbsent
+          ? const Value.absent()
+          : Value(heightCm),
+      experienceLevel: experienceLevel == null && nullToAbsent
+          ? const Value.absent()
+          : Value(experienceLevel),
+      primaryGoal: primaryGoal == null && nullToAbsent
+          ? const Value.absent()
+          : Value(primaryGoal),
+      preferredWeightUnit: Value(preferredWeightUnit),
+      weeklyTrainingGoal: weeklyTrainingGoal == null && nullToAbsent
+          ? const Value.absent()
+          : Value(weeklyTrainingGoal),
+    );
+  }
+
+  factory UserProfile.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return UserProfile(
+      id: serializer.fromJson<int>(json['id']),
+      name: serializer.fromJson<String?>(json['name']),
+      birthDate: serializer.fromJson<DateTime?>(json['birthDate']),
+      gender: $UserProfilesTable.$convertergendern.fromJson(
+        serializer.fromJson<String?>(json['gender']),
+      ),
+      heightCm: serializer.fromJson<double?>(json['heightCm']),
+      experienceLevel: $UserProfilesTable.$converterexperienceLeveln.fromJson(
+        serializer.fromJson<String?>(json['experienceLevel']),
+      ),
+      primaryGoal: $UserProfilesTable.$converterprimaryGoaln.fromJson(
+        serializer.fromJson<String?>(json['primaryGoal']),
+      ),
+      preferredWeightUnit: $UserProfilesTable.$converterpreferredWeightUnit
+          .fromJson(serializer.fromJson<String>(json['preferredWeightUnit'])),
+      weeklyTrainingGoal: serializer.fromJson<int?>(json['weeklyTrainingGoal']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'name': serializer.toJson<String?>(name),
+      'birthDate': serializer.toJson<DateTime?>(birthDate),
+      'gender': serializer.toJson<String?>(
+        $UserProfilesTable.$convertergendern.toJson(gender),
+      ),
+      'heightCm': serializer.toJson<double?>(heightCm),
+      'experienceLevel': serializer.toJson<String?>(
+        $UserProfilesTable.$converterexperienceLeveln.toJson(experienceLevel),
+      ),
+      'primaryGoal': serializer.toJson<String?>(
+        $UserProfilesTable.$converterprimaryGoaln.toJson(primaryGoal),
+      ),
+      'preferredWeightUnit': serializer.toJson<String>(
+        $UserProfilesTable.$converterpreferredWeightUnit.toJson(
+          preferredWeightUnit,
+        ),
+      ),
+      'weeklyTrainingGoal': serializer.toJson<int?>(weeklyTrainingGoal),
+    };
+  }
+
+  UserProfile copyWith({
+    int? id,
+    Value<String?> name = const Value.absent(),
+    Value<DateTime?> birthDate = const Value.absent(),
+    Value<Gender?> gender = const Value.absent(),
+    Value<double?> heightCm = const Value.absent(),
+    Value<ExperienceLevel?> experienceLevel = const Value.absent(),
+    Value<TrainingGoal?> primaryGoal = const Value.absent(),
+    WeightUnit? preferredWeightUnit,
+    Value<int?> weeklyTrainingGoal = const Value.absent(),
+  }) => UserProfile(
+    id: id ?? this.id,
+    name: name.present ? name.value : this.name,
+    birthDate: birthDate.present ? birthDate.value : this.birthDate,
+    gender: gender.present ? gender.value : this.gender,
+    heightCm: heightCm.present ? heightCm.value : this.heightCm,
+    experienceLevel: experienceLevel.present
+        ? experienceLevel.value
+        : this.experienceLevel,
+    primaryGoal: primaryGoal.present ? primaryGoal.value : this.primaryGoal,
+    preferredWeightUnit: preferredWeightUnit ?? this.preferredWeightUnit,
+    weeklyTrainingGoal: weeklyTrainingGoal.present
+        ? weeklyTrainingGoal.value
+        : this.weeklyTrainingGoal,
+  );
+  UserProfile copyWithCompanion(UserProfilesCompanion data) {
+    return UserProfile(
+      id: data.id.present ? data.id.value : this.id,
+      name: data.name.present ? data.name.value : this.name,
+      birthDate: data.birthDate.present ? data.birthDate.value : this.birthDate,
+      gender: data.gender.present ? data.gender.value : this.gender,
+      heightCm: data.heightCm.present ? data.heightCm.value : this.heightCm,
+      experienceLevel: data.experienceLevel.present
+          ? data.experienceLevel.value
+          : this.experienceLevel,
+      primaryGoal: data.primaryGoal.present
+          ? data.primaryGoal.value
+          : this.primaryGoal,
+      preferredWeightUnit: data.preferredWeightUnit.present
+          ? data.preferredWeightUnit.value
+          : this.preferredWeightUnit,
+      weeklyTrainingGoal: data.weeklyTrainingGoal.present
+          ? data.weeklyTrainingGoal.value
+          : this.weeklyTrainingGoal,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('UserProfile(')
+          ..write('id: $id, ')
+          ..write('name: $name, ')
+          ..write('birthDate: $birthDate, ')
+          ..write('gender: $gender, ')
+          ..write('heightCm: $heightCm, ')
+          ..write('experienceLevel: $experienceLevel, ')
+          ..write('primaryGoal: $primaryGoal, ')
+          ..write('preferredWeightUnit: $preferredWeightUnit, ')
+          ..write('weeklyTrainingGoal: $weeklyTrainingGoal')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    name,
+    birthDate,
+    gender,
+    heightCm,
+    experienceLevel,
+    primaryGoal,
+    preferredWeightUnit,
+    weeklyTrainingGoal,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is UserProfile &&
+          other.id == this.id &&
+          other.name == this.name &&
+          other.birthDate == this.birthDate &&
+          other.gender == this.gender &&
+          other.heightCm == this.heightCm &&
+          other.experienceLevel == this.experienceLevel &&
+          other.primaryGoal == this.primaryGoal &&
+          other.preferredWeightUnit == this.preferredWeightUnit &&
+          other.weeklyTrainingGoal == this.weeklyTrainingGoal);
+}
+
+class UserProfilesCompanion extends UpdateCompanion<UserProfile> {
+  final Value<int> id;
+  final Value<String?> name;
+  final Value<DateTime?> birthDate;
+  final Value<Gender?> gender;
+  final Value<double?> heightCm;
+  final Value<ExperienceLevel?> experienceLevel;
+  final Value<TrainingGoal?> primaryGoal;
+  final Value<WeightUnit> preferredWeightUnit;
+  final Value<int?> weeklyTrainingGoal;
+  const UserProfilesCompanion({
+    this.id = const Value.absent(),
+    this.name = const Value.absent(),
+    this.birthDate = const Value.absent(),
+    this.gender = const Value.absent(),
+    this.heightCm = const Value.absent(),
+    this.experienceLevel = const Value.absent(),
+    this.primaryGoal = const Value.absent(),
+    this.preferredWeightUnit = const Value.absent(),
+    this.weeklyTrainingGoal = const Value.absent(),
+  });
+  UserProfilesCompanion.insert({
+    this.id = const Value.absent(),
+    this.name = const Value.absent(),
+    this.birthDate = const Value.absent(),
+    this.gender = const Value.absent(),
+    this.heightCm = const Value.absent(),
+    this.experienceLevel = const Value.absent(),
+    this.primaryGoal = const Value.absent(),
+    this.preferredWeightUnit = const Value.absent(),
+    this.weeklyTrainingGoal = const Value.absent(),
+  });
+  static Insertable<UserProfile> custom({
+    Expression<int>? id,
+    Expression<String>? name,
+    Expression<DateTime>? birthDate,
+    Expression<String>? gender,
+    Expression<double>? heightCm,
+    Expression<String>? experienceLevel,
+    Expression<String>? primaryGoal,
+    Expression<String>? preferredWeightUnit,
+    Expression<int>? weeklyTrainingGoal,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (name != null) 'name': name,
+      if (birthDate != null) 'birth_date': birthDate,
+      if (gender != null) 'gender': gender,
+      if (heightCm != null) 'height_cm': heightCm,
+      if (experienceLevel != null) 'experience_level': experienceLevel,
+      if (primaryGoal != null) 'primary_goal': primaryGoal,
+      if (preferredWeightUnit != null)
+        'preferred_weight_unit': preferredWeightUnit,
+      if (weeklyTrainingGoal != null)
+        'weekly_training_goal': weeklyTrainingGoal,
+    });
+  }
+
+  UserProfilesCompanion copyWith({
+    Value<int>? id,
+    Value<String?>? name,
+    Value<DateTime?>? birthDate,
+    Value<Gender?>? gender,
+    Value<double?>? heightCm,
+    Value<ExperienceLevel?>? experienceLevel,
+    Value<TrainingGoal?>? primaryGoal,
+    Value<WeightUnit>? preferredWeightUnit,
+    Value<int?>? weeklyTrainingGoal,
+  }) {
+    return UserProfilesCompanion(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      birthDate: birthDate ?? this.birthDate,
+      gender: gender ?? this.gender,
+      heightCm: heightCm ?? this.heightCm,
+      experienceLevel: experienceLevel ?? this.experienceLevel,
+      primaryGoal: primaryGoal ?? this.primaryGoal,
+      preferredWeightUnit: preferredWeightUnit ?? this.preferredWeightUnit,
+      weeklyTrainingGoal: weeklyTrainingGoal ?? this.weeklyTrainingGoal,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (name.present) {
+      map['name'] = Variable<String>(name.value);
+    }
+    if (birthDate.present) {
+      map['birth_date'] = Variable<DateTime>(birthDate.value);
+    }
+    if (gender.present) {
+      map['gender'] = Variable<String>(
+        $UserProfilesTable.$convertergendern.toSql(gender.value),
+      );
+    }
+    if (heightCm.present) {
+      map['height_cm'] = Variable<double>(heightCm.value);
+    }
+    if (experienceLevel.present) {
+      map['experience_level'] = Variable<String>(
+        $UserProfilesTable.$converterexperienceLeveln.toSql(
+          experienceLevel.value,
+        ),
+      );
+    }
+    if (primaryGoal.present) {
+      map['primary_goal'] = Variable<String>(
+        $UserProfilesTable.$converterprimaryGoaln.toSql(primaryGoal.value),
+      );
+    }
+    if (preferredWeightUnit.present) {
+      map['preferred_weight_unit'] = Variable<String>(
+        $UserProfilesTable.$converterpreferredWeightUnit.toSql(
+          preferredWeightUnit.value,
+        ),
+      );
+    }
+    if (weeklyTrainingGoal.present) {
+      map['weekly_training_goal'] = Variable<int>(weeklyTrainingGoal.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('UserProfilesCompanion(')
+          ..write('id: $id, ')
+          ..write('name: $name, ')
+          ..write('birthDate: $birthDate, ')
+          ..write('gender: $gender, ')
+          ..write('heightCm: $heightCm, ')
+          ..write('experienceLevel: $experienceLevel, ')
+          ..write('primaryGoal: $primaryGoal, ')
+          ..write('preferredWeightUnit: $preferredWeightUnit, ')
+          ..write('weeklyTrainingGoal: $weeklyTrainingGoal')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $BodyweightLogsTable extends BodyweightLogs
+    with TableInfo<$BodyweightLogsTable, BodyweightLog> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $BodyweightLogsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _weightKgMeta = const VerificationMeta(
+    'weightKg',
+  );
+  @override
+  late final GeneratedColumn<double> weightKg = GeneratedColumn<double>(
+    'weight_kg',
+    aliasedName,
+    false,
+    type: DriftSqlType.double,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _loggedAtMeta = const VerificationMeta(
+    'loggedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> loggedAt = GeneratedColumn<DateTime>(
+    'logged_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _notesMeta = const VerificationMeta('notes');
+  @override
+  late final GeneratedColumn<String> notes = GeneratedColumn<String>(
+    'notes',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [id, weightKg, loggedAt, notes];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'bodyweight_logs';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<BodyweightLog> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('weight_kg')) {
+      context.handle(
+        _weightKgMeta,
+        weightKg.isAcceptableOrUnknown(data['weight_kg']!, _weightKgMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_weightKgMeta);
+    }
+    if (data.containsKey('logged_at')) {
+      context.handle(
+        _loggedAtMeta,
+        loggedAt.isAcceptableOrUnknown(data['logged_at']!, _loggedAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_loggedAtMeta);
+    }
+    if (data.containsKey('notes')) {
+      context.handle(
+        _notesMeta,
+        notes.isAcceptableOrUnknown(data['notes']!, _notesMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  BodyweightLog map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return BodyweightLog(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      weightKg: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}weight_kg'],
+      )!,
+      loggedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}logged_at'],
+      )!,
+      notes: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}notes'],
+      ),
+    );
+  }
+
+  @override
+  $BodyweightLogsTable createAlias(String alias) {
+    return $BodyweightLogsTable(attachedDatabase, alias);
+  }
+}
+
+class BodyweightLog extends DataClass implements Insertable<BodyweightLog> {
+  final int id;
+  final double weightKg;
+  final DateTime loggedAt;
+  final String? notes;
+  const BodyweightLog({
+    required this.id,
+    required this.weightKg,
+    required this.loggedAt,
+    this.notes,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['weight_kg'] = Variable<double>(weightKg);
+    map['logged_at'] = Variable<DateTime>(loggedAt);
+    if (!nullToAbsent || notes != null) {
+      map['notes'] = Variable<String>(notes);
+    }
+    return map;
+  }
+
+  BodyweightLogsCompanion toCompanion(bool nullToAbsent) {
+    return BodyweightLogsCompanion(
+      id: Value(id),
+      weightKg: Value(weightKg),
+      loggedAt: Value(loggedAt),
+      notes: notes == null && nullToAbsent
+          ? const Value.absent()
+          : Value(notes),
+    );
+  }
+
+  factory BodyweightLog.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return BodyweightLog(
+      id: serializer.fromJson<int>(json['id']),
+      weightKg: serializer.fromJson<double>(json['weightKg']),
+      loggedAt: serializer.fromJson<DateTime>(json['loggedAt']),
+      notes: serializer.fromJson<String?>(json['notes']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'weightKg': serializer.toJson<double>(weightKg),
+      'loggedAt': serializer.toJson<DateTime>(loggedAt),
+      'notes': serializer.toJson<String?>(notes),
+    };
+  }
+
+  BodyweightLog copyWith({
+    int? id,
+    double? weightKg,
+    DateTime? loggedAt,
+    Value<String?> notes = const Value.absent(),
+  }) => BodyweightLog(
+    id: id ?? this.id,
+    weightKg: weightKg ?? this.weightKg,
+    loggedAt: loggedAt ?? this.loggedAt,
+    notes: notes.present ? notes.value : this.notes,
+  );
+  BodyweightLog copyWithCompanion(BodyweightLogsCompanion data) {
+    return BodyweightLog(
+      id: data.id.present ? data.id.value : this.id,
+      weightKg: data.weightKg.present ? data.weightKg.value : this.weightKg,
+      loggedAt: data.loggedAt.present ? data.loggedAt.value : this.loggedAt,
+      notes: data.notes.present ? data.notes.value : this.notes,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('BodyweightLog(')
+          ..write('id: $id, ')
+          ..write('weightKg: $weightKg, ')
+          ..write('loggedAt: $loggedAt, ')
+          ..write('notes: $notes')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, weightKg, loggedAt, notes);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is BodyweightLog &&
+          other.id == this.id &&
+          other.weightKg == this.weightKg &&
+          other.loggedAt == this.loggedAt &&
+          other.notes == this.notes);
+}
+
+class BodyweightLogsCompanion extends UpdateCompanion<BodyweightLog> {
+  final Value<int> id;
+  final Value<double> weightKg;
+  final Value<DateTime> loggedAt;
+  final Value<String?> notes;
+  const BodyweightLogsCompanion({
+    this.id = const Value.absent(),
+    this.weightKg = const Value.absent(),
+    this.loggedAt = const Value.absent(),
+    this.notes = const Value.absent(),
+  });
+  BodyweightLogsCompanion.insert({
+    this.id = const Value.absent(),
+    required double weightKg,
+    required DateTime loggedAt,
+    this.notes = const Value.absent(),
+  }) : weightKg = Value(weightKg),
+       loggedAt = Value(loggedAt);
+  static Insertable<BodyweightLog> custom({
+    Expression<int>? id,
+    Expression<double>? weightKg,
+    Expression<DateTime>? loggedAt,
+    Expression<String>? notes,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (weightKg != null) 'weight_kg': weightKg,
+      if (loggedAt != null) 'logged_at': loggedAt,
+      if (notes != null) 'notes': notes,
+    });
+  }
+
+  BodyweightLogsCompanion copyWith({
+    Value<int>? id,
+    Value<double>? weightKg,
+    Value<DateTime>? loggedAt,
+    Value<String?>? notes,
+  }) {
+    return BodyweightLogsCompanion(
+      id: id ?? this.id,
+      weightKg: weightKg ?? this.weightKg,
+      loggedAt: loggedAt ?? this.loggedAt,
+      notes: notes ?? this.notes,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (weightKg.present) {
+      map['weight_kg'] = Variable<double>(weightKg.value);
+    }
+    if (loggedAt.present) {
+      map['logged_at'] = Variable<DateTime>(loggedAt.value);
+    }
+    if (notes.present) {
+      map['notes'] = Variable<String>(notes.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('BodyweightLogsCompanion(')
+          ..write('id: $id, ')
+          ..write('weightKg: $weightKg, ')
+          ..write('loggedAt: $loggedAt, ')
+          ..write('notes: $notes')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
@@ -2398,6 +3309,8 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $WorkoutSetsTable workoutSets = $WorkoutSetsTable(this);
   late final $SplitDayExercisesTable splitDayExercises =
       $SplitDayExercisesTable(this);
+  late final $UserProfilesTable userProfiles = $UserProfilesTable(this);
+  late final $BodyweightLogsTable bodyweightLogs = $BodyweightLogsTable(this);
   late final Index exerciseNameIdx = Index(
     'exercise_name_idx',
     'CREATE INDEX exercise_name_idx ON exercises (name)',
@@ -2418,6 +3331,10 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     'split_day_exercise_day_idx',
     'CREATE INDEX split_day_exercise_day_idx ON split_day_exercises (split_day_id)',
   );
+  late final Index bodyweightLogLoggedAtIdx = Index(
+    'bodyweight_log_logged_at_idx',
+    'CREATE INDEX bodyweight_log_logged_at_idx ON bodyweight_logs (logged_at)',
+  );
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -2429,11 +3346,14 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     workoutSessions,
     workoutSets,
     splitDayExercises,
+    userProfiles,
+    bodyweightLogs,
     exerciseNameIdx,
     workoutSetSessionIdx,
     workoutSetExerciseCompletedIdx,
     splitDaySplitIdx,
     splitDayExerciseDayIdx,
+    bodyweightLogLoggedAtIdx,
   ];
   @override
   StreamQueryUpdateRules get streamUpdateRules => const StreamQueryUpdateRules([
@@ -4953,6 +5873,486 @@ typedef $$SplitDayExercisesTableProcessedTableManager =
       SplitDayExercise,
       PrefetchHooks Function({bool splitDayId, bool exerciseId})
     >;
+typedef $$UserProfilesTableCreateCompanionBuilder =
+    UserProfilesCompanion Function({
+      Value<int> id,
+      Value<String?> name,
+      Value<DateTime?> birthDate,
+      Value<Gender?> gender,
+      Value<double?> heightCm,
+      Value<ExperienceLevel?> experienceLevel,
+      Value<TrainingGoal?> primaryGoal,
+      Value<WeightUnit> preferredWeightUnit,
+      Value<int?> weeklyTrainingGoal,
+    });
+typedef $$UserProfilesTableUpdateCompanionBuilder =
+    UserProfilesCompanion Function({
+      Value<int> id,
+      Value<String?> name,
+      Value<DateTime?> birthDate,
+      Value<Gender?> gender,
+      Value<double?> heightCm,
+      Value<ExperienceLevel?> experienceLevel,
+      Value<TrainingGoal?> primaryGoal,
+      Value<WeightUnit> preferredWeightUnit,
+      Value<int?> weeklyTrainingGoal,
+    });
+
+class $$UserProfilesTableFilterComposer
+    extends Composer<_$AppDatabase, $UserProfilesTable> {
+  $$UserProfilesTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get birthDate => $composableBuilder(
+    column: $table.birthDate,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnWithTypeConverterFilters<Gender?, Gender, String> get gender =>
+      $composableBuilder(
+        column: $table.gender,
+        builder: (column) => ColumnWithTypeConverterFilters(column),
+      );
+
+  ColumnFilters<double> get heightCm => $composableBuilder(
+    column: $table.heightCm,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnWithTypeConverterFilters<ExperienceLevel?, ExperienceLevel, String>
+  get experienceLevel => $composableBuilder(
+    column: $table.experienceLevel,
+    builder: (column) => ColumnWithTypeConverterFilters(column),
+  );
+
+  ColumnWithTypeConverterFilters<TrainingGoal?, TrainingGoal, String>
+  get primaryGoal => $composableBuilder(
+    column: $table.primaryGoal,
+    builder: (column) => ColumnWithTypeConverterFilters(column),
+  );
+
+  ColumnWithTypeConverterFilters<WeightUnit, WeightUnit, String>
+  get preferredWeightUnit => $composableBuilder(
+    column: $table.preferredWeightUnit,
+    builder: (column) => ColumnWithTypeConverterFilters(column),
+  );
+
+  ColumnFilters<int> get weeklyTrainingGoal => $composableBuilder(
+    column: $table.weeklyTrainingGoal,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$UserProfilesTableOrderingComposer
+    extends Composer<_$AppDatabase, $UserProfilesTable> {
+  $$UserProfilesTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get birthDate => $composableBuilder(
+    column: $table.birthDate,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get gender => $composableBuilder(
+    column: $table.gender,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get heightCm => $composableBuilder(
+    column: $table.heightCm,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get experienceLevel => $composableBuilder(
+    column: $table.experienceLevel,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get primaryGoal => $composableBuilder(
+    column: $table.primaryGoal,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get preferredWeightUnit => $composableBuilder(
+    column: $table.preferredWeightUnit,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get weeklyTrainingGoal => $composableBuilder(
+    column: $table.weeklyTrainingGoal,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$UserProfilesTableAnnotationComposer
+    extends Composer<_$AppDatabase, $UserProfilesTable> {
+  $$UserProfilesTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get name =>
+      $composableBuilder(column: $table.name, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get birthDate =>
+      $composableBuilder(column: $table.birthDate, builder: (column) => column);
+
+  GeneratedColumnWithTypeConverter<Gender?, String> get gender =>
+      $composableBuilder(column: $table.gender, builder: (column) => column);
+
+  GeneratedColumn<double> get heightCm =>
+      $composableBuilder(column: $table.heightCm, builder: (column) => column);
+
+  GeneratedColumnWithTypeConverter<ExperienceLevel?, String>
+  get experienceLevel => $composableBuilder(
+    column: $table.experienceLevel,
+    builder: (column) => column,
+  );
+
+  GeneratedColumnWithTypeConverter<TrainingGoal?, String> get primaryGoal =>
+      $composableBuilder(
+        column: $table.primaryGoal,
+        builder: (column) => column,
+      );
+
+  GeneratedColumnWithTypeConverter<WeightUnit, String>
+  get preferredWeightUnit => $composableBuilder(
+    column: $table.preferredWeightUnit,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<int> get weeklyTrainingGoal => $composableBuilder(
+    column: $table.weeklyTrainingGoal,
+    builder: (column) => column,
+  );
+}
+
+class $$UserProfilesTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $UserProfilesTable,
+          UserProfile,
+          $$UserProfilesTableFilterComposer,
+          $$UserProfilesTableOrderingComposer,
+          $$UserProfilesTableAnnotationComposer,
+          $$UserProfilesTableCreateCompanionBuilder,
+          $$UserProfilesTableUpdateCompanionBuilder,
+          (
+            UserProfile,
+            BaseReferences<_$AppDatabase, $UserProfilesTable, UserProfile>,
+          ),
+          UserProfile,
+          PrefetchHooks Function()
+        > {
+  $$UserProfilesTableTableManager(_$AppDatabase db, $UserProfilesTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$UserProfilesTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$UserProfilesTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$UserProfilesTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<String?> name = const Value.absent(),
+                Value<DateTime?> birthDate = const Value.absent(),
+                Value<Gender?> gender = const Value.absent(),
+                Value<double?> heightCm = const Value.absent(),
+                Value<ExperienceLevel?> experienceLevel = const Value.absent(),
+                Value<TrainingGoal?> primaryGoal = const Value.absent(),
+                Value<WeightUnit> preferredWeightUnit = const Value.absent(),
+                Value<int?> weeklyTrainingGoal = const Value.absent(),
+              }) => UserProfilesCompanion(
+                id: id,
+                name: name,
+                birthDate: birthDate,
+                gender: gender,
+                heightCm: heightCm,
+                experienceLevel: experienceLevel,
+                primaryGoal: primaryGoal,
+                preferredWeightUnit: preferredWeightUnit,
+                weeklyTrainingGoal: weeklyTrainingGoal,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<String?> name = const Value.absent(),
+                Value<DateTime?> birthDate = const Value.absent(),
+                Value<Gender?> gender = const Value.absent(),
+                Value<double?> heightCm = const Value.absent(),
+                Value<ExperienceLevel?> experienceLevel = const Value.absent(),
+                Value<TrainingGoal?> primaryGoal = const Value.absent(),
+                Value<WeightUnit> preferredWeightUnit = const Value.absent(),
+                Value<int?> weeklyTrainingGoal = const Value.absent(),
+              }) => UserProfilesCompanion.insert(
+                id: id,
+                name: name,
+                birthDate: birthDate,
+                gender: gender,
+                heightCm: heightCm,
+                experienceLevel: experienceLevel,
+                primaryGoal: primaryGoal,
+                preferredWeightUnit: preferredWeightUnit,
+                weeklyTrainingGoal: weeklyTrainingGoal,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<$UserProfilesTable, UserProfile>(table),
+                  BaseReferences<
+                    _$AppDatabase,
+                    $UserProfilesTable,
+                    UserProfile
+                  >(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$UserProfilesTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $UserProfilesTable,
+      UserProfile,
+      $$UserProfilesTableFilterComposer,
+      $$UserProfilesTableOrderingComposer,
+      $$UserProfilesTableAnnotationComposer,
+      $$UserProfilesTableCreateCompanionBuilder,
+      $$UserProfilesTableUpdateCompanionBuilder,
+      (
+        UserProfile,
+        BaseReferences<_$AppDatabase, $UserProfilesTable, UserProfile>,
+      ),
+      UserProfile,
+      PrefetchHooks Function()
+    >;
+typedef $$BodyweightLogsTableCreateCompanionBuilder =
+    BodyweightLogsCompanion Function({
+      Value<int> id,
+      required double weightKg,
+      required DateTime loggedAt,
+      Value<String?> notes,
+    });
+typedef $$BodyweightLogsTableUpdateCompanionBuilder =
+    BodyweightLogsCompanion Function({
+      Value<int> id,
+      Value<double> weightKg,
+      Value<DateTime> loggedAt,
+      Value<String?> notes,
+    });
+
+class $$BodyweightLogsTableFilterComposer
+    extends Composer<_$AppDatabase, $BodyweightLogsTable> {
+  $$BodyweightLogsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get weightKg => $composableBuilder(
+    column: $table.weightKg,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get loggedAt => $composableBuilder(
+    column: $table.loggedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get notes => $composableBuilder(
+    column: $table.notes,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$BodyweightLogsTableOrderingComposer
+    extends Composer<_$AppDatabase, $BodyweightLogsTable> {
+  $$BodyweightLogsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get weightKg => $composableBuilder(
+    column: $table.weightKg,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get loggedAt => $composableBuilder(
+    column: $table.loggedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get notes => $composableBuilder(
+    column: $table.notes,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$BodyweightLogsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $BodyweightLogsTable> {
+  $$BodyweightLogsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<double> get weightKg =>
+      $composableBuilder(column: $table.weightKg, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get loggedAt =>
+      $composableBuilder(column: $table.loggedAt, builder: (column) => column);
+
+  GeneratedColumn<String> get notes =>
+      $composableBuilder(column: $table.notes, builder: (column) => column);
+}
+
+class $$BodyweightLogsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $BodyweightLogsTable,
+          BodyweightLog,
+          $$BodyweightLogsTableFilterComposer,
+          $$BodyweightLogsTableOrderingComposer,
+          $$BodyweightLogsTableAnnotationComposer,
+          $$BodyweightLogsTableCreateCompanionBuilder,
+          $$BodyweightLogsTableUpdateCompanionBuilder,
+          (
+            BodyweightLog,
+            BaseReferences<_$AppDatabase, $BodyweightLogsTable, BodyweightLog>,
+          ),
+          BodyweightLog,
+          PrefetchHooks Function()
+        > {
+  $$BodyweightLogsTableTableManager(
+    _$AppDatabase db,
+    $BodyweightLogsTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$BodyweightLogsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$BodyweightLogsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$BodyweightLogsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<double> weightKg = const Value.absent(),
+                Value<DateTime> loggedAt = const Value.absent(),
+                Value<String?> notes = const Value.absent(),
+              }) => BodyweightLogsCompanion(
+                id: id,
+                weightKg: weightKg,
+                loggedAt: loggedAt,
+                notes: notes,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                required double weightKg,
+                required DateTime loggedAt,
+                Value<String?> notes = const Value.absent(),
+              }) => BodyweightLogsCompanion.insert(
+                id: id,
+                weightKg: weightKg,
+                loggedAt: loggedAt,
+                notes: notes,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<$BodyweightLogsTable, BodyweightLog>(table),
+                  BaseReferences<
+                    _$AppDatabase,
+                    $BodyweightLogsTable,
+                    BodyweightLog
+                  >(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$BodyweightLogsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $BodyweightLogsTable,
+      BodyweightLog,
+      $$BodyweightLogsTableFilterComposer,
+      $$BodyweightLogsTableOrderingComposer,
+      $$BodyweightLogsTableAnnotationComposer,
+      $$BodyweightLogsTableCreateCompanionBuilder,
+      $$BodyweightLogsTableUpdateCompanionBuilder,
+      (
+        BodyweightLog,
+        BaseReferences<_$AppDatabase, $BodyweightLogsTable, BodyweightLog>,
+      ),
+      BodyweightLog,
+      PrefetchHooks Function()
+    >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -4969,4 +6369,8 @@ class $AppDatabaseManager {
       $$WorkoutSetsTableTableManager(_db, _db.workoutSets);
   $$SplitDayExercisesTableTableManager get splitDayExercises =>
       $$SplitDayExercisesTableTableManager(_db, _db.splitDayExercises);
+  $$UserProfilesTableTableManager get userProfiles =>
+      $$UserProfilesTableTableManager(_db, _db.userProfiles);
+  $$BodyweightLogsTableTableManager get bodyweightLogs =>
+      $$BodyweightLogsTableTableManager(_db, _db.bodyweightLogs);
 }

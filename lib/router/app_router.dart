@@ -5,10 +5,12 @@ import '../features/home/presentation/home_screen.dart';
 import '../features/history/presentation/history_screen.dart';
 import '../features/history/presentation/session_detail_screen.dart';
 import '../features/exercises/presentation/exercise_library_screen.dart';
+import '../features/exercises/presentation/exercise_detail_screen.dart';
 import '../features/workout/presentation/active_workout_screen.dart';
 import '../features/splits/presentation/splits_list_screen.dart';
 import '../features/splits/presentation/split_detail_screen.dart';
 import '../features/splits/presentation/split_day_detail_screen.dart';
+import '../features/profile/presentation/profile_screen.dart';
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
 
@@ -39,7 +41,20 @@ final appRouter = GoRouter(
           ],
         ),
         StatefulShellBranch(
-          routes: [GoRoute(path: '/exercises', builder: (c, s) => const ExerciseLibraryScreen())],
+          routes: [
+            GoRoute(
+              path: '/exercises',
+              builder: (c, s) => const ExerciseLibraryScreen(),
+              routes: [
+                GoRoute(
+                  path: ':id',
+                  builder: (c, s) => ExerciseDetailScreen(
+                    exerciseId: int.parse(s.pathParameters['id']!),
+                  ),
+                ),
+              ],
+            ),
+          ],
         ),
         StatefulShellBranch(
           routes: [
@@ -64,6 +79,9 @@ final appRouter = GoRouter(
               ],
             ),
           ],
+        ),
+        StatefulShellBranch(
+          routes: [GoRoute(path: '/profile', builder: (c, s) => const ProfileScreen())],
         ),
       ],
     ),

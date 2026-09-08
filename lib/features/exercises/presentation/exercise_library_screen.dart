@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import '../../../database/enums.dart';
 import '../providers/exercise_providers.dart';
 import 'add_exercise_sheet.dart';
@@ -73,6 +74,7 @@ class _ExerciseLibraryScreenState extends ConsumerState<ExerciseLibraryScreen> {
                 title: Text(exercise.name),
                 subtitle: Text('${exercise.primaryMuscleGroup.label} • ${exercise.equipment.label}'),
                 trailing: exercise.isCustom ? const Icon(Icons.person, size: 18) : null,
+                onTap: () => context.push('/exercises/${exercise.id}'),
               );
             },
           );
