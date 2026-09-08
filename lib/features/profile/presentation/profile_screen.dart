@@ -1,6 +1,7 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import '../../../database/app_database.dart';
 import '../../../database/enums.dart';
 import '../providers/profile_providers.dart';
@@ -34,6 +35,10 @@ class ProfileScreen extends ConsumerWidget {
       appBar: AppBar(
         title: const Text('Profile'),
         actions: [
+          IconButton(
+            icon: const Icon(Icons.bar_chart_outlined),
+            onPressed: () => context.push('/profile/stats'),
+          ),
           IconButton(
             icon: const Icon(Icons.edit_outlined),
             onPressed: () => showModalBottomSheet(

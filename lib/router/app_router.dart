@@ -11,6 +11,7 @@ import '../features/splits/presentation/splits_list_screen.dart';
 import '../features/splits/presentation/split_detail_screen.dart';
 import '../features/splits/presentation/split_day_detail_screen.dart';
 import '../features/profile/presentation/profile_screen.dart';
+import '../features/stats/presentation/stats_screen.dart';
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
 
@@ -81,7 +82,15 @@ final appRouter = GoRouter(
           ],
         ),
         StatefulShellBranch(
-          routes: [GoRoute(path: '/profile', builder: (c, s) => const ProfileScreen())],
+          routes: [
+            GoRoute(
+              path: '/profile',
+              builder: (c, s) => const ProfileScreen(),
+              routes: [
+                GoRoute(path: 'stats', builder: (c, s) => const StatsScreen()),
+              ],
+            ),
+          ],
         ),
       ],
     ),
