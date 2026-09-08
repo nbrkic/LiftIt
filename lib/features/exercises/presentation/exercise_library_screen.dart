@@ -29,6 +29,10 @@ class _ExerciseLibraryScreenState extends ConsumerState<ExerciseLibraryScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Exercises'),
+        leading: IconButton(
+          icon: const Icon(Icons.menu),
+          onPressed: () => Scaffold.of(context).openDrawer(),
+        ),
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(56),
           child: Padding(

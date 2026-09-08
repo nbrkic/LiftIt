@@ -42,7 +42,7 @@ class _LogSetSheetState extends ConsumerState<LogSetSheet> {
           reps: int.parse(_repsController.text),
           isWarmup: _isWarmup,
         );
-    if (mounted) Navigator.of(context).pop();
+    if (mounted) Navigator.of(context).pop(true);
   }
 
   @override

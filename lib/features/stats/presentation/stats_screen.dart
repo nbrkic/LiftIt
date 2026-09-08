@@ -24,7 +24,13 @@ class StatsScreen extends ConsumerWidget {
     final muscleVolumeAsync = ref.watch(muscleGroupVolumeProvider);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Stats')),
+      appBar: AppBar(
+        title: const Text('Stats'),
+        leading: IconButton(
+          icon: const Icon(Icons.menu),
+          onPressed: () => Scaffold.of(context).openDrawer(),
+        ),
+      ),
       body: sessionsAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (error, stack) => Center(child: Text('Error: $error')),

@@ -11,7 +11,13 @@ class HomeScreen extends ConsumerWidget {
     final activeSession = ref.watch(activeSessionProvider).value;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('LiftIt')),
+      appBar: AppBar(
+        title: const Text('LiftIt'),
+        leading: IconButton(
+          icon: const Icon(Icons.menu),
+          onPressed: () => Scaffold.of(context).openDrawer(),
+        ),
+      ),
       body: Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,

@@ -12,6 +12,7 @@ import '../features/splits/presentation/split_detail_screen.dart';
 import '../features/splits/presentation/split_day_detail_screen.dart';
 import '../features/profile/presentation/profile_screen.dart';
 import '../features/stats/presentation/stats_screen.dart';
+import '../features/settings/presentation/settings_screen.dart';
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
 
@@ -58,39 +59,10 @@ final appRouter = GoRouter(
           ],
         ),
         StatefulShellBranch(
-          routes: [
-            GoRoute(
-              path: '/splits',
-              builder: (c, s) => const SplitsListScreen(),
-              routes: [
-                GoRoute(
-                  path: ':id',
-                  builder: (c, s) => SplitDetailScreen(
-                    splitId: int.parse(s.pathParameters['id']!),
-                  ),
-                  routes: [
-                    GoRoute(
-                      path: 'day/:dayId',
-                      builder: (c, s) => SplitDayDetailScreen(
-                        splitDayId: int.parse(s.pathParameters['dayId']!),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ],
+          routes: [GoRoute(path: '/stats', builder: (c, s) => const StatsScreen())],
         ),
         StatefulShellBranch(
-          routes: [
-            GoRoute(
-              path: '/profile',
-              builder: (c, s) => const ProfileScreen(),
-              routes: [
-                GoRoute(path: 'stats', builder: (c, s) => const StatsScreen()),
-              ],
-            ),
-          ],
+          routes: [GoRoute(path: '/profile', builder: (c, s) => const ProfileScreen())],
         ),
       ],
     ),
@@ -98,6 +70,32 @@ final appRouter = GoRouter(
       path: '/active-workout',
       parentNavigatorKey: _rootNavigatorKey,
       builder: (c, s) => ActiveWorkoutScreen(startFromSplitDayId: s.extra as int?),
+    ),
+    GoRoute(
+      path: '/settings',
+      parentNavigatorKey: _rootNavigatorKey,
+      builder: (c, s) => const SettingsScreen(),
+    ),
+    GoRoute(
+      path: '/splits',
+      parentNavigatorKey: _rootNavigatorKey,
+      builder: (c, s) => const SplitsListScreen(),
+      routes: [
+        GoRoute(
+          path: ':id',
+          builder: (c, s) => SplitDetailScreen(
+            splitId: int.parse(s.pathParameters['id']!),
+          ),
+          routes: [
+            GoRoute(
+              path: 'day/:dayId',
+              builder: (c, s) => SplitDayDetailScreen(
+                splitDayId: int.parse(s.pathParameters['dayId']!),
+              ),
+            ),
+          ],
+        ),
+      ],
     ),
   ],
 );
