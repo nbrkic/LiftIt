@@ -7,6 +7,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:share_plus/share_plus.dart';
 
 import '../../../database/backup_service.dart';
+import '../../../design/tokens/app_colors.dart';
+import '../../../design/tokens/app_spacing.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../../providers/database_provider.dart';
 import '../../../providers/locale_provider.dart';
@@ -81,6 +83,7 @@ class SettingsScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final c = context.colors;
     final themeMode = ref.watch(themeModeProvider);
     final locale = ref.watch(localeProvider);
     final l10n = AppLocalizations.of(context)!;
@@ -90,10 +93,10 @@ class SettingsScreen extends ConsumerWidget {
       body: SafeArea(
         top: false,
         child: ListView(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(AppSpacing.xxl),
           children: [
-            Text(l10n.appearanceLabel, style: Theme.of(context).textTheme.titleMedium),
-            const SizedBox(height: 12),
+            Text(l10n.appearanceLabel.toUpperCase(), style: Theme.of(context).textTheme.labelMedium),
+            const SizedBox(height: AppSpacing.md),
             SegmentedButton<ThemeMode>(
               segments: [
                 ButtonSegment(
@@ -117,9 +120,9 @@ class SettingsScreen extends ConsumerWidget {
                   .read(themeModeProvider.notifier)
                   .setThemeMode(selection.first),
             ),
-            const SizedBox(height: 32),
-            Text(l10n.languageLabel, style: Theme.of(context).textTheme.titleMedium),
-            const SizedBox(height: 12),
+            const SizedBox(height: AppSpacing.xxxl),
+            Text(l10n.languageLabel.toUpperCase(), style: Theme.of(context).textTheme.labelMedium),
+            const SizedBox(height: AppSpacing.md),
             SegmentedButton<Locale>(
               segments: [
                 ButtonSegment(value: const Locale('en'), label: Text(l10n.languageEnglish)),
@@ -129,49 +132,38 @@ class SettingsScreen extends ConsumerWidget {
               onSelectionChanged: (selection) =>
                   ref.read(localeProvider.notifier).setLocale(selection.first),
             ),
-            const SizedBox(height: 32),
+            const SizedBox(height: AppSpacing.xxxl),
             Text(
-              l10n.backupRestoreLabel,
-              style: Theme.of(context).textTheme.titleMedium,
+              l10n.backupRestoreLabel.toUpperCase(),
+              style: Theme.of(context).textTheme.labelMedium,
             ),
-            const SizedBox(height: 4),
+            const SizedBox(height: AppSpacing.sm),
             Text(
               l10n.backupDescription,
-              style: Theme.of(context).textTheme.bodySmall,
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(color: c.textSecondary),
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: AppSpacing.lg),
             FilledButton.icon(
               onPressed: () => _exportBackup(context, ref),
               icon: const Icon(Icons.upload_outlined),
               label: Text(l10n.exportBackupButton),
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: AppSpacing.sm),
             OutlinedButton.icon(
               onPressed: () => _restoreBackup(context, ref),
               icon: const Icon(Icons.download_outlined),
               label: Text(l10n.restoreFromBackupButton),
             ),
-            const SizedBox(height: 32),
-            Text(l10n.aboutLabel, style: Theme.of(context).textTheme.titleMedium),
-            const SizedBox(height: 12),
-            Card(
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      l10n.appTitle,
-                      style: Theme.of(context).textTheme.titleLarge,
-                    ),
-                    const SizedBox(height: 4),
-                    Text(l10n.versionLabel(_appVersion)),
-                    const SizedBox(height: 8),
-                    Text(l10n.aboutDescription),
-                  ],
-                ),
-              ),
-            ),
+            const SizedBox(height: AppSpacing.xxxl),
+            Text(l10n.aboutLabel.toUpperCase(), style: Theme.of(context).textTheme.labelMedium),
+            const SizedBox(height: AppSpacing.md),
+            Text(l10n.appTitle, style: Theme.of(context).textTheme.titleLarge),
+            const SizedBox(height: AppSpacing.xs),
+            Text(l10n.versionLabel(_appVersion),
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(color: c.textSecondary)),
+            const SizedBox(height: AppSpacing.sm),
+            Text(l10n.aboutDescription,
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: c.textSecondary)),
           ],
         ),
       ),

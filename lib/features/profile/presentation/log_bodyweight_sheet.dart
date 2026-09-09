@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../common/weight_format.dart';
+import '../../../design/tokens/app_spacing.dart';
+import '../../../design/widgets/lift_button.dart';
 import '../../../l10n/app_localizations.dart';
 import '../providers/profile_providers.dart';
 
@@ -41,12 +43,12 @@ class _LogBodyweightSheetState extends ConsumerState<LogBodyweightSheet> {
 
     return Padding(
       padding: EdgeInsets.only(
-        left: 16,
-        right: 16,
-        top: 16,
+        left: AppSpacing.xxl,
+        right: AppSpacing.xxl,
+        top: AppSpacing.xl,
         bottom: MediaQuery.of(context).viewInsets.bottom +
             MediaQuery.of(context).padding.bottom +
-            16,
+            AppSpacing.xxl,
       ),
       child: Form(
         key: _formKey,
@@ -55,7 +57,7 @@ class _LogBodyweightSheetState extends ConsumerState<LogBodyweightSheet> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Text(l10n.logWeighInTitle, style: Theme.of(context).textTheme.titleLarge),
-            const SizedBox(height: 16),
+            const SizedBox(height: AppSpacing.xl),
             TextFormField(
               controller: _weightController,
               autofocus: true,
@@ -64,13 +66,13 @@ class _LogBodyweightSheetState extends ConsumerState<LogBodyweightSheet> {
               validator: (value) =>
                   double.tryParse((value ?? '').replaceAll(',', '.')) == null ? l10n.invalid : null,
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: AppSpacing.md),
             TextFormField(
               controller: _notesController,
               decoration: InputDecoration(labelText: l10n.notesOptionalLabel),
             ),
-            const SizedBox(height: 20),
-            FilledButton(onPressed: _submit, child: Text(l10n.logWeightButton)),
+            const SizedBox(height: AppSpacing.xl),
+            LiftPrimaryButton(label: l10n.logWeightButton, onPressed: _submit),
           ],
         ),
       ),

@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../design/tokens/app_colors.dart';
+import '../../../design/tokens/app_spacing.dart';
+import '../../../design/widgets/empty_state.dart';
 import '../../../l10n/app_localizations.dart';
 import '../providers/split_providers.dart';
 import 'create_split_sheet.dart';
@@ -11,6 +14,7 @@ class SplitsListScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final c = context.colors;
     final splitsAsync = ref.watch(splitListProvider);
     final l10n = AppLocalizations.of(context)!;
 
@@ -34,32 +38,53 @@ class SplitsListScreen extends ConsumerWidget {
           error: (error, stack) => Center(child: Text(l10n.errorMessage('$error'))),
           data: (splitList) {
             if (splitList.isEmpty) {
-              return Center(
-                child: Text(l10n.noSplitsYetTapToCreate),
-              );
+              return LiftEmptyState(message: l10n.noSplitsYetTapToCreate);
             }
-            return ListView.builder(
+            return ListView.separated(
+              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xxl, vertical: AppSpacing.sm),
               itemCount: splitList.length,
+              separatorBuilder: (_, _) => Divider(height: 1, color: c.divider),
               itemBuilder: (context, index) {
                 final split = splitList[index];
                 return Dismissible(
                   key: ValueKey(split.id),
                   direction: DismissDirection.endToStart,
                   background: Container(
-                    color: Theme.of(context).colorScheme.errorContainer,
+                    color: c.danger.withValues(alpha: 0.15),
                     alignment: Alignment.centerRight,
-                    padding: const EdgeInsets.only(right: 20),
-                    child: const Icon(Icons.delete_outline),
+                    padding: const EdgeInsets.only(right: AppSpacing.lg),
+                    child: Icon(Icons.delete_outline, color: c.danger),
                   ),
                   onDismissed: (_) =>
                       ref.read(splitControllerProvider).deleteSplit(split.id),
-                  child: ListTile(
-                    title: Text(split.name),
-                    subtitle: split.description != null
-                        ? Text(split.description!)
-                        : null,
-                    trailing: const Icon(Icons.chevron_right),
+                  child: InkWell(
                     onTap: () => context.push('/splits/${split.id}'),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: AppSpacing.md),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(split.name, style: Theme.of(context).textTheme.titleMedium),
+                                if (split.description != null && split.description!.isNotEmpty) ...[
+                                  const SizedBox(height: 2),
+                                  Text(
+                                    split.description!,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodySmall
+                                        ?.copyWith(color: c.textSecondary),
+                                  ),
+                                ],
+                              ],
+                            ),
+                          ),
+                          Icon(Icons.chevron_right, size: 20, color: c.textSecondary),
+                        ],
+                      ),
+                    ),
                   ),
                 );
               },

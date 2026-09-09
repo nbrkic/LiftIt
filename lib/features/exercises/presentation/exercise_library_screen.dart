@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../database/enums.dart';
+import '../../../design/tokens/app_colors.dart';
+import '../../../design/tokens/app_spacing.dart';
+import '../../../design/widgets/empty_state.dart';
 import '../../../l10n/app_localizations.dart';
 import '../providers/exercise_providers.dart';
 import 'add_exercise_sheet.dart';
@@ -25,6 +28,7 @@ class _ExerciseLibraryScreenState extends ConsumerState<ExerciseLibraryScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final c = context.colors;
     final exercisesAsync = ref.watch(exerciseListProvider);
     final l10n = AppLocalizations.of(context)!;
 
@@ -36,15 +40,14 @@ class _ExerciseLibraryScreenState extends ConsumerState<ExerciseLibraryScreen> {
           onPressed: () => Scaffold.of(context).openDrawer(),
         ),
         bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(56),
+          preferredSize: const Size.fromHeight(60),
           child: Padding(
-            padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
+            padding: const EdgeInsets.fromLTRB(AppSpacing.xxl, 0, AppSpacing.xxl, AppSpacing.md),
             child: TextField(
               controller: _searchController,
               decoration: InputDecoration(
-                prefixIcon: const Icon(Icons.search),
+                prefixIcon: const Icon(Icons.search, size: 20),
                 hintText: l10n.searchExercises,
-                border: const OutlineInputBorder(),
                 isDense: true,
               ),
               onChanged: (value) => setState(() => _query = value.trim().toLowerCase()),
@@ -69,21 +72,48 @@ class _ExerciseLibraryScreenState extends ConsumerState<ExerciseLibraryScreen> {
               : exercises.where((e) => e.name.toLowerCase().contains(_query)).toList();
 
           if (filtered.isEmpty) {
-            return Center(child: Text(l10n.noExercisesFound));
+            return LiftEmptyState(message: l10n.noExercisesFound);
           }
 
-          return ListView.builder(
+          return ListView.separated(
+            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xxl, vertical: AppSpacing.sm),
             itemCount: filtered.length,
+            separatorBuilder: (_, _) => Divider(height: 1, color: c.divider),
             itemBuilder: (context, index) {
               final exercise = filtered[index];
-              return ListTile(
-                title: Text(exercise.name),
-                subtitle: Text(l10n.exerciseSubtitle(
-                  exercise.primaryMuscleGroup.label(context),
-                  exercise.equipment.label(context),
-                )),
-                trailing: exercise.isCustom ? const Icon(Icons.person, size: 18) : null,
+              return InkWell(
                 onTap: () => context.push('/exercises/${exercise.id}'),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: AppSpacing.md),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(exercise.name, style: Theme.of(context).textTheme.titleMedium),
+                            const SizedBox(height: 2),
+                            Text(
+                              l10n.exerciseSubtitle(
+                                exercise.primaryMuscleGroup.label(context),
+                                exercise.equipment.label(context),
+                              ),
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodySmall
+                                  ?.copyWith(color: c.textSecondary),
+                            ),
+                          ],
+                        ),
+                      ),
+                      if (exercise.isCustom) ...[
+                        Icon(Icons.person_outline, size: 16, color: c.textSecondary),
+                        const SizedBox(width: AppSpacing.sm),
+                      ],
+                      Icon(Icons.chevron_right, size: 20, color: c.textSecondary),
+                    ],
+                  ),
+                ),
               );
             },
           );

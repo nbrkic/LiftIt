@@ -4,6 +4,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../common/weight_format.dart';
 import '../../../database/app_database.dart';
 import '../../../database/enums.dart';
+import '../../../design/tokens/app_colors.dart';
+import '../../../design/tokens/app_spacing.dart';
+import '../../../design/widgets/chart_theme.dart';
+import '../../../design/widgets/empty_state.dart';
+import '../../../design/widgets/set_row.dart';
+import '../../../design/widgets/stat_block.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../profile/providers/profile_providers.dart';
 import '../providers/exercise_providers.dart';
@@ -17,6 +23,7 @@ class ExerciseDetailScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final c = context.colors;
     final exercisesAsync = ref.watch(exerciseListProvider);
     final setsAsync = ref.watch(exerciseSetsProvider(exerciseId));
     final unit = ref.watch(preferredWeightUnitProvider);
@@ -37,61 +44,50 @@ class ExerciseDetailScreen extends ConsumerWidget {
         error: (error, stack) => Center(child: Text(l10n.errorMessage('$error'))),
         data: (sets) {
           if (sets.isEmpty) {
-            return Center(child: Text(l10n.noSetsLoggedForExercise));
+            return LiftEmptyState(message: l10n.noSetsLoggedForExercise);
           }
           final oneRm = computeOneRepMax(sets)!;
           final points = computeProgressPoints(sets);
 
           return ListView(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.all(AppSpacing.xxl),
             children: [
-              Card(
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(l10n.personalRecord, style: Theme.of(context).textTheme.labelLarge),
-                      const SizedBox(height: 4),
-                      Text(
-                        l10n.timesReps(formatWeight(oneRm.set.weight, unit), oneRm.set.reps) +
-                            (oneRm.set.rpe != null ? l10n.rpeSuffix('${oneRm.set.rpe}') : ''),
-                        style: Theme.of(context).textTheme.headlineSmall,
-                      ),
-                      Text(
-                        '${oneRm.isTested ? l10n.oneRepMaxTested : l10n.estimatedOneRepMax}: '
-                        '${formatWeight(oneRm.weight, unit)}',
-                      ),
-                    ],
-                  ),
-                ),
+              Text(l10n.personalRecord.toUpperCase(), style: Theme.of(context).textTheme.labelMedium),
+              const SizedBox(height: AppSpacing.sm),
+              StatBlock(
+                value: '${oneRm.isTested ? '' : '~'}${formatWeight(oneRm.weight, unit)}',
+                label: oneRm.isTested ? l10n.oneRepMaxTested : l10n.estimatedOneRepMax,
+                valueSize: 44,
+                valueColor: c.violetLight,
+              ),
+              const SizedBox(height: AppSpacing.xs),
+              Text(
+                l10n.timesReps(formatWeight(oneRm.set.weight, unit), oneRm.set.reps) +
+                    (oneRm.set.rpe != null ? l10n.rpeSuffix('${oneRm.set.rpe}') : ''),
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: c.textSecondary),
               ),
               if (points.length > 1) ...[
-                const SizedBox(height: 24),
+                const SizedBox(height: AppSpacing.xxxl),
                 Text(l10n.progressChartTitle, style: Theme.of(context).textTheme.titleMedium),
-                const SizedBox(height: 12),
+                const SizedBox(height: AppSpacing.lg),
                 SizedBox(height: 200, child: _ProgressChart(points: points, unit: unit)),
               ],
-              const SizedBox(height: 24),
+              const SizedBox(height: AppSpacing.xxxl),
               Text(l10n.historyLabel, style: Theme.of(context).textTheme.titleMedium),
-              const SizedBox(height: 8),
-              ...sets.reversed.map((set) => ListTile(
-                    contentPadding: EdgeInsets.zero,
-                    title: Text(
-                      l10n.timesReps(formatWeight(set.weight, unit), set.reps) +
-                          (set.rpe != null ? l10n.rpeSuffix('${set.rpe}') : ''),
-                    ),
-                    subtitle: Text(_formatDate(set.completedAt)),
+              Divider(height: AppSpacing.xl, color: c.divider),
+              ...sets.reversed.map((set) => SetRow(
+                    setNumber: set.setNumber,
+                    weightLabel: formatWeight(set.weight, unit),
+                    reps: set.reps,
+                    rpe: set.rpe,
+                    note: set.notes,
+                    isWarmup: set.isWarmup,
                   )),
             ],
           );
         },
       ),
     );
-  }
-
-  String _formatDate(DateTime date) {
-    return '${date.day.toString().padLeft(2, '0')}.${date.month.toString().padLeft(2, '0')}.${date.year}';
   }
 }
 
@@ -103,6 +99,7 @@ class _ProgressChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final chart = ChartTheme.of(context);
     final spots = points
         .asMap()
         .entries
@@ -111,12 +108,16 @@ class _ProgressChart extends StatelessWidget {
 
     return LineChart(
       LineChartData(
-        gridData: const FlGridData(show: true, drawVerticalLine: false),
-        borderData: FlBorderData(show: false),
+        gridData: chart.grid,
+        borderData: chart.border,
         titlesData: FlTitlesData(
           topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
           rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-          leftTitles: AxisTitles(sideTitles: SideTitles(showTitles: true, reservedSize: 40)),
+          leftTitles: AxisTitles(
+            sideTitles: SideTitles(showTitles: true, reservedSize: 40, getTitlesWidget: (value, meta) {
+              return Text(value.round().toString(), style: chart.axisLabelStyle);
+            }),
+          ),
           bottomTitles: AxisTitles(
             sideTitles: SideTitles(
               showTitles: true,
@@ -128,25 +129,14 @@ class _ProgressChart extends StatelessWidget {
                 final date = points[index].date;
                 return Padding(
                   padding: const EdgeInsets.only(top: 4),
-                  child: Text('${date.day}.${date.month}.', style: const TextStyle(fontSize: 10)),
+                  child: Text('${date.day}.${date.month}.', style: chart.axisLabelStyle),
                 );
               },
             ),
           ),
         ),
-        lineBarsData: [
-          LineChartBarData(
-            spots: spots,
-            isCurved: true,
-            barWidth: 3,
-            color: Theme.of(context).colorScheme.primary,
-            dotData: const FlDotData(show: true),
-            belowBarData: BarAreaData(
-              show: true,
-              color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.15),
-            ),
-          ),
-        ],
+        lineTouchData: chart.lineTouch(label: (spot) => spot.y.toStringAsFixed(0)),
+        lineBarsData: [chart.line(spots)],
       ),
     );
   }

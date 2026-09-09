@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import '../design/widgets/lift_nav_bar.dart';
 import '../l10n/app_localizations.dart';
 import 'app_drawer.dart';
 
@@ -14,16 +15,16 @@ class AppShell extends StatelessWidget {
     return Scaffold(
       drawer: const AppDrawer(),
       body: navigationShell,
-      bottomNavigationBar: NavigationBar(
+      bottomNavigationBar: LiftNavBar(
         selectedIndex: navigationShell.currentIndex,
         onDestinationSelected: (index) =>
             navigationShell.goBranch(index, initialLocation: index == navigationShell.currentIndex),
         destinations: [
-          NavigationDestination(icon: const Icon(Icons.home_outlined), selectedIcon: const Icon(Icons.home), label: l10n.navHome),
-          NavigationDestination(icon: const Icon(Icons.history_outlined), selectedIcon: const Icon(Icons.history), label: l10n.navHistory),
-          NavigationDestination(icon: const Icon(Icons.fitness_center_outlined), selectedIcon: const Icon(Icons.fitness_center), label: l10n.navExercises),
-          NavigationDestination(icon: const Icon(Icons.bar_chart_outlined), selectedIcon: const Icon(Icons.bar_chart), label: l10n.navStats),
-          NavigationDestination(icon: const Icon(Icons.person_outline), selectedIcon: const Icon(Icons.person), label: l10n.navProfile),
+          LiftNavDestination(icon: Icons.home_outlined, selectedIcon: Icons.home_rounded, label: l10n.navHome),
+          LiftNavDestination(icon: Icons.history_outlined, selectedIcon: Icons.history_rounded, label: l10n.navHistory),
+          LiftNavDestination(icon: Icons.fitness_center_outlined, selectedIcon: Icons.fitness_center_rounded, label: l10n.navExercises),
+          LiftNavDestination(icon: Icons.bar_chart_outlined, selectedIcon: Icons.bar_chart_rounded, label: l10n.navStats),
+          LiftNavDestination(icon: Icons.person_outline, selectedIcon: Icons.person_rounded, label: l10n.navProfile),
         ],
       ),
     );

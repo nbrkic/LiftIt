@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../database/enums.dart';
+import '../../../design/tokens/app_colors.dart';
+import '../../../design/tokens/app_spacing.dart';
 import '../../../l10n/app_localizations.dart';
 import '../providers/profile_providers.dart';
 import 'edit_profile_sheet.dart';
@@ -21,6 +23,8 @@ class ProfileScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final c = context.colors;
+    final theme = Theme.of(context);
     final profileAsync = ref.watch(userProfileProvider);
     final unit = ref.watch(preferredWeightUnitProvider);
     final l10n = AppLocalizations.of(context)!;
@@ -49,39 +53,45 @@ class ProfileScreen extends ConsumerWidget {
         data: (profile) {
           final age = _ageFrom(profile?.birthDate);
 
+          final rows = <String>[
+            if (age != null) l10n.ageLabel(age),
+            if (profile?.gender != null) l10n.genderValueLabel(profile!.gender!.label(context)),
+            if (profile?.heightCm != null) l10n.heightValueLabel('${profile!.heightCm}'),
+            if (profile?.experienceLevel != null)
+              l10n.experienceValueLabel(profile!.experienceLevel!.label(context)),
+            if (profile?.primaryGoal != null)
+              l10n.goalValueLabel(profile!.primaryGoal!.label(context)),
+            if (profile?.weeklyTrainingGoal != null)
+              l10n.weeklyGoalValueLabel(profile!.weeklyTrainingGoal!),
+            l10n.preferredUnitValueLabel(unit.label(context)),
+          ];
+
           return ListView(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.all(AppSpacing.xxl),
             children: [
-              Card(
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        profile?.name?.isNotEmpty == true ? profile!.name! : l10n.noNameSet,
-                        style: Theme.of(context).textTheme.titleLarge,
-                      ),
-                      const SizedBox(height: 8),
-                      if (age != null) Text(l10n.ageLabel(age)),
-                      if (profile?.gender != null) Text(l10n.genderValueLabel(profile!.gender!.label(context))),
-                      if (profile?.heightCm != null) Text(l10n.heightValueLabel('${profile!.heightCm}')),
-                      if (profile?.experienceLevel != null)
-                        Text(l10n.experienceValueLabel(profile!.experienceLevel!.label(context))),
-                      if (profile?.primaryGoal != null)
-                        Text(l10n.goalValueLabel(profile!.primaryGoal!.label(context))),
-                      if (profile?.weeklyTrainingGoal != null)
-                        Text(l10n.weeklyGoalValueLabel(profile!.weeklyTrainingGoal!)),
-                      Text(l10n.preferredUnitValueLabel(unit.label(context))),
-                      if (profile == null)
-                        Padding(
-                          padding: const EdgeInsets.only(top: 8),
-                          child: Text(l10n.tapEditToFillProfile),
-                        ),
-                    ],
-                  ),
-                ),
+              Text(
+                profile?.name?.isNotEmpty == true ? profile!.name! : l10n.noNameSet,
+                style: theme.textTheme.displaySmall,
               ),
+              if (profile == null) ...[
+                const SizedBox(height: AppSpacing.sm),
+                Text(l10n.tapEditToFillProfile,
+                    style: theme.textTheme.bodyMedium?.copyWith(color: c.textSecondary)),
+              ],
+              const SizedBox(height: AppSpacing.xxl),
+              Divider(height: 1, color: c.divider),
+              ...rows.map((row) => Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: AppSpacing.md),
+                        child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(row, style: theme.textTheme.bodyMedium),
+                        ),
+                      ),
+                      Divider(height: 1, color: c.divider),
+                    ],
+                  )),
             ],
           );
         },

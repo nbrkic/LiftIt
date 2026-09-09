@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../design/tokens/app_spacing.dart';
+import '../../../design/widgets/lift_button.dart';
 import '../../../l10n/app_localizations.dart';
 import '../providers/split_providers.dart';
 
@@ -36,12 +38,12 @@ class _AddSplitDaySheetState extends ConsumerState<AddSplitDaySheet> {
     final l10n = AppLocalizations.of(context)!;
     return Padding(
       padding: EdgeInsets.only(
-        left: 16,
-        right: 16,
-        top: 16,
+        left: AppSpacing.xxl,
+        right: AppSpacing.xxl,
+        top: AppSpacing.xl,
         bottom: MediaQuery.of(context).viewInsets.bottom +
             MediaQuery.of(context).padding.bottom +
-            16,
+            AppSpacing.xxl,
       ),
       child: Form(
         key: _formKey,
@@ -50,7 +52,7 @@ class _AddSplitDaySheetState extends ConsumerState<AddSplitDaySheet> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Text(l10n.addDayTitle, style: Theme.of(context).textTheme.titleLarge),
-            const SizedBox(height: 16),
+            const SizedBox(height: AppSpacing.xl),
             TextFormField(
               controller: _nameController,
               autofocus: true,
@@ -58,8 +60,8 @@ class _AddSplitDaySheetState extends ConsumerState<AddSplitDaySheet> {
               validator: (value) =>
                   (value == null || value.trim().isEmpty) ? l10n.enterAName : null,
             ),
-            const SizedBox(height: 20),
-            FilledButton(onPressed: _submit, child: Text(l10n.addDayButton)),
+            const SizedBox(height: AppSpacing.xl),
+            LiftPrimaryButton(label: l10n.addDayButton, onPressed: _submit),
           ],
         ),
       ),

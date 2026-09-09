@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../database/app_database.dart';
 import '../../../database/enums.dart';
+import '../../../design/tokens/app_colors.dart';
+import '../../../design/tokens/app_spacing.dart';
+import '../../../design/widgets/empty_state.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../exercises/providers/exercise_providers.dart';
 
@@ -17,6 +20,7 @@ class _ExercisePickerSheetState extends ConsumerState<ExercisePickerSheet> {
 
   @override
   Widget build(BuildContext context) {
+    final c = context.colors;
     final exercisesAsync = ref.watch(exerciseListProvider);
     final l10n = AppLocalizations.of(context)!;
 
@@ -29,13 +33,13 @@ class _ExercisePickerSheetState extends ConsumerState<ExercisePickerSheet> {
         return Column(
           children: [
             Padding(
-              padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+              padding: const EdgeInsets.fromLTRB(
+                  AppSpacing.xxl, AppSpacing.xl, AppSpacing.xxl, AppSpacing.sm),
               child: TextField(
                 autofocus: true,
                 decoration: InputDecoration(
-                  prefixIcon: const Icon(Icons.search),
+                  prefixIcon: const Icon(Icons.search, size: 20),
                   hintText: l10n.searchExercises,
-                  border: const OutlineInputBorder(),
                   isDense: true,
                 ),
                 onChanged: (value) => setState(() => _query = value.trim().toLowerCase()),
@@ -49,18 +53,38 @@ class _ExercisePickerSheetState extends ConsumerState<ExercisePickerSheet> {
                   final filtered = _query.isEmpty
                       ? exercises
                       : exercises.where((e) => e.name.toLowerCase().contains(_query)).toList();
-                  return ListView.builder(
+                  if (filtered.isEmpty) {
+                    return LiftEmptyState(message: l10n.noExercisesFound);
+                  }
+                  return ListView.separated(
                     controller: scrollController,
+                    padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xxl),
                     itemCount: filtered.length,
+                    separatorBuilder: (_, _) => Divider(height: 1, color: c.divider),
                     itemBuilder: (context, index) {
                       final exercise = filtered[index];
-                      return ListTile(
-                        title: Text(exercise.name),
-                        subtitle: Text(l10n.exerciseSubtitle(
-                          exercise.primaryMuscleGroup.label(context),
-                          exercise.equipment.label(context),
-                        )),
+                      return InkWell(
                         onTap: () => Navigator.of(context).pop<Exercise>(exercise),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(vertical: AppSpacing.md),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(exercise.name, style: Theme.of(context).textTheme.titleMedium),
+                              const SizedBox(height: 2),
+                              Text(
+                                l10n.exerciseSubtitle(
+                                  exercise.primaryMuscleGroup.label(context),
+                                  exercise.equipment.label(context),
+                                ),
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodySmall
+                                    ?.copyWith(color: c.textSecondary),
+                              ),
+                            ],
+                          ),
+                        ),
                       );
                     },
                   );

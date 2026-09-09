@@ -49,6 +49,18 @@ OneRepMax? computeOneRepMax(List<WorkoutSet> sets) {
   return OneRepMax(set: best.set, weight: best.estimated1Rm, isTested: false);
 }
 
+// The sets from the most recent session that touched this exercise, other
+// than the given (typically active) session — "Last time: 80x8, 80x8..."
+// `allSets` must already be ordered ascending by completedAt (as returned by
+// watchSetsForExercise), so the most recent prior session is whichever one
+// the last non-excluded entry belongs to.
+List<WorkoutSet> previousSessionSets(List<WorkoutSet> allSets, int excludingSessionId) {
+  final prior = allSets.where((s) => s.workoutSessionId != excludingSessionId).toList();
+  if (prior.isEmpty) return const [];
+  final lastSessionId = prior.last.workoutSessionId;
+  return prior.where((s) => s.workoutSessionId == lastSessionId).toList();
+}
+
 class ProgressPoint {
   final DateTime date;
   final double estimated1Rm;

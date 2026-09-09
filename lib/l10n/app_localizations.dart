@@ -224,6 +224,60 @@ abstract class AppLocalizations {
   /// **'reps not set'**
   String get repsNotSet;
 
+  /// No description provided for @lastTimeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Last time'**
+  String get lastTimeLabel;
+
+  /// No description provided for @newPrTag.
+  ///
+  /// In en, this message translates to:
+  /// **'New PR'**
+  String get newPrTag;
+
+  /// No description provided for @restDismiss.
+  ///
+  /// In en, this message translates to:
+  /// **'Dismiss'**
+  String get restDismiss;
+
+  /// No description provided for @setsLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Sets'**
+  String get setsLabel;
+
+  /// No description provided for @workoutCompleteTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Workout Complete'**
+  String get workoutCompleteTitle;
+
+  /// No description provided for @doneButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Done'**
+  String get doneButton;
+
+  /// No description provided for @deleteWorkoutDialogTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete workout?'**
+  String get deleteWorkoutDialogTitle;
+
+  /// No description provided for @deleteWorkoutDialogContent.
+  ///
+  /// In en, this message translates to:
+  /// **'This will permanently delete this workout and all its logged sets. This cannot be undone.'**
+  String get deleteWorkoutDialogContent;
+
+  /// No description provided for @deleteButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get deleteButton;
+
   /// No description provided for @homeStartFreestyleWorkout.
   ///
   /// In en, this message translates to:
@@ -241,6 +295,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Start From a Split'**
   String get homeStartFromSplit;
+
+  /// No description provided for @workoutInProgressLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Workout in progress'**
+  String get workoutInProgressLabel;
+
+  /// No description provided for @homeStreakStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} week streak'**
+  String homeStreakStatus(int count);
+
+  /// No description provided for @greetingMorning.
+  ///
+  /// In en, this message translates to:
+  /// **'Good morning'**
+  String get greetingMorning;
+
+  /// No description provided for @greetingAfternoon.
+  ///
+  /// In en, this message translates to:
+  /// **'Good afternoon'**
+  String get greetingAfternoon;
+
+  /// No description provided for @greetingEvening.
+  ///
+  /// In en, this message translates to:
+  /// **'Good evening'**
+  String get greetingEvening;
 
   /// No description provided for @bodyweightTitle.
   ///

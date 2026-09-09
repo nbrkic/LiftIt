@@ -3,6 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../database/app_database.dart';
+import '../../../design/tokens/app_colors.dart';
+import '../../../design/tokens/app_spacing.dart';
+import '../../../design/widgets/empty_state.dart';
+import '../../../design/widgets/lift_button.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../workout/presentation/exercise_picker_sheet.dart';
 import '../providers/split_providers.dart';
@@ -30,6 +34,7 @@ class SplitDayDetailScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final c = context.colors;
     final dayAsync = ref.watch(splitDayByIdProvider(splitDayId));
     final plannedAsync = ref.watch(splitDayExercisesProvider(splitDayId));
     final l10n = AppLocalizations.of(context)!;
@@ -50,11 +55,12 @@ class SplitDayDetailScreen extends ConsumerWidget {
               children: [
                 Expanded(
                   child: planned.isEmpty
-                      ? Center(
-                          child: Text(l10n.noExercisesYetTapToAdd),
-                        )
-                      : ListView.builder(
+                      ? LiftEmptyState(message: l10n.noExercisesYetTapToAdd)
+                      : ListView.separated(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: AppSpacing.xxl, vertical: AppSpacing.sm),
                           itemCount: planned.length,
+                          separatorBuilder: (_, _) => Divider(height: 1, color: c.divider),
                           itemBuilder: (context, index) {
                             final entry = planned[index];
                             final repsRange =
@@ -69,20 +75,30 @@ class SplitDayDetailScreen extends ConsumerWidget {
                               key: ValueKey(entry.planned.id),
                               direction: DismissDirection.endToStart,
                               background: Container(
-                                color: Theme.of(context)
-                                    .colorScheme
-                                    .errorContainer,
+                                color: c.danger.withValues(alpha: 0.15),
                                 alignment: Alignment.centerRight,
-                                padding: const EdgeInsets.only(right: 20),
-                                child: const Icon(Icons.delete_outline),
+                                padding: const EdgeInsets.only(right: AppSpacing.lg),
+                                child: Icon(Icons.delete_outline, color: c.danger),
                               ),
                               onDismissed: (_) => ref
                                   .read(splitControllerProvider)
                                   .removeExerciseFromDay(entry.planned.id),
-                              child: ListTile(
-                                title: Text(entry.exercise.name),
-                                subtitle: Text(
-                                  l10n.setsRepsRangeSummary(entry.planned.targetSets, repsRange),
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(vertical: AppSpacing.md),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(entry.exercise.name,
+                                        style: Theme.of(context).textTheme.titleMedium),
+                                    const SizedBox(height: 2),
+                                    Text(
+                                      l10n.setsRepsRangeSummary(entry.planned.targetSets, repsRange),
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodySmall
+                                          ?.copyWith(color: c.textSecondary),
+                                    ),
+                                  ],
                                 ),
                               ),
                             );
@@ -91,12 +107,13 @@ class SplitDayDetailScreen extends ConsumerWidget {
                 ),
                 if (planned.isNotEmpty)
                   Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: FilledButton.icon(
+                    padding: const EdgeInsets.fromLTRB(
+                        AppSpacing.xxl, 0, AppSpacing.xxl, AppSpacing.xxl),
+                    child: LiftPrimaryButton(
+                      label: l10n.startWorkoutFromThisDay,
+                      icon: Icons.play_arrow_rounded,
                       onPressed: () =>
                           context.push('/active-workout', extra: splitDayId),
-                      icon: const Icon(Icons.play_arrow),
-                      label: Text(l10n.startWorkoutFromThisDay),
                     ),
                   ),
               ],

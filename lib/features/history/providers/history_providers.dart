@@ -16,3 +16,14 @@ final sessionByIdProvider =
     StreamProvider.family.autoDispose<WorkoutSession?, int>((ref, sessionId) {
   return ref.watch(appDatabaseProvider).watchSessionById(sessionId);
 });
+
+class HistoryController {
+  final AppDatabase _db;
+  HistoryController(this._db);
+
+  Future<void> deleteSession(int sessionId) => _db.deleteSession(sessionId);
+}
+
+final historyControllerProvider = Provider<HistoryController>((ref) {
+  return HistoryController(ref.watch(appDatabaseProvider));
+});

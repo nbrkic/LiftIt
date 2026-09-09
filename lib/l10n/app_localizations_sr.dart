@@ -85,6 +85,34 @@ class AppLocalizationsSr extends AppLocalizations {
   String get repsNotSet => 'ponavljanja nisu podešena';
 
   @override
+  String get lastTimeLabel => 'Prošli put';
+
+  @override
+  String get newPrTag => 'Novi rekord';
+
+  @override
+  String get restDismiss => 'Sakrij';
+
+  @override
+  String get setsLabel => 'Serije';
+
+  @override
+  String get workoutCompleteTitle => 'Trening završen';
+
+  @override
+  String get doneButton => 'Gotovo';
+
+  @override
+  String get deleteWorkoutDialogTitle => 'Obrisati trening?';
+
+  @override
+  String get deleteWorkoutDialogContent =>
+      'Ovo će trajno obrisati ovaj trening i sve njegove ulogovane serije. Ova akcija se ne može poništiti.';
+
+  @override
+  String get deleteButton => 'Obriši';
+
+  @override
   String get homeStartFreestyleWorkout => 'Započni slobodni trening';
 
   @override
@@ -92,6 +120,23 @@ class AppLocalizationsSr extends AppLocalizations {
 
   @override
   String get homeStartFromSplit => 'Započni iz splita';
+
+  @override
+  String get workoutInProgressLabel => 'Trening je u toku';
+
+  @override
+  String homeStreakStatus(int count) {
+    return '$count ned. niz';
+  }
+
+  @override
+  String get greetingMorning => 'Dobro jutro';
+
+  @override
+  String get greetingAfternoon => 'Dobar dan';
+
+  @override
+  String get greetingEvening => 'Dobro veče';
 
   @override
   String get bodyweightTitle => 'Telesna težina';

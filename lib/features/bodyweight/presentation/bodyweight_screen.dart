@@ -4,6 +4,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../common/weight_format.dart';
 import '../../../database/app_database.dart';
 import '../../../database/enums.dart';
+import '../../../design/tokens/app_colors.dart';
+import '../../../design/tokens/app_spacing.dart';
+import '../../../design/widgets/chart_theme.dart';
+import '../../../design/widgets/empty_state.dart';
+import '../../../design/widgets/stat_block.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../profile/presentation/log_bodyweight_sheet.dart';
 import '../../profile/providers/profile_providers.dart';
@@ -13,6 +18,8 @@ class BodyweightScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final c = context.colors;
+    final theme = Theme.of(context);
     final latestWeightAsync = ref.watch(latestBodyweightProvider);
     final historyAsync = ref.watch(bodyweightHistoryProvider);
     final unit = ref.watch(preferredWeightUnitProvider);
@@ -32,19 +39,21 @@ class BodyweightScreen extends ConsumerWidget {
       body: SafeArea(
         top: false,
         child: ListView(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(AppSpacing.xxl),
           children: [
             latestWeightAsync.when(
               loading: () => const SizedBox.shrink(),
               error: (error, stack) => const SizedBox.shrink(),
-              data: (latest) => Text(
-                latest == null
-                    ? l10n.bodyweightNoWeighInsYet
-                    : l10n.bodyweightCurrent(formatWeight(latest.weightKg, unit)),
-                style: Theme.of(context).textTheme.headlineSmall,
-              ),
+              data: (latest) => latest == null
+                  ? Text(l10n.bodyweightNoWeighInsYet,
+                      style: theme.textTheme.bodyLarge?.copyWith(color: c.textSecondary))
+                  : StatBlock(
+                      value: formatWeight(latest.weightKg, unit),
+                      label: l10n.bodyweightTitle,
+                      valueSize: 44,
+                    ),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: AppSpacing.xxl),
             historyAsync.when(
               loading: () => const SizedBox.shrink(),
               error: (error, stack) => const SizedBox.shrink(),
@@ -52,32 +61,51 @@ class BodyweightScreen extends ConsumerWidget {
                 if (history.length < 2) return const SizedBox.shrink();
                 final ascending = history.reversed.toList();
                 return Padding(
-                  padding: const EdgeInsets.only(bottom: 16),
-                  child: SizedBox(height: 220, child: _BodyweightChart(entries: ascending, unit: unit)),
+                  padding: const EdgeInsets.only(bottom: AppSpacing.xl),
+                  child: SizedBox(height: 200, child: _BodyweightChart(entries: ascending, unit: unit)),
                 );
               },
             ),
-            Text(l10n.historyLabel, style: Theme.of(context).textTheme.titleMedium),
-            const SizedBox(height: 8),
+            Text(l10n.historyLabel, style: theme.textTheme.titleMedium),
+            Divider(height: AppSpacing.xl, color: c.divider),
             historyAsync.when(
               loading: () => const Center(child: CircularProgressIndicator()),
               error: (error, stack) => Text(l10n.errorMessage('$error')),
               data: (history) {
-                if (history.isEmpty) return Text(l10n.bodyweightNoWeighInsYetTapToLog);
+                if (history.isEmpty) {
+                  return LiftEmptyState(message: l10n.bodyweightNoWeighInsYetTapToLog);
+                }
                 return Column(
                   children: history
-                      .map((entry) => ListTile(
-                            contentPadding: EdgeInsets.zero,
-                            title: Text(formatWeight(entry.weightKg, unit)),
-                            subtitle: Text(
-                              entry.notes != null && entry.notes!.isNotEmpty
-                                  ? l10n.bodyweightHistoryRow(_formatDate(entry.loggedAt), entry.notes!)
-                                  : _formatDate(entry.loggedAt),
-                            ),
-                            trailing: IconButton(
-                              icon: const Icon(Icons.delete_outline),
-                              onPressed: () =>
-                                  ref.read(profileControllerProvider).deleteBodyweightLog(entry.id),
+                      .map((entry) => Padding(
+                            padding: const EdgeInsets.symmetric(vertical: AppSpacing.sm),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(formatWeight(entry.weightKg, unit),
+                                          style: theme.textTheme.bodyLarge),
+                                      Text(
+                                        entry.notes != null && entry.notes!.isNotEmpty
+                                            ? l10n.bodyweightHistoryRow(
+                                                _formatDate(entry.loggedAt), entry.notes!)
+                                            : _formatDate(entry.loggedAt),
+                                        style: theme.textTheme.bodySmall
+                                            ?.copyWith(color: c.textSecondary),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                IconButton(
+                                  icon: const Icon(Icons.delete_outline, size: 20),
+                                  color: c.textSecondary,
+                                  onPressed: () => ref
+                                      .read(profileControllerProvider)
+                                      .deleteBodyweightLog(entry.id),
+                                ),
+                              ],
                             ),
                           ))
                       .toList(),
@@ -85,7 +113,7 @@ class BodyweightScreen extends ConsumerWidget {
               },
             ),
             // Extra bottom space so the last row isn't hidden behind the FAB.
-            const SizedBox(height: 72),
+            const SizedBox(height: AppSpacing.giant),
           ],
         ),
       ),
@@ -105,6 +133,7 @@ class _BodyweightChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final chart = ChartTheme.of(context);
     final displayWeights = entries.map((e) => displayWeight(e.weightKg, unit)).toList();
     final spots = displayWeights
         .asMap()
@@ -119,12 +148,19 @@ class _BodyweightChart extends StatelessWidget {
       LineChartData(
         minY: minWeight - padding,
         maxY: maxWeight + padding,
-        gridData: const FlGridData(show: true, drawVerticalLine: false),
-        borderData: FlBorderData(show: false),
+        gridData: chart.grid,
+        borderData: chart.border,
         titlesData: FlTitlesData(
           topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
           rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-          leftTitles: AxisTitles(sideTitles: SideTitles(showTitles: true, reservedSize: 40)),
+          leftTitles: AxisTitles(
+            sideTitles: SideTitles(
+              showTitles: true,
+              reservedSize: 40,
+              getTitlesWidget: (value, meta) =>
+                  Text(value.round().toString(), style: chart.axisLabelStyle),
+            ),
+          ),
           bottomTitles: AxisTitles(
             sideTitles: SideTitles(
               showTitles: true,
@@ -136,35 +172,14 @@ class _BodyweightChart extends StatelessWidget {
                 final date = entries[index].loggedAt;
                 return Padding(
                   padding: const EdgeInsets.only(top: 4),
-                  child: Text('${date.day}.${date.month}.', style: const TextStyle(fontSize: 10)),
+                  child: Text('${date.day}.${date.month}.', style: chart.axisLabelStyle),
                 );
               },
             ),
           ),
         ),
-        lineTouchData: LineTouchData(
-          touchTooltipData: LineTouchTooltipData(
-            getTooltipItems: (touchedSpots) => touchedSpots
-                .map((spot) => LineTooltipItem(
-                      formatWeight(entries[spot.x.toInt()].weightKg, unit),
-                      const TextStyle(fontWeight: FontWeight.bold),
-                    ))
-                .toList(),
-          ),
-        ),
-        lineBarsData: [
-          LineChartBarData(
-            spots: spots,
-            isCurved: true,
-            barWidth: 3,
-            color: Theme.of(context).colorScheme.primary,
-            dotData: const FlDotData(show: true),
-            belowBarData: BarAreaData(
-              show: true,
-              color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.15),
-            ),
-          ),
-        ],
+        lineTouchData: chart.lineTouch(label: (spot) => formatWeight(entries[spot.x.toInt()].weightKg, unit)),
+        lineBarsData: [chart.line(spots)],
       ),
     );
   }

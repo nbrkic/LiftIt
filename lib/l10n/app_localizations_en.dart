@@ -85,6 +85,34 @@ class AppLocalizationsEn extends AppLocalizations {
   String get repsNotSet => 'reps not set';
 
   @override
+  String get lastTimeLabel => 'Last time';
+
+  @override
+  String get newPrTag => 'New PR';
+
+  @override
+  String get restDismiss => 'Dismiss';
+
+  @override
+  String get setsLabel => 'Sets';
+
+  @override
+  String get workoutCompleteTitle => 'Workout Complete';
+
+  @override
+  String get doneButton => 'Done';
+
+  @override
+  String get deleteWorkoutDialogTitle => 'Delete workout?';
+
+  @override
+  String get deleteWorkoutDialogContent =>
+      'This will permanently delete this workout and all its logged sets. This cannot be undone.';
+
+  @override
+  String get deleteButton => 'Delete';
+
+  @override
   String get homeStartFreestyleWorkout => 'Start Freestyle Workout';
 
   @override
@@ -92,6 +120,23 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get homeStartFromSplit => 'Start From a Split';
+
+  @override
+  String get workoutInProgressLabel => 'Workout in progress';
+
+  @override
+  String homeStreakStatus(int count) {
+    return '$count week streak';
+  }
+
+  @override
+  String get greetingMorning => 'Good morning';
+
+  @override
+  String get greetingAfternoon => 'Good afternoon';
+
+  @override
+  String get greetingEvening => 'Good evening';
 
   @override
   String get bodyweightTitle => 'Bodyweight';

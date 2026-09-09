@@ -25,8 +25,20 @@ String unitLabel(WeightUnit unit) => switch (unit) {
       WeightUnit.lb => 'lb',
     };
 
-// Formats a canonical kg value as "80.0 kg" / "176.4 lb" in the given unit.
+// Formats a canonical kg value as "80kg" / "176.4lb" in the given unit — the
+// unit is glued directly to the number, and a whole-number result never
+// shows a trailing ".0" (but "52.5kg" keeps its meaningful decimal).
 String formatWeight(double kg, WeightUnit unit, {int decimals = 1}) {
   final value = displayWeight(kg, unit);
-  return '${value.toStringAsFixed(decimals)} ${unitLabel(unit)}';
+  return '${_trimTrailingZeros(value, decimals)}${unitLabel(unit)}';
+}
+
+String _trimTrailingZeros(double value, int decimals) {
+  var text = value.toStringAsFixed(decimals);
+  if (!text.contains('.')) return text;
+  while (text.endsWith('0')) {
+    text = text.substring(0, text.length - 1);
+  }
+  if (text.endsWith('.')) text = text.substring(0, text.length - 1);
+  return text;
 }

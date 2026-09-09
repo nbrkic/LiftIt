@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../database/app_database.dart';
 import '../../../database/enums.dart';
+import '../../../design/tokens/app_spacing.dart';
+import '../../../design/widgets/lift_button.dart';
 import '../../../l10n/app_localizations.dart';
 import '../providers/profile_providers.dart';
 
@@ -78,12 +80,12 @@ class _EditProfileSheetState extends ConsumerState<EditProfileSheet> {
     final l10n = AppLocalizations.of(context)!;
     return Padding(
       padding: EdgeInsets.only(
-        left: 16,
-        right: 16,
-        top: 16,
+        left: AppSpacing.xxl,
+        right: AppSpacing.xxl,
+        top: AppSpacing.xl,
         bottom: MediaQuery.of(context).viewInsets.bottom +
             MediaQuery.of(context).padding.bottom +
-            16,
+            AppSpacing.xxl,
       ),
       child: SingleChildScrollView(
         child: Form(
@@ -93,12 +95,13 @@ class _EditProfileSheetState extends ConsumerState<EditProfileSheet> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Text(l10n.editProfileTitle, style: Theme.of(context).textTheme.titleLarge),
-              const SizedBox(height: 16),
+              const SizedBox(height: AppSpacing.xl),
               TextFormField(
                 controller: _nameController,
+                autofocus: true,
                 decoration: InputDecoration(labelText: l10n.nameLabel),
               ),
-              const SizedBox(height: 12),
+              const SizedBox(height: AppSpacing.md),
               InkWell(
                 onTap: _pickBirthDate,
                 child: InputDecorator(
@@ -110,7 +113,7 @@ class _EditProfileSheetState extends ConsumerState<EditProfileSheet> {
                   ),
                 ),
               ),
-              const SizedBox(height: 12),
+              const SizedBox(height: AppSpacing.md),
               DropdownButtonFormField<Gender>(
                 initialValue: _gender,
                 decoration: InputDecoration(labelText: l10n.genderLabel),
@@ -119,13 +122,13 @@ class _EditProfileSheetState extends ConsumerState<EditProfileSheet> {
                     .toList(),
                 onChanged: (value) => setState(() => _gender = value),
               ),
-              const SizedBox(height: 12),
+              const SizedBox(height: AppSpacing.md),
               TextFormField(
                 controller: _heightController,
                 keyboardType: const TextInputType.numberWithOptions(decimal: true),
                 decoration: InputDecoration(labelText: l10n.heightLabel),
               ),
-              const SizedBox(height: 12),
+              const SizedBox(height: AppSpacing.md),
               DropdownButtonFormField<ExperienceLevel>(
                 initialValue: _experienceLevel,
                 decoration: InputDecoration(labelText: l10n.experienceLevelLabel),
@@ -134,7 +137,7 @@ class _EditProfileSheetState extends ConsumerState<EditProfileSheet> {
                     .toList(),
                 onChanged: (value) => setState(() => _experienceLevel = value),
               ),
-              const SizedBox(height: 12),
+              const SizedBox(height: AppSpacing.md),
               DropdownButtonFormField<TrainingGoal>(
                 initialValue: _primaryGoal,
                 decoration: InputDecoration(labelText: l10n.primaryGoalLabel),
@@ -143,7 +146,7 @@ class _EditProfileSheetState extends ConsumerState<EditProfileSheet> {
                     .toList(),
                 onChanged: (value) => setState(() => _primaryGoal = value),
               ),
-              const SizedBox(height: 12),
+              const SizedBox(height: AppSpacing.md),
               DropdownButtonFormField<WeightUnit>(
                 initialValue: _weightUnit,
                 decoration: InputDecoration(labelText: l10n.preferredWeightUnitLabel),
@@ -152,14 +155,14 @@ class _EditProfileSheetState extends ConsumerState<EditProfileSheet> {
                     .toList(),
                 onChanged: (value) => setState(() => _weightUnit = value!),
               ),
-              const SizedBox(height: 12),
+              const SizedBox(height: AppSpacing.md),
               TextFormField(
                 controller: _weeklyGoalController,
                 keyboardType: TextInputType.number,
                 decoration: InputDecoration(labelText: l10n.weeklyTrainingGoalLabel),
               ),
-              const SizedBox(height: 20),
-              FilledButton(onPressed: _submit, child: Text(l10n.saveButton)),
+              const SizedBox(height: AppSpacing.xl),
+              LiftPrimaryButton(label: l10n.saveButton, onPressed: _submit),
             ],
           ),
         ),

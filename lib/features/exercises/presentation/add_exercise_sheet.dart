@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../database/enums.dart';
+import '../../../design/tokens/app_spacing.dart';
+import '../../../design/widgets/lift_button.dart';
 import '../../../l10n/app_localizations.dart';
 import '../providers/exercise_providers.dart';
 
@@ -38,12 +40,12 @@ class _AddExerciseSheetState extends ConsumerState<AddExerciseSheet> {
     final l10n = AppLocalizations.of(context)!;
     return Padding(
       padding: EdgeInsets.only(
-        left: 16,
-        right: 16,
-        top: 16,
+        left: AppSpacing.xxl,
+        right: AppSpacing.xxl,
+        top: AppSpacing.xl,
         bottom: MediaQuery.of(context).viewInsets.bottom +
             MediaQuery.of(context).padding.bottom +
-            16,
+            AppSpacing.xxl,
       ),
       child: Form(
         key: _formKey,
@@ -52,14 +54,15 @@ class _AddExerciseSheetState extends ConsumerState<AddExerciseSheet> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Text(l10n.addExerciseTitle, style: Theme.of(context).textTheme.titleLarge),
-            const SizedBox(height: 16),
+            const SizedBox(height: AppSpacing.xl),
             TextFormField(
               controller: _nameController,
+              autofocus: true,
               decoration: InputDecoration(labelText: l10n.nameLabel),
               validator: (value) =>
                   (value == null || value.trim().isEmpty) ? l10n.enterAName : null,
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: AppSpacing.md),
             DropdownButtonFormField<MuscleGroup>(
               initialValue: _muscleGroup,
               decoration: InputDecoration(labelText: l10n.muscleGroupLabel),
@@ -68,7 +71,7 @@ class _AddExerciseSheetState extends ConsumerState<AddExerciseSheet> {
                   .toList(),
               onChanged: (value) => setState(() => _muscleGroup = value!),
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: AppSpacing.md),
             DropdownButtonFormField<Equipment>(
               initialValue: _equipment,
               decoration: InputDecoration(labelText: l10n.equipmentLabel),
@@ -77,8 +80,8 @@ class _AddExerciseSheetState extends ConsumerState<AddExerciseSheet> {
                   .toList(),
               onChanged: (value) => setState(() => _equipment = value!),
             ),
-            const SizedBox(height: 20),
-            FilledButton(onPressed: _submit, child: Text(l10n.addExerciseButton)),
+            const SizedBox(height: AppSpacing.xl),
+            LiftPrimaryButton(label: l10n.addExerciseButton, onPressed: _submit),
           ],
         ),
       ),

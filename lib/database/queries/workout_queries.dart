@@ -86,4 +86,10 @@ extension WorkoutQueries on AppDatabase {
     return (select(workoutSessions)..where((s) => s.id.equals(sessionId)))
         .watchSingleOrNull();
   }
+
+  // WorkoutSets.workoutSessionId cascades on delete, so this also removes
+  // every set logged in the session.
+  Future<void> deleteSession(int sessionId) {
+    return (delete(workoutSessions)..where((s) => s.id.equals(sessionId))).go();
+  }
 }

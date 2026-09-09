@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../database/app_database.dart';
+import '../../../design/tokens/app_spacing.dart';
+import '../../../design/widgets/lift_button.dart';
 import '../../../l10n/app_localizations.dart';
 import '../providers/split_providers.dart';
 
@@ -45,12 +47,12 @@ class _TargetSetsRepsSheetState extends ConsumerState<TargetSetsRepsSheet> {
     final l10n = AppLocalizations.of(context)!;
     return Padding(
       padding: EdgeInsets.only(
-        left: 16,
-        right: 16,
-        top: 16,
+        left: AppSpacing.xxl,
+        right: AppSpacing.xxl,
+        top: AppSpacing.xl,
         bottom: MediaQuery.of(context).viewInsets.bottom +
             MediaQuery.of(context).padding.bottom +
-            16,
+            AppSpacing.xxl,
       ),
       child: Form(
         key: _formKey,
@@ -59,7 +61,7 @@ class _TargetSetsRepsSheetState extends ConsumerState<TargetSetsRepsSheet> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Text(widget.exercise.name, style: Theme.of(context).textTheme.titleLarge),
-            const SizedBox(height: 16),
+            const SizedBox(height: AppSpacing.xl),
             TextFormField(
               controller: _setsController,
               autofocus: true,
@@ -67,7 +69,7 @@ class _TargetSetsRepsSheetState extends ConsumerState<TargetSetsRepsSheet> {
               decoration: InputDecoration(labelText: l10n.targetSetsLabel),
               validator: (value) => int.tryParse(value ?? '') == null ? l10n.invalid : null,
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: AppSpacing.md),
             Row(
               children: [
                 Expanded(
@@ -77,7 +79,7 @@ class _TargetSetsRepsSheetState extends ConsumerState<TargetSetsRepsSheet> {
                     decoration: InputDecoration(labelText: l10n.repsFromOptionalLabel),
                   ),
                 ),
-                const SizedBox(width: 12),
+                const SizedBox(width: AppSpacing.md),
                 Expanded(
                   child: TextFormField(
                     controller: _repsHighController,
@@ -87,8 +89,8 @@ class _TargetSetsRepsSheetState extends ConsumerState<TargetSetsRepsSheet> {
                 ),
               ],
             ),
-            const SizedBox(height: 20),
-            FilledButton(onPressed: _submit, child: Text(l10n.addToDayButton)),
+            const SizedBox(height: AppSpacing.xl),
+            LiftPrimaryButton(label: l10n.addToDayButton, onPressed: _submit),
           ],
         ),
       ),
