@@ -8,12 +8,11 @@ import '../features/exercises/presentation/exercise_library_screen.dart';
 import '../features/exercises/presentation/exercise_detail_screen.dart';
 import '../features/workout/presentation/active_workout_screen.dart';
 import '../features/splits/presentation/splits_list_screen.dart';
-import '../features/splits/presentation/split_detail_screen.dart';
-import '../features/splits/presentation/split_day_detail_screen.dart';
 import '../features/profile/presentation/profile_screen.dart';
 import '../features/stats/presentation/stats_screen.dart';
 import '../features/settings/presentation/settings_screen.dart';
 import '../features/bodyweight/presentation/bodyweight_screen.dart';
+import '../features/streaks/presentation/streak_levels_screen.dart';
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
 
@@ -86,22 +85,11 @@ final appRouter = GoRouter(
       path: '/splits',
       parentNavigatorKey: _rootNavigatorKey,
       builder: (c, s) => const SplitsListScreen(),
-      routes: [
-        GoRoute(
-          path: ':id',
-          builder: (c, s) => SplitDetailScreen(
-            splitId: int.parse(s.pathParameters['id']!),
-          ),
-          routes: [
-            GoRoute(
-              path: 'day/:dayId',
-              builder: (c, s) => SplitDayDetailScreen(
-                splitDayId: int.parse(s.pathParameters['dayId']!),
-              ),
-            ),
-          ],
-        ),
-      ],
+    ),
+    GoRoute(
+      path: '/streaks',
+      parentNavigatorKey: _rootNavigatorKey,
+      builder: (c, s) => const StreakLevelsScreen(),
     ),
   ],
 );

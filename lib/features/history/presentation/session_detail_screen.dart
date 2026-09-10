@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import '../../../common/weight_format.dart';
 import '../../../database/queries/workout_queries.dart';
@@ -129,7 +130,10 @@ class SessionDetailScreen extends ConsumerWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(exercise.name, style: theme.textTheme.titleMedium),
+                        InkWell(
+                          onTap: () => context.push('/exercises/$exerciseId'),
+                          child: Text(exercise.name, style: theme.textTheme.titleMedium),
+                        ),
                         Divider(height: AppSpacing.md, color: c.divider),
                         ...entries.map((entry) => SetRow(
                               setNumber: entry.set.setNumber,

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../common/weight_format.dart';
 import '../../../database/app_database.dart';
@@ -187,7 +188,7 @@ class _ActiveWorkoutScreenState extends ConsumerState<ActiveWorkoutScreen> {
         duration: _finishedDuration,
         volume: _finishedVolume,
         groups: _finishedGroups!,
-        onDone: () => Navigator.of(context).pop(),
+        onDone: () => context.go('/home'),
       );
     }
 

@@ -47,7 +47,7 @@ class ExerciseDetailScreen extends ConsumerWidget {
             return LiftEmptyState(message: l10n.noSetsLoggedForExercise);
           }
           final oneRm = computeOneRepMax(sets)!;
-          final points = computeProgressPoints(sets);
+          final topSets = computeTopSetProgress(sets);
 
           return ListView(
             padding: const EdgeInsets.all(AppSpacing.xxl),
@@ -66,11 +66,11 @@ class ExerciseDetailScreen extends ConsumerWidget {
                     (oneRm.set.rpe != null ? l10n.rpeSuffix('${oneRm.set.rpe}') : ''),
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: c.textSecondary),
               ),
-              if (points.length > 1) ...[
+              if (topSets.length > 1) ...[
                 const SizedBox(height: AppSpacing.xxxl),
                 Text(l10n.progressChartTitle, style: Theme.of(context).textTheme.titleMedium),
                 const SizedBox(height: AppSpacing.lg),
-                SizedBox(height: 200, child: _ProgressChart(points: points, unit: unit)),
+                SizedBox(height: 200, child: _ProgressChart(topSets: topSets, unit: unit)),
               ],
               const SizedBox(height: AppSpacing.xxxl),
               Text(l10n.historyLabel, style: Theme.of(context).textTheme.titleMedium),
@@ -92,18 +92,19 @@ class ExerciseDetailScreen extends ConsumerWidget {
 }
 
 class _ProgressChart extends StatelessWidget {
-  final List<ProgressPoint> points;
+  final List<WorkoutSet> topSets;
   final WeightUnit unit;
 
-  const _ProgressChart({required this.points, required this.unit});
+  const _ProgressChart({required this.topSets, required this.unit});
 
   @override
   Widget build(BuildContext context) {
     final chart = ChartTheme.of(context);
-    final spots = points
+    final l10n = AppLocalizations.of(context)!;
+    final spots = topSets
         .asMap()
         .entries
-        .map((e) => FlSpot(e.key.toDouble(), displayWeight(e.value.estimated1Rm, unit)))
+        .map((e) => FlSpot(e.key.toDouble(), displayWeight(e.value.weight, unit)))
         .toList();
 
     return LineChart(
@@ -114,19 +115,19 @@ class _ProgressChart extends StatelessWidget {
           topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
           rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
           leftTitles: AxisTitles(
-            sideTitles: SideTitles(showTitles: true, reservedSize: 40, getTitlesWidget: (value, meta) {
-              return Text(value.round().toString(), style: chart.axisLabelStyle);
+            sideTitles: SideTitles(showTitles: true, reservedSize: 44, getTitlesWidget: (value, meta) {
+              return Text('${value.round()}${unitLabel(unit)}', style: chart.axisLabelStyle);
             }),
           ),
           bottomTitles: AxisTitles(
             sideTitles: SideTitles(
               showTitles: true,
               reservedSize: 24,
-              interval: (points.length / 4).clamp(1, double.infinity).roundToDouble(),
+              interval: (topSets.length / 4).clamp(1, double.infinity).roundToDouble(),
               getTitlesWidget: (value, meta) {
                 final index = value.round();
-                if (index < 0 || index >= points.length) return const SizedBox.shrink();
-                final date = points[index].date;
+                if (index < 0 || index >= topSets.length) return const SizedBox.shrink();
+                final date = topSets[index].completedAt;
                 return Padding(
                   padding: const EdgeInsets.only(top: 4),
                   child: Text('${date.day}.${date.month}.', style: chart.axisLabelStyle),
@@ -135,7 +136,10 @@ class _ProgressChart extends StatelessWidget {
             ),
           ),
         ),
-        lineTouchData: chart.lineTouch(label: (spot) => spot.y.toStringAsFixed(0)),
+        lineTouchData: chart.lineTouch(label: (spot) {
+          final set = topSets[spot.x.toInt()];
+          return l10n.timesReps(formatWeight(set.weight, unit), set.reps);
+        }),
         lineBarsData: [chart.line(spots)],
       ),
     );

@@ -125,11 +125,6 @@ class AppLocalizationsSr extends AppLocalizations {
   String get workoutInProgressLabel => 'Trening je u toku';
 
   @override
-  String homeStreakStatus(int count) {
-    return '$count ned. niz';
-  }
-
-  @override
   String get greetingMorning => 'Dobro jutro';
 
   @override
@@ -137,6 +132,82 @@ class AppLocalizationsSr extends AppLocalizations {
 
   @override
   String get greetingEvening => 'Dobro veče';
+
+  @override
+  String get homeCompletedMsg1 =>
+      'Današnji posao je završen. Oporavak počinje sada.';
+
+  @override
+  String get homeCompletedMsg2 => 'Ulogovano i gotovo. Danas je odrađeno.';
+
+  @override
+  String get homeCompletedMsg3 =>
+      'Još jedan trening u banci. Doslednost pobeđuje.';
+
+  @override
+  String get homeTodoMsg1 => 'Danas još nije ulogovan trening.';
+
+  @override
+  String get homeTodoMsg2 => 'Dan je još otvoren — odradi trening.';
+
+  @override
+  String get homeTodoMsg3 => 'Još ništa nije ulogovano. Dan nije gotov.';
+
+  @override
+  String get homeRestMsg1 => 'Dan odmora. Oporavak je deo posla.';
+
+  @override
+  String get homeRestMsg2 => 'Danas se odmara. To je plan.';
+
+  @override
+  String get homeRestMsg3 => 'Dan odmora zabeležen. Vrati se jači.';
+
+  @override
+  String get homeMarkRestDayButton => 'Danas je dan odmora';
+
+  @override
+  String get homeNoStreakYet => 'Treniraj danas da započneš niz.';
+
+  @override
+  String get streaksTitle => 'Nizovi';
+
+  @override
+  String streakDaysCount(int count) {
+    return 'Niz od $count dana';
+  }
+
+  @override
+  String streakDaysRequired(int count) {
+    return '$count dana';
+  }
+
+  @override
+  String get streakLevel1Name => 'Iskra';
+
+  @override
+  String get streakLevel2Name => 'Žar';
+
+  @override
+  String get streakLevel3Name => 'Plamen';
+
+  @override
+  String get streakLevel4Name => 'Buktinja';
+
+  @override
+  String get streakLevel5Name => 'Inferno';
+
+  @override
+  String get streakCurrentLevelLabel => 'Trenutni';
+
+  @override
+  String get streakLockedLabel => 'Zaključano';
+
+  @override
+  String get streakAchievedLabel => 'Ostvareno';
+
+  @override
+  String get streakScreenIntro =>
+      'Treniraj (ili obeleži dan odmora) svaki dan da bi gradio niz. Ako preskočiš dan, niz se resetuje.';
 
   @override
   String get bodyweightTitle => 'Telesna težina';
@@ -196,7 +267,7 @@ class AppLocalizationsSr extends AppLocalizations {
   String get estimatedOneRepMax => 'Procenjeni 1RM';
 
   @override
-  String get progressChartTitle => 'Napredak (proc. 1RM)';
+  String get progressChartTitle => 'Progresivno opterećenje';
 
   @override
   String get exercisesTitle => 'Vežbe';
@@ -419,9 +490,6 @@ class AppLocalizationsSr extends AppLocalizations {
   String get createButton => 'Napravi';
 
   @override
-  String get dayFallbackTitle => 'Dan';
-
-  @override
   String get noExercisesYetTapToAdd =>
       'Još nema vežbi — dodirni + da dodaš jednu.';
 
@@ -432,9 +500,6 @@ class AppLocalizationsSr extends AppLocalizations {
 
   @override
   String get startWorkoutFromThisDay => 'Započni trening iz ovog dana';
-
-  @override
-  String get splitFallbackTitle => 'Split';
 
   @override
   String get noDaysYetTapToAdd => 'Još nema dana — dodirni + da dodaš jedan.';
@@ -470,11 +535,6 @@ class AppLocalizationsSr extends AppLocalizations {
 
   @override
   String get currentStreak => 'Trenutni niz';
-
-  @override
-  String streakWeeks(int count) {
-    return '$count ned.';
-  }
 
   @override
   String get avgPerWeek => 'Prosek / nedeljno';

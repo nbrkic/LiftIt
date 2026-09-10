@@ -302,12 +302,6 @@ abstract class AppLocalizations {
   /// **'Workout in progress'**
   String get workoutInProgressLabel;
 
-  /// No description provided for @homeStreakStatus.
-  ///
-  /// In en, this message translates to:
-  /// **'{count} week streak'**
-  String homeStreakStatus(int count);
-
   /// No description provided for @greetingMorning.
   ///
   /// In en, this message translates to:
@@ -325,6 +319,144 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Good evening'**
   String get greetingEvening;
+
+  /// No description provided for @homeCompletedMsg1.
+  ///
+  /// In en, this message translates to:
+  /// **'Today\'s work is done. Recovery starts now.'**
+  String get homeCompletedMsg1;
+
+  /// No description provided for @homeCompletedMsg2.
+  ///
+  /// In en, this message translates to:
+  /// **'Logged and locked in. That\'s today handled.'**
+  String get homeCompletedMsg2;
+
+  /// No description provided for @homeCompletedMsg3.
+  ///
+  /// In en, this message translates to:
+  /// **'Another session banked. Consistency wins.'**
+  String get homeCompletedMsg3;
+
+  /// No description provided for @homeTodoMsg1.
+  ///
+  /// In en, this message translates to:
+  /// **'No session logged yet today.'**
+  String get homeTodoMsg1;
+
+  /// No description provided for @homeTodoMsg2.
+  ///
+  /// In en, this message translates to:
+  /// **'Today\'s still open — get a session in.'**
+  String get homeTodoMsg2;
+
+  /// No description provided for @homeTodoMsg3.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing logged yet. The day\'s not over.'**
+  String get homeTodoMsg3;
+
+  /// No description provided for @homeRestMsg1.
+  ///
+  /// In en, this message translates to:
+  /// **'Rest day. Recovery is part of the work.'**
+  String get homeRestMsg1;
+
+  /// No description provided for @homeRestMsg2.
+  ///
+  /// In en, this message translates to:
+  /// **'Taking it easy today. That\'s the plan.'**
+  String get homeRestMsg2;
+
+  /// No description provided for @homeRestMsg3.
+  ///
+  /// In en, this message translates to:
+  /// **'Rest day noted. Come back stronger.'**
+  String get homeRestMsg3;
+
+  /// No description provided for @homeMarkRestDayButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Today\'s a rest day'**
+  String get homeMarkRestDayButton;
+
+  /// No description provided for @homeNoStreakYet.
+  ///
+  /// In en, this message translates to:
+  /// **'Train today to start a streak.'**
+  String get homeNoStreakYet;
+
+  /// No description provided for @streaksTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Streaks'**
+  String get streaksTitle;
+
+  /// No description provided for @streakDaysCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} day streak'**
+  String streakDaysCount(int count);
+
+  /// No description provided for @streakDaysRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} days'**
+  String streakDaysRequired(int count);
+
+  /// No description provided for @streakLevel1Name.
+  ///
+  /// In en, this message translates to:
+  /// **'Spark'**
+  String get streakLevel1Name;
+
+  /// No description provided for @streakLevel2Name.
+  ///
+  /// In en, this message translates to:
+  /// **'Ember'**
+  String get streakLevel2Name;
+
+  /// No description provided for @streakLevel3Name.
+  ///
+  /// In en, this message translates to:
+  /// **'Flame'**
+  String get streakLevel3Name;
+
+  /// No description provided for @streakLevel4Name.
+  ///
+  /// In en, this message translates to:
+  /// **'Blaze'**
+  String get streakLevel4Name;
+
+  /// No description provided for @streakLevel5Name.
+  ///
+  /// In en, this message translates to:
+  /// **'Inferno'**
+  String get streakLevel5Name;
+
+  /// No description provided for @streakCurrentLevelLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Current'**
+  String get streakCurrentLevelLabel;
+
+  /// No description provided for @streakLockedLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Locked'**
+  String get streakLockedLabel;
+
+  /// No description provided for @streakAchievedLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Achieved'**
+  String get streakAchievedLabel;
+
+  /// No description provided for @streakScreenIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'Train (or mark a rest day) every day to build your streak. Miss a day and it resets.'**
+  String get streakScreenIntro;
 
   /// No description provided for @bodyweightTitle.
   ///
@@ -431,7 +563,7 @@ abstract class AppLocalizations {
   /// No description provided for @progressChartTitle.
   ///
   /// In en, this message translates to:
-  /// **'Progress (est. 1RM)'**
+  /// **'Progressive Overload'**
   String get progressChartTitle;
 
   /// No description provided for @exercisesTitle.
@@ -824,12 +956,6 @@ abstract class AppLocalizations {
   /// **'Create'**
   String get createButton;
 
-  /// No description provided for @dayFallbackTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Day'**
-  String get dayFallbackTitle;
-
   /// No description provided for @noExercisesYetTapToAdd.
   ///
   /// In en, this message translates to:
@@ -847,12 +973,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Start Workout From This Day'**
   String get startWorkoutFromThisDay;
-
-  /// No description provided for @splitFallbackTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Split'**
-  String get splitFallbackTitle;
 
   /// No description provided for @noDaysYetTapToAdd.
   ///
@@ -919,12 +1039,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Current Streak'**
   String get currentStreak;
-
-  /// No description provided for @streakWeeks.
-  ///
-  /// In en, this message translates to:
-  /// **'{count} wk'**
-  String streakWeeks(int count);
 
   /// No description provided for @avgPerWeek.
   ///

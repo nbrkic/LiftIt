@@ -15,6 +15,8 @@ import '../../history/providers/history_providers.dart';
 import '../../profile/providers/profile_providers.dart';
 import '../../profile/providers/stats_providers.dart';
 import '../../profile/utils/volume_stats.dart';
+import '../../streaks/providers/rest_day_providers.dart';
+import '../../streaks/utils/streak_calculator.dart';
 import '../providers/dashboard_providers.dart';
 import '../utils/dashboard_stats.dart';
 
@@ -30,6 +32,7 @@ class StatsScreen extends ConsumerWidget {
     final allSetsAsync = ref.watch(allWorkingSetsProvider);
     final muscleVolumeAsync = ref.watch(muscleGroupVolumeProvider);
     final sessionVolumesAsync = ref.watch(sessionVolumesProvider);
+    final restDays = ref.watch(restDaysProvider).value ?? const [];
     final unit = ref.watch(preferredWeightUnitProvider);
     final l10n = AppLocalizations.of(context)!;
 
@@ -49,7 +52,7 @@ class StatsScreen extends ConsumerWidget {
             return LiftEmptyState(message: l10n.finishWorkoutToSeeStats);
           }
 
-          final streak = computeStreakWeeks(sessions);
+          final streak = computeDailyStreak(sessions, restDays);
           final avgPerWeek = computeAverageWorkoutsPerWeek(sessions);
           final avgDuration = computeAverageDuration(sessions);
 
@@ -62,7 +65,7 @@ class StatsScreen extends ConsumerWidget {
                     child: _StatCol(value: '${sessions.length}', label: l10n.totalWorkouts),
                   ),
                   Expanded(
-                    child: _StatCol(value: l10n.streakWeeks(streak), label: l10n.currentStreak),
+                    child: _StatCol(value: '$streak', label: l10n.currentStreak),
                   ),
                 ],
               ),

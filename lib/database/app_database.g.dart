@@ -3344,6 +3344,193 @@ class BodyweightLogsCompanion extends UpdateCompanion<BodyweightLog> {
   }
 }
 
+class $RestDaysTable extends RestDays with TableInfo<$RestDaysTable, RestDay> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $RestDaysTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _dateMeta = const VerificationMeta('date');
+  @override
+  late final GeneratedColumn<DateTime> date = GeneratedColumn<DateTime>(
+    'date',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways('UNIQUE'),
+  );
+  @override
+  List<GeneratedColumn> get $columns => [id, date];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'rest_days';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<RestDay> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('date')) {
+      context.handle(
+        _dateMeta,
+        date.isAcceptableOrUnknown(data['date']!, _dateMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_dateMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  RestDay map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return RestDay(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      date: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}date'],
+      )!,
+    );
+  }
+
+  @override
+  $RestDaysTable createAlias(String alias) {
+    return $RestDaysTable(attachedDatabase, alias);
+  }
+}
+
+class RestDay extends DataClass implements Insertable<RestDay> {
+  final int id;
+  final DateTime date;
+  const RestDay({required this.id, required this.date});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['date'] = Variable<DateTime>(date);
+    return map;
+  }
+
+  RestDaysCompanion toCompanion(bool nullToAbsent) {
+    return RestDaysCompanion(id: Value(id), date: Value(date));
+  }
+
+  factory RestDay.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return RestDay(
+      id: serializer.fromJson<int>(json['id']),
+      date: serializer.fromJson<DateTime>(json['date']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'date': serializer.toJson<DateTime>(date),
+    };
+  }
+
+  RestDay copyWith({int? id, DateTime? date}) =>
+      RestDay(id: id ?? this.id, date: date ?? this.date);
+  RestDay copyWithCompanion(RestDaysCompanion data) {
+    return RestDay(
+      id: data.id.present ? data.id.value : this.id,
+      date: data.date.present ? data.date.value : this.date,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('RestDay(')
+          ..write('id: $id, ')
+          ..write('date: $date')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, date);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is RestDay && other.id == this.id && other.date == this.date);
+}
+
+class RestDaysCompanion extends UpdateCompanion<RestDay> {
+  final Value<int> id;
+  final Value<DateTime> date;
+  const RestDaysCompanion({
+    this.id = const Value.absent(),
+    this.date = const Value.absent(),
+  });
+  RestDaysCompanion.insert({
+    this.id = const Value.absent(),
+    required DateTime date,
+  }) : date = Value(date);
+  static Insertable<RestDay> custom({
+    Expression<int>? id,
+    Expression<DateTime>? date,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (date != null) 'date': date,
+    });
+  }
+
+  RestDaysCompanion copyWith({Value<int>? id, Value<DateTime>? date}) {
+    return RestDaysCompanion(id: id ?? this.id, date: date ?? this.date);
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (date.present) {
+      map['date'] = Variable<DateTime>(date.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('RestDaysCompanion(')
+          ..write('id: $id, ')
+          ..write('date: $date')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
@@ -3358,6 +3545,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
       $SplitDayExercisesTable(this);
   late final $UserProfilesTable userProfiles = $UserProfilesTable(this);
   late final $BodyweightLogsTable bodyweightLogs = $BodyweightLogsTable(this);
+  late final $RestDaysTable restDays = $RestDaysTable(this);
   late final Index exerciseNameIdx = Index(
     'exercise_name_idx',
     'CREATE INDEX exercise_name_idx ON exercises (name)',
@@ -3382,6 +3570,10 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     'bodyweight_log_logged_at_idx',
     'CREATE INDEX bodyweight_log_logged_at_idx ON bodyweight_logs (logged_at)',
   );
+  late final Index restDayDateIdx = Index(
+    'rest_day_date_idx',
+    'CREATE INDEX rest_day_date_idx ON rest_days (date)',
+  );
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -3395,12 +3587,14 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     splitDayExercises,
     userProfiles,
     bodyweightLogs,
+    restDays,
     exerciseNameIdx,
     workoutSetSessionIdx,
     workoutSetExerciseCompletedIdx,
     splitDaySplitIdx,
     splitDayExerciseDayIdx,
     bodyweightLogLoggedAtIdx,
+    restDayDateIdx,
   ];
   @override
   StreamQueryUpdateRules get streamUpdateRules => const StreamQueryUpdateRules([
@@ -6419,6 +6613,136 @@ typedef $$BodyweightLogsTableProcessedTableManager =
       BodyweightLog,
       PrefetchHooks Function()
     >;
+typedef $$RestDaysTableCreateCompanionBuilder = RestDaysCompanion Function({
+  Value<int> id,
+  required DateTime date,
+});
+typedef $$RestDaysTableUpdateCompanionBuilder = RestDaysCompanion Function({
+  Value<int> id,
+  Value<DateTime> date,
+});
+
+class $$RestDaysTableFilterComposer
+    extends Composer<_$AppDatabase, $RestDaysTable> {
+  $$RestDaysTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get date => $composableBuilder(
+    column: $table.date,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$RestDaysTableOrderingComposer
+    extends Composer<_$AppDatabase, $RestDaysTable> {
+  $$RestDaysTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get date => $composableBuilder(
+    column: $table.date,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$RestDaysTableAnnotationComposer
+    extends Composer<_$AppDatabase, $RestDaysTable> {
+  $$RestDaysTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get date =>
+      $composableBuilder(column: $table.date, builder: (column) => column);
+}
+
+class $$RestDaysTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $RestDaysTable,
+          RestDay,
+          $$RestDaysTableFilterComposer,
+          $$RestDaysTableOrderingComposer,
+          $$RestDaysTableAnnotationComposer,
+          $$RestDaysTableCreateCompanionBuilder,
+          $$RestDaysTableUpdateCompanionBuilder,
+          (RestDay, BaseReferences<_$AppDatabase, $RestDaysTable, RestDay>),
+          RestDay,
+          PrefetchHooks Function()
+        > {
+  $$RestDaysTableTableManager(_$AppDatabase db, $RestDaysTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$RestDaysTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$RestDaysTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$RestDaysTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback: ({
+            Value<int> id = const Value.absent(),
+            Value<DateTime> date = const Value.absent(),
+          }) => RestDaysCompanion(id: id, date: date),
+          createCompanionCallback: ({
+            Value<int> id = const Value.absent(),
+            required DateTime date,
+          }) => RestDaysCompanion.insert(id: id, date: date),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<$RestDaysTable, RestDay>(table),
+                  BaseReferences<_$AppDatabase, $RestDaysTable, RestDay>(
+                    db,
+                    table,
+                    e,
+                  ),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$RestDaysTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $RestDaysTable,
+      RestDay,
+      $$RestDaysTableFilterComposer,
+      $$RestDaysTableOrderingComposer,
+      $$RestDaysTableAnnotationComposer,
+      $$RestDaysTableCreateCompanionBuilder,
+      $$RestDaysTableUpdateCompanionBuilder,
+      (RestDay, BaseReferences<_$AppDatabase, $RestDaysTable, RestDay>),
+      RestDay,
+      PrefetchHooks Function()
+    >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -6439,4 +6763,6 @@ class $AppDatabaseManager {
       $$UserProfilesTableTableManager(_db, _db.userProfiles);
   $$BodyweightLogsTableTableManager get bodyweightLogs =>
       $$BodyweightLogsTableTableManager(_db, _db.bodyweightLogs);
+  $$RestDaysTableTableManager get restDays =>
+      $$RestDaysTableTableManager(_db, _db.restDays);
 }

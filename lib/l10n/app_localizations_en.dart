@@ -125,11 +125,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get workoutInProgressLabel => 'Workout in progress';
 
   @override
-  String homeStreakStatus(int count) {
-    return '$count week streak';
-  }
-
-  @override
   String get greetingMorning => 'Good morning';
 
   @override
@@ -137,6 +132,81 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get greetingEvening => 'Good evening';
+
+  @override
+  String get homeCompletedMsg1 => 'Today\'s work is done. Recovery starts now.';
+
+  @override
+  String get homeCompletedMsg2 =>
+      'Logged and locked in. That\'s today handled.';
+
+  @override
+  String get homeCompletedMsg3 => 'Another session banked. Consistency wins.';
+
+  @override
+  String get homeTodoMsg1 => 'No session logged yet today.';
+
+  @override
+  String get homeTodoMsg2 => 'Today\'s still open — get a session in.';
+
+  @override
+  String get homeTodoMsg3 => 'Nothing logged yet. The day\'s not over.';
+
+  @override
+  String get homeRestMsg1 => 'Rest day. Recovery is part of the work.';
+
+  @override
+  String get homeRestMsg2 => 'Taking it easy today. That\'s the plan.';
+
+  @override
+  String get homeRestMsg3 => 'Rest day noted. Come back stronger.';
+
+  @override
+  String get homeMarkRestDayButton => 'Today\'s a rest day';
+
+  @override
+  String get homeNoStreakYet => 'Train today to start a streak.';
+
+  @override
+  String get streaksTitle => 'Streaks';
+
+  @override
+  String streakDaysCount(int count) {
+    return '$count day streak';
+  }
+
+  @override
+  String streakDaysRequired(int count) {
+    return '$count days';
+  }
+
+  @override
+  String get streakLevel1Name => 'Spark';
+
+  @override
+  String get streakLevel2Name => 'Ember';
+
+  @override
+  String get streakLevel3Name => 'Flame';
+
+  @override
+  String get streakLevel4Name => 'Blaze';
+
+  @override
+  String get streakLevel5Name => 'Inferno';
+
+  @override
+  String get streakCurrentLevelLabel => 'Current';
+
+  @override
+  String get streakLockedLabel => 'Locked';
+
+  @override
+  String get streakAchievedLabel => 'Achieved';
+
+  @override
+  String get streakScreenIntro =>
+      'Train (or mark a rest day) every day to build your streak. Miss a day and it resets.';
 
   @override
   String get bodyweightTitle => 'Bodyweight';
@@ -195,7 +265,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get estimatedOneRepMax => 'Estimated 1RM';
 
   @override
-  String get progressChartTitle => 'Progress (est. 1RM)';
+  String get progressChartTitle => 'Progressive Overload';
 
   @override
   String get exercisesTitle => 'Exercises';
@@ -418,9 +488,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get createButton => 'Create';
 
   @override
-  String get dayFallbackTitle => 'Day';
-
-  @override
   String get noExercisesYetTapToAdd => 'No exercises yet — tap + to add one.';
 
   @override
@@ -430,9 +497,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get startWorkoutFromThisDay => 'Start Workout From This Day';
-
-  @override
-  String get splitFallbackTitle => 'Split';
 
   @override
   String get noDaysYetTapToAdd => 'No days yet — tap + to add one.';
@@ -466,11 +530,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get currentStreak => 'Current Streak';
-
-  @override
-  String streakWeeks(int count) {
-    return '$count wk';
-  }
 
   @override
   String get avgPerWeek => 'Avg / Week';

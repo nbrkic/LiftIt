@@ -61,21 +61,20 @@ List<WorkoutSet> previousSessionSets(List<WorkoutSet> allSets, int excludingSess
   return prior.where((s) => s.workoutSessionId == lastSessionId).toList();
 }
 
-class ProgressPoint {
-  final DateTime date;
-  final double estimated1Rm;
-  ProgressPoint({required this.date, required this.estimated1Rm});
-}
-
-// One point per calendar day: the best estimated 1RM among sets logged that day.
-List<ProgressPoint> computeProgressPoints(List<WorkoutSet> sets) {
-  final byDay = <DateTime, double>{};
+// One "top set" per training session — the heaviest non-warm-up set logged
+// for this exercise that session (in most training styles that's simply the
+// first working set). Tracks real logged weight/reps progress over time,
+// not a formula-derived estimate — that's what computeOneRepMax is for.
+List<WorkoutSet> computeTopSetProgress(List<WorkoutSet> sets) {
+  final bySession = <int, WorkoutSet>{};
   for (final set in sets) {
-    final day = DateTime(set.completedAt.year, set.completedAt.month, set.completedAt.day);
-    final e1rm = estimated1Rm(set);
-    if (e1rm > (byDay[day] ?? 0)) byDay[day] = e1rm;
+    if (set.isWarmup) continue;
+    final current = bySession[set.workoutSessionId];
+    if (current == null || set.weight > current.weight) {
+      bySession[set.workoutSessionId] = set;
+    }
   }
-  final points = byDay.entries.map((e) => ProgressPoint(date: e.key, estimated1Rm: e.value)).toList();
-  points.sort((a, b) => a.date.compareTo(b.date));
-  return points;
+  final topSets = bySession.values.toList();
+  topSets.sort((a, b) => a.completedAt.compareTo(b.completedAt));
+  return topSets;
 }
