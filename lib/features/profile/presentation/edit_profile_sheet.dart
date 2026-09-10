@@ -21,6 +21,10 @@ class _EditProfileSheetState extends ConsumerState<EditProfileSheet> {
   late final TextEditingController _nameController;
   late final TextEditingController _heightController;
   late final TextEditingController _weeklyGoalController;
+  late final TextEditingController _calorieGoalController;
+  late final TextEditingController _proteinGoalController;
+  late final TextEditingController _carbsGoalController;
+  late final TextEditingController _fatGoalController;
   DateTime? _birthDate;
   Gender? _gender;
   ExperienceLevel? _experienceLevel;
@@ -34,6 +38,10 @@ class _EditProfileSheetState extends ConsumerState<EditProfileSheet> {
     _nameController = TextEditingController(text: p?.name ?? '');
     _heightController = TextEditingController(text: p?.heightCm?.toString() ?? '');
     _weeklyGoalController = TextEditingController(text: p?.weeklyTrainingGoal?.toString() ?? '');
+    _calorieGoalController = TextEditingController(text: p?.dailyCalorieGoal?.toString() ?? '');
+    _proteinGoalController = TextEditingController(text: p?.dailyProteinGoalG?.toString() ?? '');
+    _carbsGoalController = TextEditingController(text: p?.dailyCarbsGoalG?.toString() ?? '');
+    _fatGoalController = TextEditingController(text: p?.dailyFatGoalG?.toString() ?? '');
     _birthDate = p?.birthDate;
     _gender = p?.gender;
     _experienceLevel = p?.experienceLevel;
@@ -46,6 +54,10 @@ class _EditProfileSheetState extends ConsumerState<EditProfileSheet> {
     _nameController.dispose();
     _heightController.dispose();
     _weeklyGoalController.dispose();
+    _calorieGoalController.dispose();
+    _proteinGoalController.dispose();
+    _carbsGoalController.dispose();
+    _fatGoalController.dispose();
     super.dispose();
   }
 
@@ -71,6 +83,10 @@ class _EditProfileSheetState extends ConsumerState<EditProfileSheet> {
           primaryGoal: _primaryGoal,
           preferredWeightUnit: _weightUnit,
           weeklyTrainingGoal: int.tryParse(_weeklyGoalController.text),
+          dailyCalorieGoal: int.tryParse(_calorieGoalController.text),
+          dailyProteinGoalG: int.tryParse(_proteinGoalController.text),
+          dailyCarbsGoalG: int.tryParse(_carbsGoalController.text),
+          dailyFatGoalG: int.tryParse(_fatGoalController.text),
         );
     if (mounted) Navigator.of(context).pop();
   }
@@ -87,85 +103,134 @@ class _EditProfileSheetState extends ConsumerState<EditProfileSheet> {
             MediaQuery.of(context).padding.bottom +
             AppSpacing.xxl,
       ),
-      child: SingleChildScrollView(
-        child: Form(
-          key: _formKey,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Text(l10n.editProfileTitle, style: Theme.of(context).textTheme.titleLarge),
-              const SizedBox(height: AppSpacing.xl),
-              TextFormField(
-                controller: _nameController,
-                autofocus: true,
-                decoration: InputDecoration(labelText: l10n.nameLabel),
-              ),
-              const SizedBox(height: AppSpacing.md),
-              InkWell(
-                onTap: _pickBirthDate,
-                child: InputDecorator(
-                  decoration: InputDecoration(labelText: l10n.dateOfBirthLabel),
-                  child: Text(
-                    _birthDate == null
-                        ? l10n.notSet
-                        : '${_birthDate!.day.toString().padLeft(2, '0')}.${_birthDate!.month.toString().padLeft(2, '0')}.${_birthDate!.year}',
-                  ),
+      // The Save button is a fixed footer outside the scroll view so it's
+      // always fully visible, regardless of scroll offset or keyboard state
+      // (previously it lived inside the scrollable Form and could end up
+      // clipped at the bottom edge when the keyboard closed).
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Flexible(
+            child: SingleChildScrollView(
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Text(l10n.editProfileTitle, style: Theme.of(context).textTheme.titleLarge),
+                    const SizedBox(height: AppSpacing.xl),
+                    TextFormField(
+                      controller: _nameController,
+                      autofocus: true,
+                      decoration: InputDecoration(labelText: l10n.nameLabel),
+                    ),
+                    const SizedBox(height: AppSpacing.md),
+                    InkWell(
+                      onTap: _pickBirthDate,
+                      child: InputDecorator(
+                        decoration: InputDecoration(labelText: l10n.dateOfBirthLabel),
+                        child: Text(
+                          _birthDate == null
+                              ? l10n.notSet
+                              : '${_birthDate!.day.toString().padLeft(2, '0')}.${_birthDate!.month.toString().padLeft(2, '0')}.${_birthDate!.year}',
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: AppSpacing.md),
+                    DropdownButtonFormField<Gender>(
+                      initialValue: _gender,
+                      decoration: InputDecoration(labelText: l10n.genderLabel),
+                      items: Gender.values
+                          .map((g) => DropdownMenuItem(value: g, child: Text(g.label(context))))
+                          .toList(),
+                      onChanged: (value) => setState(() => _gender = value),
+                    ),
+                    const SizedBox(height: AppSpacing.md),
+                    TextFormField(
+                      controller: _heightController,
+                      keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                      decoration: InputDecoration(labelText: l10n.heightLabel),
+                    ),
+                    const SizedBox(height: AppSpacing.md),
+                    DropdownButtonFormField<ExperienceLevel>(
+                      initialValue: _experienceLevel,
+                      decoration: InputDecoration(labelText: l10n.experienceLevelLabel),
+                      items: ExperienceLevel.values
+                          .map((e) => DropdownMenuItem(value: e, child: Text(e.label(context))))
+                          .toList(),
+                      onChanged: (value) => setState(() => _experienceLevel = value),
+                    ),
+                    const SizedBox(height: AppSpacing.md),
+                    DropdownButtonFormField<TrainingGoal>(
+                      initialValue: _primaryGoal,
+                      decoration: InputDecoration(labelText: l10n.primaryGoalLabel),
+                      items: TrainingGoal.values
+                          .map((g) => DropdownMenuItem(value: g, child: Text(g.label(context))))
+                          .toList(),
+                      onChanged: (value) => setState(() => _primaryGoal = value),
+                    ),
+                    const SizedBox(height: AppSpacing.md),
+                    DropdownButtonFormField<WeightUnit>(
+                      initialValue: _weightUnit,
+                      decoration: InputDecoration(labelText: l10n.preferredWeightUnitLabel),
+                      items: WeightUnit.values
+                          .map((u) => DropdownMenuItem(value: u, child: Text(u.label(context))))
+                          .toList(),
+                      onChanged: (value) => setState(() => _weightUnit = value!),
+                    ),
+                    const SizedBox(height: AppSpacing.md),
+                    TextFormField(
+                      controller: _weeklyGoalController,
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(labelText: l10n.weeklyTrainingGoalLabel),
+                    ),
+                    const SizedBox(height: AppSpacing.xl),
+                    Text(l10n.nutritionGoalsSectionLabel.toUpperCase(),
+                        style: Theme.of(context).textTheme.labelMedium),
+                    const SizedBox(height: AppSpacing.md),
+                    TextFormField(
+                      controller: _calorieGoalController,
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(labelText: l10n.dailyCalorieGoalLabel),
+                    ),
+                    const SizedBox(height: AppSpacing.md),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: TextFormField(
+                            controller: _proteinGoalController,
+                            keyboardType: TextInputType.number,
+                            decoration: InputDecoration(labelText: l10n.dailyProteinGoalLabel),
+                          ),
+                        ),
+                        const SizedBox(width: AppSpacing.md),
+                        Expanded(
+                          child: TextFormField(
+                            controller: _carbsGoalController,
+                            keyboardType: TextInputType.number,
+                            decoration: InputDecoration(labelText: l10n.dailyCarbsGoalLabel),
+                          ),
+                        ),
+                        const SizedBox(width: AppSpacing.md),
+                        Expanded(
+                          child: TextFormField(
+                            controller: _fatGoalController,
+                            keyboardType: TextInputType.number,
+                            decoration: InputDecoration(labelText: l10n.dailyFatGoalLabel),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
               ),
-              const SizedBox(height: AppSpacing.md),
-              DropdownButtonFormField<Gender>(
-                initialValue: _gender,
-                decoration: InputDecoration(labelText: l10n.genderLabel),
-                items: Gender.values
-                    .map((g) => DropdownMenuItem(value: g, child: Text(g.label(context))))
-                    .toList(),
-                onChanged: (value) => setState(() => _gender = value),
-              ),
-              const SizedBox(height: AppSpacing.md),
-              TextFormField(
-                controller: _heightController,
-                keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                decoration: InputDecoration(labelText: l10n.heightLabel),
-              ),
-              const SizedBox(height: AppSpacing.md),
-              DropdownButtonFormField<ExperienceLevel>(
-                initialValue: _experienceLevel,
-                decoration: InputDecoration(labelText: l10n.experienceLevelLabel),
-                items: ExperienceLevel.values
-                    .map((e) => DropdownMenuItem(value: e, child: Text(e.label(context))))
-                    .toList(),
-                onChanged: (value) => setState(() => _experienceLevel = value),
-              ),
-              const SizedBox(height: AppSpacing.md),
-              DropdownButtonFormField<TrainingGoal>(
-                initialValue: _primaryGoal,
-                decoration: InputDecoration(labelText: l10n.primaryGoalLabel),
-                items: TrainingGoal.values
-                    .map((g) => DropdownMenuItem(value: g, child: Text(g.label(context))))
-                    .toList(),
-                onChanged: (value) => setState(() => _primaryGoal = value),
-              ),
-              const SizedBox(height: AppSpacing.md),
-              DropdownButtonFormField<WeightUnit>(
-                initialValue: _weightUnit,
-                decoration: InputDecoration(labelText: l10n.preferredWeightUnitLabel),
-                items: WeightUnit.values
-                    .map((u) => DropdownMenuItem(value: u, child: Text(u.label(context))))
-                    .toList(),
-                onChanged: (value) => setState(() => _weightUnit = value!),
-              ),
-              const SizedBox(height: AppSpacing.md),
-              TextFormField(
-                controller: _weeklyGoalController,
-                keyboardType: TextInputType.number,
-                decoration: InputDecoration(labelText: l10n.weeklyTrainingGoalLabel),
-              ),
-              const SizedBox(height: AppSpacing.xl),
-              LiftPrimaryButton(label: l10n.saveButton, onPressed: _submit),
-            ],
+            ),
           ),
-        ),
+          const SizedBox(height: AppSpacing.xl),
+          LiftPrimaryButton(label: l10n.saveButton, onPressed: _submit),
+        ],
       ),
     );
   }

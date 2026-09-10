@@ -41,6 +41,22 @@ class AppDrawer extends StatelessWidget {
               },
             ),
             _DrawerItem(
+              icon: Icons.restaurant_outlined,
+              label: l10n.drawerNutrition,
+              onTap: () {
+                Navigator.of(context).pop();
+                context.push('/nutrition');
+              },
+            ),
+            _DrawerItem(
+              icon: Icons.local_fire_department_outlined,
+              label: l10n.drawerStreaks,
+              onTap: () {
+                Navigator.of(context).pop();
+                context.push('/streaks');
+              },
+            ),
+            _DrawerItem(
               icon: Icons.settings_outlined,
               label: l10n.drawerSettings,
               onTap: () {

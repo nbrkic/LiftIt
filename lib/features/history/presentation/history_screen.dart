@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import '../../../common/date_utils.dart';
 import '../../../database/app_database.dart';
 import '../../../design/tokens/app_colors.dart';
 import '../../../design/tokens/app_spacing.dart';
@@ -13,8 +14,6 @@ import 'training_calendar.dart';
 
 class HistoryScreen extends ConsumerWidget {
   const HistoryScreen({super.key});
-
-  DateTime _dayOf(DateTime date) => DateTime(date.year, date.month, date.day);
 
   Future<bool> _confirmDelete(BuildContext context) async {
     final l10n = AppLocalizations.of(context)!;
@@ -51,7 +50,7 @@ class HistoryScreen extends ConsumerWidget {
     List<WorkoutSession> sessions,
     DateTime day,
   ) {
-    final matches = sessions.where((s) => _dayOf(s.startedAt) == day).toList();
+    final matches = sessions.where((s) => dayOf(s.startedAt) == day).toList();
     if (matches.isEmpty) return;
     if (matches.length == 1) {
       context.push('/history/session/${matches.first.id}');
@@ -113,7 +112,7 @@ class HistoryScreen extends ConsumerWidget {
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (error, stack) => Center(child: Text(l10n.errorMessage('$error'))),
         data: (sessions) {
-          final workoutDays = sessions.map((s) => _dayOf(s.startedAt)).toSet();
+          final workoutDays = sessions.map((s) => dayOf(s.startedAt)).toSet();
 
           return ListView(
             padding: const EdgeInsets.only(bottom: AppSpacing.xxl),

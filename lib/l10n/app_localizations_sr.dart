@@ -34,6 +34,12 @@ class AppLocalizationsSr extends AppLocalizations {
   String get drawerBodyweight => 'Telesna težina';
 
   @override
+  String get drawerNutrition => 'Ishrana';
+
+  @override
+  String get drawerStreaks => 'Nizovi';
+
+  @override
   String get drawerSettings => 'Podešavanja';
 
   @override
@@ -210,6 +216,59 @@ class AppLocalizationsSr extends AppLocalizations {
       'Treniraj (ili obeleži dan odmora) svaki dan da bi gradio niz. Ako preskočiš dan, niz se resetuje.';
 
   @override
+  String get nutritionTitle => 'Ishrana';
+
+  @override
+  String get nutritionTodayLabel => 'Danas';
+
+  @override
+  String get nutritionCaloriesLabel => 'Kalorije';
+
+  @override
+  String get nutritionProteinLabel => 'Proteini';
+
+  @override
+  String get nutritionCarbsLabel => 'Ugljeni hidrati';
+
+  @override
+  String get nutritionFatLabel => 'Masti';
+
+  @override
+  String get nutritionEmptyDay =>
+      'Još ništa nije ulogovano — dodirni + da dodaš.';
+
+  @override
+  String get nutritionLogFoodTitle => 'Uloguj hranu';
+
+  @override
+  String get nutritionFoodNameLabel => 'Naziv namirnice';
+
+  @override
+  String get nutritionQuantityLabel => 'Količina (npr. 150 g)';
+
+  @override
+  String get nutritionLogButton => 'Uloguj';
+
+  @override
+  String get nutritionSourceOpenFoodFacts => 'Open Food Facts';
+
+  @override
+  String get nutritionSourceUsda => 'USDA';
+
+  @override
+  String get nutritionSourceGemini => 'Gemini';
+
+  @override
+  String get nutritionSourceManual => 'Ručno';
+
+  @override
+  String get deleteFoodDialogTitle => 'Obrisati unos?';
+
+  @override
+  String get deleteFoodDialogContent =>
+      'Ovo će trajno obrisati ovaj unos hrane.';
+
+  @override
   String get bodyweightTitle => 'Telesna težina';
 
   @override
@@ -327,6 +386,21 @@ class AppLocalizationsSr extends AppLocalizations {
 
   @override
   String get weeklyTrainingGoalLabel => 'Nedeljni cilj treninga (dana)';
+
+  @override
+  String get nutritionGoalsSectionLabel => 'Ciljevi ishrane';
+
+  @override
+  String get dailyCalorieGoalLabel => 'Dnevne kalorije';
+
+  @override
+  String get dailyProteinGoalLabel => 'Dnevni proteini (g)';
+
+  @override
+  String get dailyCarbsGoalLabel => 'Dnevni ugljeni hidrati (g)';
+
+  @override
+  String get dailyFatGoalLabel => 'Dnevne masti (g)';
 
   @override
   String get saveButton => 'Sačuvaj';

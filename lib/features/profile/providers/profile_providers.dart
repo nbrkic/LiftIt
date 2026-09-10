@@ -35,6 +35,10 @@ class ProfileController {
     TrainingGoal? primaryGoal,
     required WeightUnit preferredWeightUnit,
     int? weeklyTrainingGoal,
+    int? dailyCalorieGoal,
+    int? dailyProteinGoalG,
+    int? dailyCarbsGoalG,
+    int? dailyFatGoalG,
   }) {
     return _db.upsertProfile(
       name: name,
@@ -45,6 +49,10 @@ class ProfileController {
       primaryGoal: primaryGoal,
       preferredWeightUnit: preferredWeightUnit,
       weeklyTrainingGoal: weeklyTrainingGoal,
+      dailyCalorieGoal: dailyCalorieGoal,
+      dailyProteinGoalG: dailyProteinGoalG,
+      dailyCarbsGoalG: dailyCarbsGoalG,
+      dailyFatGoalG: dailyFatGoalG,
     );
   }
 

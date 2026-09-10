@@ -1,7 +1,6 @@
+import '../../../common/date_utils.dart';
 import '../../../database/app_database.dart';
 import '../../../l10n/app_localizations.dart';
-
-DateTime _dayOf(DateTime date) => DateTime(date.year, date.month, date.day);
 
 // A day counts toward the streak if it has a finished workout OR was
 // explicitly marked as a planned rest day — anything else breaks it.
@@ -10,11 +9,11 @@ DateTime _dayOf(DateTime date) => DateTime(date.year, date.month, date.day);
 // counted nor treated as a break until it actually lapses into yesterday.
 int computeDailyStreak(List<WorkoutSession> pastSessions, List<RestDay> restDays) {
   final activeDays = <DateTime>{
-    ...pastSessions.map((s) => _dayOf(s.startedAt)),
-    ...restDays.map((r) => _dayOf(r.date)),
+    ...pastSessions.map((s) => dayOf(s.startedAt)),
+    ...restDays.map((r) => dayOf(r.date)),
   };
 
-  var day = _dayOf(DateTime.now());
+  var day = dayOf(DateTime.now());
   if (!activeDays.contains(day)) {
     day = day.subtract(const Duration(days: 1));
   }

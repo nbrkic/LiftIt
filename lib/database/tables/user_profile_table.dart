@@ -14,4 +14,8 @@ class UserProfiles extends Table {
   TextColumn get preferredWeightUnit =>
       textEnum<WeightUnit>().withDefault(const Constant('kg'))();
   IntColumn get weeklyTrainingGoal => integer().nullable()();
+  IntColumn get dailyCalorieGoal => integer().nullable()();
+  IntColumn get dailyProteinGoalG => integer().nullable()();
+  IntColumn get dailyCarbsGoalG => integer().nullable()();
+  IntColumn get dailyFatGoalG => integer().nullable()();
 }

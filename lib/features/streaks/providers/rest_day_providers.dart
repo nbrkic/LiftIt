@@ -1,9 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../common/date_utils.dart';
 import '../../../database/app_database.dart';
 import '../../../database/queries/rest_day_queries.dart';
 import '../../../providers/database_provider.dart';
-
-DateTime dayOf(DateTime date) => DateTime(date.year, date.month, date.day);
 
 final restDaysProvider = StreamProvider<List<RestDay>>((ref) {
   return ref.watch(appDatabaseProvider).watchAllRestDays();

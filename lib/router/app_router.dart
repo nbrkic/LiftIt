@@ -13,6 +13,7 @@ import '../features/stats/presentation/stats_screen.dart';
 import '../features/settings/presentation/settings_screen.dart';
 import '../features/bodyweight/presentation/bodyweight_screen.dart';
 import '../features/streaks/presentation/streak_levels_screen.dart';
+import '../features/nutrition/presentation/nutrition_diary_screen.dart';
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
 
@@ -90,6 +91,11 @@ final appRouter = GoRouter(
       path: '/streaks',
       parentNavigatorKey: _rootNavigatorKey,
       builder: (c, s) => const StreakLevelsScreen(),
+    ),
+    GoRoute(
+      path: '/nutrition',
+      parentNavigatorKey: _rootNavigatorKey,
+      builder: (c, s) => const NutritionDiaryScreen(),
     ),
   ],
 );

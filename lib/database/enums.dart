@@ -35,6 +35,8 @@ enum TrainingGoal { strength, hypertrophy, endurance, weightLoss, generalFitness
 
 enum WeightUnit { kg, lb }
 
+enum FoodLogSource { openFoodFacts, usda, gemini, manual }
+
 extension GenderLabel on Gender {
   String label(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
@@ -77,6 +79,18 @@ extension WeightUnitLabel on WeightUnit {
     return switch (this) {
       WeightUnit.kg => l10n.weightUnitKg,
       WeightUnit.lb => l10n.weightUnitLb,
+    };
+  }
+}
+
+extension FoodLogSourceLabel on FoodLogSource {
+  String label(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    return switch (this) {
+      FoodLogSource.openFoodFacts => l10n.nutritionSourceOpenFoodFacts,
+      FoodLogSource.usda => l10n.nutritionSourceUsda,
+      FoodLogSource.gemini => l10n.nutritionSourceGemini,
+      FoodLogSource.manual => l10n.nutritionSourceManual,
     };
   }
 }

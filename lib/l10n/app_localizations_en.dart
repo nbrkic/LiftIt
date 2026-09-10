@@ -34,6 +34,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get drawerBodyweight => 'Bodyweight';
 
   @override
+  String get drawerNutrition => 'Nutrition';
+
+  @override
+  String get drawerStreaks => 'Streaks';
+
+  @override
   String get drawerSettings => 'Settings';
 
   @override
@@ -209,6 +215,58 @@ class AppLocalizationsEn extends AppLocalizations {
       'Train (or mark a rest day) every day to build your streak. Miss a day and it resets.';
 
   @override
+  String get nutritionTitle => 'Nutrition';
+
+  @override
+  String get nutritionTodayLabel => 'Today';
+
+  @override
+  String get nutritionCaloriesLabel => 'Calories';
+
+  @override
+  String get nutritionProteinLabel => 'Protein';
+
+  @override
+  String get nutritionCarbsLabel => 'Carbs';
+
+  @override
+  String get nutritionFatLabel => 'Fat';
+
+  @override
+  String get nutritionEmptyDay => 'No food logged yet — tap + to add.';
+
+  @override
+  String get nutritionLogFoodTitle => 'Log Food';
+
+  @override
+  String get nutritionFoodNameLabel => 'Food name';
+
+  @override
+  String get nutritionQuantityLabel => 'Quantity (e.g. 150 g)';
+
+  @override
+  String get nutritionLogButton => 'Log';
+
+  @override
+  String get nutritionSourceOpenFoodFacts => 'Open Food Facts';
+
+  @override
+  String get nutritionSourceUsda => 'USDA';
+
+  @override
+  String get nutritionSourceGemini => 'Gemini';
+
+  @override
+  String get nutritionSourceManual => 'Manual';
+
+  @override
+  String get deleteFoodDialogTitle => 'Delete entry?';
+
+  @override
+  String get deleteFoodDialogContent =>
+      'This will permanently delete this food log entry.';
+
+  @override
   String get bodyweightTitle => 'Bodyweight';
 
   @override
@@ -325,6 +383,21 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get weeklyTrainingGoalLabel => 'Weekly training goal (days)';
+
+  @override
+  String get nutritionGoalsSectionLabel => 'Nutrition Goals';
+
+  @override
+  String get dailyCalorieGoalLabel => 'Daily calories';
+
+  @override
+  String get dailyProteinGoalLabel => 'Daily protein (g)';
+
+  @override
+  String get dailyCarbsGoalLabel => 'Daily carbs (g)';
+
+  @override
+  String get dailyFatGoalLabel => 'Daily fat (g)';
 
   @override
   String get saveButton => 'Save';

@@ -146,6 +146,18 @@ abstract class AppLocalizations {
   /// **'Bodyweight'**
   String get drawerBodyweight;
 
+  /// No description provided for @drawerNutrition.
+  ///
+  /// In en, this message translates to:
+  /// **'Nutrition'**
+  String get drawerNutrition;
+
+  /// No description provided for @drawerStreaks.
+  ///
+  /// In en, this message translates to:
+  /// **'Streaks'**
+  String get drawerStreaks;
+
   /// No description provided for @drawerSettings.
   ///
   /// In en, this message translates to:
@@ -458,6 +470,108 @@ abstract class AppLocalizations {
   /// **'Train (or mark a rest day) every day to build your streak. Miss a day and it resets.'**
   String get streakScreenIntro;
 
+  /// No description provided for @nutritionTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Nutrition'**
+  String get nutritionTitle;
+
+  /// No description provided for @nutritionTodayLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Today'**
+  String get nutritionTodayLabel;
+
+  /// No description provided for @nutritionCaloriesLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Calories'**
+  String get nutritionCaloriesLabel;
+
+  /// No description provided for @nutritionProteinLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Protein'**
+  String get nutritionProteinLabel;
+
+  /// No description provided for @nutritionCarbsLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Carbs'**
+  String get nutritionCarbsLabel;
+
+  /// No description provided for @nutritionFatLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Fat'**
+  String get nutritionFatLabel;
+
+  /// No description provided for @nutritionEmptyDay.
+  ///
+  /// In en, this message translates to:
+  /// **'No food logged yet — tap + to add.'**
+  String get nutritionEmptyDay;
+
+  /// No description provided for @nutritionLogFoodTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Log Food'**
+  String get nutritionLogFoodTitle;
+
+  /// No description provided for @nutritionFoodNameLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Food name'**
+  String get nutritionFoodNameLabel;
+
+  /// No description provided for @nutritionQuantityLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Quantity (e.g. 150 g)'**
+  String get nutritionQuantityLabel;
+
+  /// No description provided for @nutritionLogButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Log'**
+  String get nutritionLogButton;
+
+  /// No description provided for @nutritionSourceOpenFoodFacts.
+  ///
+  /// In en, this message translates to:
+  /// **'Open Food Facts'**
+  String get nutritionSourceOpenFoodFacts;
+
+  /// No description provided for @nutritionSourceUsda.
+  ///
+  /// In en, this message translates to:
+  /// **'USDA'**
+  String get nutritionSourceUsda;
+
+  /// No description provided for @nutritionSourceGemini.
+  ///
+  /// In en, this message translates to:
+  /// **'Gemini'**
+  String get nutritionSourceGemini;
+
+  /// No description provided for @nutritionSourceManual.
+  ///
+  /// In en, this message translates to:
+  /// **'Manual'**
+  String get nutritionSourceManual;
+
+  /// No description provided for @deleteFoodDialogTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete entry?'**
+  String get deleteFoodDialogTitle;
+
+  /// No description provided for @deleteFoodDialogContent.
+  ///
+  /// In en, this message translates to:
+  /// **'This will permanently delete this food log entry.'**
+  String get deleteFoodDialogContent;
+
   /// No description provided for @bodyweightTitle.
   ///
   /// In en, this message translates to:
@@ -679,6 +793,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Weekly training goal (days)'**
   String get weeklyTrainingGoalLabel;
+
+  /// No description provided for @nutritionGoalsSectionLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Nutrition Goals'**
+  String get nutritionGoalsSectionLabel;
+
+  /// No description provided for @dailyCalorieGoalLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily calories'**
+  String get dailyCalorieGoalLabel;
+
+  /// No description provided for @dailyProteinGoalLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily protein (g)'**
+  String get dailyProteinGoalLabel;
+
+  /// No description provided for @dailyCarbsGoalLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily carbs (g)'**
+  String get dailyCarbsGoalLabel;
+
+  /// No description provided for @dailyFatGoalLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily fat (g)'**
+  String get dailyFatGoalLabel;
 
   /// No description provided for @saveButton.
   ///
