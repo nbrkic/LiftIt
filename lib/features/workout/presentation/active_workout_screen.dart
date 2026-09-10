@@ -17,6 +17,7 @@ import '../../../design/tokens/app_spacing.dart';
 import '../../../design/widgets/set_row.dart';
 import '../../../design/widgets/stat_block.dart';
 import '../../../l10n/app_localizations.dart';
+import '../../../providers/api_keys_provider.dart';
 import '../../../providers/database_provider.dart';
 import '../../exercises/providers/exercise_stats_providers.dart';
 import '../../exercises/utils/exercise_stats.dart';
@@ -136,6 +137,23 @@ class _ActiveWorkoutScreenState extends ConsumerState<ActiveWorkoutScreen> {
     await ref.read(activeWorkoutControllerProvider).finishWorkout(_sessionId!);
     hasPr ? HapticFeedback.heavyImpact() : HapticFeedback.mediumImpact();
     if (!mounted) return;
+
+    final apiKey = (await ref.read(apiKeysProvider.notifier).ensureGeminiApiKey()).trim();
+    if (!mounted) return;
+    if (apiKey.isNotEmpty) {
+      final languageName = Localizations.localeOf(context).languageCode == 'sr' ? 'Serbian' : 'English';
+      // Deliberately not awaited — generating the AI summary must never
+      // hold up showing the completion screen. It finishes in the
+      // background and lands on the session once ready (History watches
+      // the session row reactively, so it just appears there).
+      ref.read(activeWorkoutControllerProvider).generateAiSummary(
+            sessionId: _sessionId!,
+            apiKey: apiKey,
+            languageName: languageName,
+            hasPr: hasPr,
+          );
+    }
+
     setState(() {
       _completed = true;
       _finishedGroups = groups
@@ -185,6 +203,7 @@ class _ActiveWorkoutScreenState extends ConsumerState<ActiveWorkoutScreen> {
 
     if (_completed) {
       return WorkoutCompletionView(
+        sessionId: _sessionId!,
         duration: _finishedDuration,
         volume: _finishedVolume,
         groups: _finishedGroups!,

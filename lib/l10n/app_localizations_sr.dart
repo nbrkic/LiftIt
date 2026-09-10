@@ -1074,4 +1074,13 @@ class AppLocalizationsSr extends AppLocalizations {
   String bmiGoalSetConfirmation(String preset) {
     return 'Ciljevi za \"$preset\" su podešeni.';
   }
+
+  @override
+  String get aiWorkoutSummaryLabel => 'Beleške trenera';
+
+  @override
+  String get aiWorkoutSummaryRevealAction => 'Pogledaj šta kaže trener';
+
+  @override
+  String get aiWorkoutSummaryGenerating => 'Razmišlja…';
 }

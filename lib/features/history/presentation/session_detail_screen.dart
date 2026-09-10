@@ -121,6 +121,26 @@ class SessionDetailScreen extends ConsumerWidget {
                     ),
                   ],
                 ),
+                if (session?.aiSummary != null) ...[
+                  const SizedBox(height: AppSpacing.xxxl),
+                  Container(
+                    padding: const EdgeInsets.only(left: AppSpacing.md),
+                    decoration: BoxDecoration(
+                      border: Border(left: BorderSide(color: c.violet, width: 3)),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          l10n.aiWorkoutSummaryLabel.toUpperCase(),
+                          style: theme.textTheme.labelMedium?.copyWith(color: c.textSecondary),
+                        ),
+                        const SizedBox(height: AppSpacing.xs),
+                        Text(session!.aiSummary!, style: theme.textTheme.bodyMedium),
+                      ],
+                    ),
+                  ),
+                ],
                 const SizedBox(height: AppSpacing.xxxl),
                 ...groupOrder.map((exerciseId) {
                   final entries = groups[exerciseId]!;

@@ -39,7 +39,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase.forTesting(super.executor);
 
   @override
-  int get schemaVersion => 8;
+  int get schemaVersion => 9;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -86,6 +86,9 @@ class AppDatabase extends _$AppDatabase {
           if (from < 8) {
             await m.createTable(supplements);
             await m.createTable(supplementLogs);
+          }
+          if (from < 9) {
+            await m.addColumn(workoutSessions, workoutSessions.aiSummary);
           }
         },
         // SQLite does not enforce FK constraints unless explicitly turned on

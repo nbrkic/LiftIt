@@ -347,5 +347,8 @@
   "bmiGoalBulk": "Bulk",
   "bmiGoalAggressiveBulk": "Agresivan bulk",
   "bmiSetAsGoalAction": "Postavi kao cilj",
-  "bmiGoalSetConfirmation": "Ciljevi za \"{preset}\" su podešeni."
+  "bmiGoalSetConfirmation": "Ciljevi za \"{preset}\" su podešeni.",
+  "aiWorkoutSummaryLabel": "Beleške trenera",
+  "aiWorkoutSummaryRevealAction": "Pogledaj šta kaže trener",
+  "aiWorkoutSummaryGenerating": "Razmišlja…"
 }

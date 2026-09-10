@@ -1067,4 +1067,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String bmiGoalSetConfirmation(String preset) {
     return '$preset goals set.';
   }
+
+  @override
+  String get aiWorkoutSummaryLabel => 'Coach\'s Notes';
+
+  @override
+  String get aiWorkoutSummaryRevealAction => 'See what the coach thinks';
+
+  @override
+  String get aiWorkoutSummaryGenerating => 'Thinking it over…';
 }

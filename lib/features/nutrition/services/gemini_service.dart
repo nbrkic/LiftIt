@@ -78,6 +78,47 @@ class GeminiService {
     ]);
   }
 
+  // Plain free-text generation (no JSON schema) — used for prose like the
+  // workout summary, where the output is meant to be read directly, not
+  // parsed.
+  Future<String> generateText(String prompt, String apiKey) async {
+    final uri = Uri.parse(_base).replace(queryParameters: {'key': apiKey});
+    final requestBody = jsonEncode({
+      'contents': [
+        {
+          'parts': [
+            {'text': prompt},
+          ],
+        },
+      ],
+    });
+
+    final response = await _postWithRetry(uri, requestBody);
+
+    if (response.statusCode == 401 || response.statusCode == 403) {
+      throw const NutritionApiException('Gemini: invalid API key');
+    }
+    if (response.statusCode != 200) {
+      throw NutritionApiException('Gemini: HTTP ${response.statusCode}');
+    }
+
+    try {
+      final body = jsonDecode(response.body) as Map<String, dynamic>;
+      final candidates = body['candidates'] as List?;
+      final parts = ((candidates?.first as Map<String, dynamic>?)?['content']
+          as Map<String, dynamic>?)?['parts'] as List?;
+      final text = (parts?.first as Map<String, dynamic>?)?['text'] as String?;
+      if (text == null || text.trim().isEmpty) {
+        throw const NutritionApiException('Gemini: empty response');
+      }
+      return text.trim();
+    } on NutritionApiException {
+      rethrow;
+    } catch (_) {
+      throw const NutritionApiException('Gemini: could not read the response');
+    }
+  }
+
   Future<List<GeminiFoodItem>> _generateItems(
     String apiKey, {
     required List<Map<String, Object>> parts,

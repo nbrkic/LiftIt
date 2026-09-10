@@ -1043,6 +1043,17 @@ class $WorkoutSessionsTable extends WorkoutSessions
     type: DriftSqlType.string,
     requiredDuringInsert: false,
   );
+  static const VerificationMeta _aiSummaryMeta = const VerificationMeta(
+    'aiSummary',
+  );
+  @override
+  late final GeneratedColumn<String> aiSummary = GeneratedColumn<String>(
+    'ai_summary',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -1050,6 +1061,7 @@ class $WorkoutSessionsTable extends WorkoutSessions
     endedAt,
     splitDayId,
     notes,
+    aiSummary,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -1095,6 +1107,12 @@ class $WorkoutSessionsTable extends WorkoutSessions
         notes.isAcceptableOrUnknown(data['notes']!, _notesMeta),
       );
     }
+    if (data.containsKey('ai_summary')) {
+      context.handle(
+        _aiSummaryMeta,
+        aiSummary.isAcceptableOrUnknown(data['ai_summary']!, _aiSummaryMeta),
+      );
+    }
     return context;
   }
 
@@ -1124,6 +1142,10 @@ class $WorkoutSessionsTable extends WorkoutSessions
         DriftSqlType.string,
         data['${effectivePrefix}notes'],
       ),
+      aiSummary: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}ai_summary'],
+      ),
     );
   }
 
@@ -1139,12 +1161,14 @@ class WorkoutSession extends DataClass implements Insertable<WorkoutSession> {
   final DateTime? endedAt;
   final int? splitDayId;
   final String? notes;
+  final String? aiSummary;
   const WorkoutSession({
     required this.id,
     required this.startedAt,
     this.endedAt,
     this.splitDayId,
     this.notes,
+    this.aiSummary,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -1159,6 +1183,9 @@ class WorkoutSession extends DataClass implements Insertable<WorkoutSession> {
     }
     if (!nullToAbsent || notes != null) {
       map['notes'] = Variable<String>(notes);
+    }
+    if (!nullToAbsent || aiSummary != null) {
+      map['ai_summary'] = Variable<String>(aiSummary);
     }
     return map;
   }
@@ -1176,6 +1203,9 @@ class WorkoutSession extends DataClass implements Insertable<WorkoutSession> {
       notes: notes == null && nullToAbsent
           ? const Value.absent()
           : Value(notes),
+      aiSummary: aiSummary == null && nullToAbsent
+          ? const Value.absent()
+          : Value(aiSummary),
     );
   }
 
@@ -1190,6 +1220,7 @@ class WorkoutSession extends DataClass implements Insertable<WorkoutSession> {
       endedAt: serializer.fromJson<DateTime?>(json['endedAt']),
       splitDayId: serializer.fromJson<int?>(json['splitDayId']),
       notes: serializer.fromJson<String?>(json['notes']),
+      aiSummary: serializer.fromJson<String?>(json['aiSummary']),
     );
   }
   @override
@@ -1201,6 +1232,7 @@ class WorkoutSession extends DataClass implements Insertable<WorkoutSession> {
       'endedAt': serializer.toJson<DateTime?>(endedAt),
       'splitDayId': serializer.toJson<int?>(splitDayId),
       'notes': serializer.toJson<String?>(notes),
+      'aiSummary': serializer.toJson<String?>(aiSummary),
     };
   }
 
@@ -1210,12 +1242,14 @@ class WorkoutSession extends DataClass implements Insertable<WorkoutSession> {
     Value<DateTime?> endedAt = const Value.absent(),
     Value<int?> splitDayId = const Value.absent(),
     Value<String?> notes = const Value.absent(),
+    Value<String?> aiSummary = const Value.absent(),
   }) => WorkoutSession(
     id: id ?? this.id,
     startedAt: startedAt ?? this.startedAt,
     endedAt: endedAt.present ? endedAt.value : this.endedAt,
     splitDayId: splitDayId.present ? splitDayId.value : this.splitDayId,
     notes: notes.present ? notes.value : this.notes,
+    aiSummary: aiSummary.present ? aiSummary.value : this.aiSummary,
   );
   WorkoutSession copyWithCompanion(WorkoutSessionsCompanion data) {
     return WorkoutSession(
@@ -1226,6 +1260,7 @@ class WorkoutSession extends DataClass implements Insertable<WorkoutSession> {
           ? data.splitDayId.value
           : this.splitDayId,
       notes: data.notes.present ? data.notes.value : this.notes,
+      aiSummary: data.aiSummary.present ? data.aiSummary.value : this.aiSummary,
     );
   }
 
@@ -1236,13 +1271,15 @@ class WorkoutSession extends DataClass implements Insertable<WorkoutSession> {
           ..write('startedAt: $startedAt, ')
           ..write('endedAt: $endedAt, ')
           ..write('splitDayId: $splitDayId, ')
-          ..write('notes: $notes')
+          ..write('notes: $notes, ')
+          ..write('aiSummary: $aiSummary')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, startedAt, endedAt, splitDayId, notes);
+  int get hashCode =>
+      Object.hash(id, startedAt, endedAt, splitDayId, notes, aiSummary);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -1251,7 +1288,8 @@ class WorkoutSession extends DataClass implements Insertable<WorkoutSession> {
           other.startedAt == this.startedAt &&
           other.endedAt == this.endedAt &&
           other.splitDayId == this.splitDayId &&
-          other.notes == this.notes);
+          other.notes == this.notes &&
+          other.aiSummary == this.aiSummary);
 }
 
 class WorkoutSessionsCompanion extends UpdateCompanion<WorkoutSession> {
@@ -1260,12 +1298,14 @@ class WorkoutSessionsCompanion extends UpdateCompanion<WorkoutSession> {
   final Value<DateTime?> endedAt;
   final Value<int?> splitDayId;
   final Value<String?> notes;
+  final Value<String?> aiSummary;
   const WorkoutSessionsCompanion({
     this.id = const Value.absent(),
     this.startedAt = const Value.absent(),
     this.endedAt = const Value.absent(),
     this.splitDayId = const Value.absent(),
     this.notes = const Value.absent(),
+    this.aiSummary = const Value.absent(),
   });
   WorkoutSessionsCompanion.insert({
     this.id = const Value.absent(),
@@ -1273,6 +1313,7 @@ class WorkoutSessionsCompanion extends UpdateCompanion<WorkoutSession> {
     this.endedAt = const Value.absent(),
     this.splitDayId = const Value.absent(),
     this.notes = const Value.absent(),
+    this.aiSummary = const Value.absent(),
   }) : startedAt = Value(startedAt);
   static Insertable<WorkoutSession> custom({
     Expression<int>? id,
@@ -1280,6 +1321,7 @@ class WorkoutSessionsCompanion extends UpdateCompanion<WorkoutSession> {
     Expression<DateTime>? endedAt,
     Expression<int>? splitDayId,
     Expression<String>? notes,
+    Expression<String>? aiSummary,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -1287,6 +1329,7 @@ class WorkoutSessionsCompanion extends UpdateCompanion<WorkoutSession> {
       if (endedAt != null) 'ended_at': endedAt,
       if (splitDayId != null) 'split_day_id': splitDayId,
       if (notes != null) 'notes': notes,
+      if (aiSummary != null) 'ai_summary': aiSummary,
     });
   }
 
@@ -1296,6 +1339,7 @@ class WorkoutSessionsCompanion extends UpdateCompanion<WorkoutSession> {
     Value<DateTime?>? endedAt,
     Value<int?>? splitDayId,
     Value<String?>? notes,
+    Value<String?>? aiSummary,
   }) {
     return WorkoutSessionsCompanion(
       id: id ?? this.id,
@@ -1303,6 +1347,7 @@ class WorkoutSessionsCompanion extends UpdateCompanion<WorkoutSession> {
       endedAt: endedAt ?? this.endedAt,
       splitDayId: splitDayId ?? this.splitDayId,
       notes: notes ?? this.notes,
+      aiSummary: aiSummary ?? this.aiSummary,
     );
   }
 
@@ -1324,6 +1369,9 @@ class WorkoutSessionsCompanion extends UpdateCompanion<WorkoutSession> {
     if (notes.present) {
       map['notes'] = Variable<String>(notes.value);
     }
+    if (aiSummary.present) {
+      map['ai_summary'] = Variable<String>(aiSummary.value);
+    }
     return map;
   }
 
@@ -1334,7 +1382,8 @@ class WorkoutSessionsCompanion extends UpdateCompanion<WorkoutSession> {
           ..write('startedAt: $startedAt, ')
           ..write('endedAt: $endedAt, ')
           ..write('splitDayId: $splitDayId, ')
-          ..write('notes: $notes')
+          ..write('notes: $notes, ')
+          ..write('aiSummary: $aiSummary')
           ..write(')'))
         .toString();
   }
@@ -7159,6 +7208,7 @@ typedef $$WorkoutSessionsTableCreateCompanionBuilder =
       Value<DateTime?> endedAt,
       Value<int?> splitDayId,
       Value<String?> notes,
+      Value<String?> aiSummary,
     });
 typedef $$WorkoutSessionsTableUpdateCompanionBuilder =
     WorkoutSessionsCompanion Function({
@@ -7167,6 +7217,7 @@ typedef $$WorkoutSessionsTableUpdateCompanionBuilder =
       Value<DateTime?> endedAt,
       Value<int?> splitDayId,
       Value<String?> notes,
+      Value<String?> aiSummary,
     });
 
 final class $$WorkoutSessionsTableReferences
@@ -7240,6 +7291,11 @@ class $$WorkoutSessionsTableFilterComposer
 
   ColumnFilters<String> get notes => $composableBuilder(
     column: $table.notes,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get aiSummary => $composableBuilder(
+    column: $table.aiSummary,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -7321,6 +7377,11 @@ class $$WorkoutSessionsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get aiSummary => $composableBuilder(
+    column: $table.aiSummary,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   $$SplitDaysTableOrderingComposer get splitDayId {
     final $$SplitDaysTableOrderingComposer composer = $composerBuilder(
       composer: this,
@@ -7365,6 +7426,9 @@ class $$WorkoutSessionsTableAnnotationComposer
 
   GeneratedColumn<String> get notes =>
       $composableBuilder(column: $table.notes, builder: (column) => column);
+
+  GeneratedColumn<String> get aiSummary =>
+      $composableBuilder(column: $table.aiSummary, builder: (column) => column);
 
   $$SplitDaysTableAnnotationComposer get splitDayId {
     final $$SplitDaysTableAnnotationComposer composer = $composerBuilder(
@@ -7450,12 +7514,14 @@ class $$WorkoutSessionsTableTableManager
                 Value<DateTime?> endedAt = const Value.absent(),
                 Value<int?> splitDayId = const Value.absent(),
                 Value<String?> notes = const Value.absent(),
+                Value<String?> aiSummary = const Value.absent(),
               }) => WorkoutSessionsCompanion(
                 id: id,
                 startedAt: startedAt,
                 endedAt: endedAt,
                 splitDayId: splitDayId,
                 notes: notes,
+                aiSummary: aiSummary,
               ),
           createCompanionCallback:
               ({
@@ -7464,12 +7530,14 @@ class $$WorkoutSessionsTableTableManager
                 Value<DateTime?> endedAt = const Value.absent(),
                 Value<int?> splitDayId = const Value.absent(),
                 Value<String?> notes = const Value.absent(),
+                Value<String?> aiSummary = const Value.absent(),
               }) => WorkoutSessionsCompanion.insert(
                 id: id,
                 startedAt: startedAt,
                 endedAt: endedAt,
                 splitDayId: splitDayId,
                 notes: notes,
+                aiSummary: aiSummary,
               ),
           withReferenceMapper: (p0) => p0
               .map(

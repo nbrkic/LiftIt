@@ -7,8 +7,10 @@ import '../../../design/tokens/app_spacing.dart';
 import '../../../design/widgets/lift_button.dart';
 import '../../../design/widgets/stat_block.dart';
 import '../../../l10n/app_localizations.dart';
+import '../../../providers/api_keys_provider.dart';
 import '../../exercises/providers/exercise_stats_providers.dart';
 import '../../exercises/utils/exercise_stats.dart';
+import '../../history/providers/history_providers.dart';
 import '../../profile/providers/profile_providers.dart';
 
 class FinishedGroup {
@@ -22,6 +24,7 @@ class FinishedGroup {
 // session and calling out any exercise where the best set logged today is
 // now the all-time best for that exercise.
 class WorkoutCompletionView extends ConsumerWidget {
+  final int sessionId;
   final Duration duration;
   final double volume;
   final List<FinishedGroup> groups;
@@ -29,6 +32,7 @@ class WorkoutCompletionView extends ConsumerWidget {
 
   const WorkoutCompletionView({
     super.key,
+    required this.sessionId,
     required this.duration,
     required this.volume,
     required this.groups,
@@ -93,10 +97,68 @@ class WorkoutCompletionView extends ConsumerWidget {
                 ),
               ),
               const Spacer(),
+              if (ref.watch(apiKeysProvider).geminiApiKey.isNotEmpty) ...[
+                TextButton.icon(
+                  onPressed: () => showModalBottomSheet(
+                    context: context,
+                    isScrollControlled: true,
+                    builder: (_) => _CoachNotesSheet(sessionId: sessionId),
+                  ),
+                  icon: const Icon(Icons.auto_awesome_outlined, size: 18),
+                  label: Text(l10n.aiWorkoutSummaryRevealAction),
+                ),
+                const SizedBox(height: AppSpacing.sm),
+              ],
               LiftPrimaryButton(label: l10n.doneButton, onPressed: onDone),
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+// The summary generates in the background and may still be in flight when
+// this opens — watching the session (rather than fetching it once) means
+// the sheet updates itself the moment it lands, no need to close/reopen.
+class _CoachNotesSheet extends ConsumerWidget {
+  final int sessionId;
+
+  const _CoachNotesSheet({required this.sessionId});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
+    final summary = ref.watch(sessionByIdProvider(sessionId)).value?.aiSummary;
+
+    return Padding(
+      padding: EdgeInsets.only(
+        left: AppSpacing.xxl,
+        right: AppSpacing.xxl,
+        top: AppSpacing.xl,
+        bottom: MediaQuery.of(context).padding.bottom + AppSpacing.xxl,
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(l10n.aiWorkoutSummaryLabel, style: Theme.of(context).textTheme.titleLarge),
+          const SizedBox(height: AppSpacing.lg),
+          if (summary == null)
+            Row(
+              children: [
+                const SizedBox(
+                  width: 16,
+                  height: 16,
+                  child: CircularProgressIndicator(strokeWidth: 2),
+                ),
+                const SizedBox(width: AppSpacing.md),
+                Expanded(child: Text(l10n.aiWorkoutSummaryGenerating)),
+              ],
+            )
+          else
+            Text(summary, style: Theme.of(context).textTheme.bodyMedium),
+        ],
       ),
     );
   }

@@ -47,7 +47,8 @@ class _FoodSearchScreenState extends ConsumerState<FoodSearchScreen> {
 
   Future<void> _tryAiEstimate() async {
     final l10n = AppLocalizations.of(context)!;
-    final apiKey = ref.read(apiKeysProvider).geminiApiKey.trim();
+    final apiKey = (await ref.read(apiKeysProvider.notifier).ensureGeminiApiKey()).trim();
+    if (!mounted) return;
     if (apiKey.isEmpty) {
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text(l10n.nutritionGeminiKeyMissing)));

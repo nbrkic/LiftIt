@@ -93,7 +93,8 @@ class _NutritionDiaryScreenState extends ConsumerState<NutritionDiaryScreen> {
 
   Future<void> _pickAndAnalyzePhoto(BuildContext context) async {
     final l10n = AppLocalizations.of(context)!;
-    final apiKey = ref.read(apiKeysProvider).geminiApiKey.trim();
+    final apiKey = (await ref.read(apiKeysProvider.notifier).ensureGeminiApiKey()).trim();
+    if (!context.mounted) return;
     if (apiKey.isEmpty) {
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text(l10n.nutritionGeminiKeyMissing)));

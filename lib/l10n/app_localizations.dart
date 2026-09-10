@@ -2029,6 +2029,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{preset} goals set.'**
   String bmiGoalSetConfirmation(String preset);
+
+  /// No description provided for @aiWorkoutSummaryLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Coach\'s Notes'**
+  String get aiWorkoutSummaryLabel;
+
+  /// No description provided for @aiWorkoutSummaryRevealAction.
+  ///
+  /// In en, this message translates to:
+  /// **'See what the coach thinks'**
+  String get aiWorkoutSummaryRevealAction;
+
+  /// No description provided for @aiWorkoutSummaryGenerating.
+  ///
+  /// In en, this message translates to:
+  /// **'Thinking it over…'**
+  String get aiWorkoutSummaryGenerating;
 }
 
 class _AppLocalizationsDelegate

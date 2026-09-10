@@ -46,6 +46,50 @@ extension WorkoutQueries on AppDatabase {
         );
   }
 
+  // One-shot (not a watch stream) — used by the background AI-summary
+  // generation, which runs detached from any widget and just needs a
+  // single snapshot of the finished workout.
+  Future<List<WorkoutSetWithExercise>> getSetsForSession(int sessionId) async {
+    final query = select(workoutSets).join([
+      innerJoin(exercises, exercises.id.equalsExp(workoutSets.exerciseId)),
+    ])
+      ..where(workoutSets.workoutSessionId.equals(sessionId))
+      ..orderBy([OrderingTerm.asc(workoutSets.completedAt)]);
+    final rows = await query.get();
+    return rows
+        .map((row) => WorkoutSetWithExercise(
+              set: row.readTable(workoutSets),
+              exercise: row.readTable(exercises),
+            ))
+        .toList();
+  }
+
+  // The most recent prior *finished* session for a same-day comparison —
+  // same split day when the session came from one, otherwise just the
+  // last finished session of any kind (better than no comparison at all).
+  Future<WorkoutSession?> getPreviousComparableSession({
+    required int? splitDayId,
+    required int beforeSessionId,
+    required DateTime beforeStartedAt,
+  }) {
+    final query = select(workoutSessions)
+      ..where((s) =>
+          s.id.isNotValue(beforeSessionId) &
+          s.endedAt.isNotNull() &
+          s.startedAt.isSmallerThanValue(beforeStartedAt))
+      ..orderBy([(s) => OrderingTerm.desc(s.startedAt)])
+      ..limit(1);
+    if (splitDayId != null) {
+      query.where((s) => s.splitDayId.equals(splitDayId));
+    }
+    return query.getSingleOrNull();
+  }
+
+  Future<void> setSessionAiSummary(int sessionId, String summary) {
+    return (update(workoutSessions)..where((s) => s.id.equals(sessionId)))
+        .write(WorkoutSessionsCompanion(aiSummary: Value(summary)));
+  }
+
   Future<int> logSet({
     required int sessionId,
     required int exerciseId,

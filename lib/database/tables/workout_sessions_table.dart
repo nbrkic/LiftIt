@@ -11,4 +11,8 @@ class WorkoutSessions extends Table {
   IntColumn get splitDayId =>
       integer().nullable().references(SplitDays, #id, onDelete: KeyAction.setNull)();
   TextColumn get notes => text().nullable()();
+  // Filled in the background by Gemini shortly after the workout finishes
+  // (fire-and-forget, never blocks finishing) — null for older sessions and
+  // whenever the call fails or no Gemini key is set.
+  TextColumn get aiSummary => text().nullable()();
 }

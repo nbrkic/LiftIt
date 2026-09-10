@@ -382,5 +382,8 @@
   "bmiGoalAggressiveBulk": "Aggressive Bulk",
   "bmiSetAsGoalAction": "Set as goal",
   "bmiGoalSetConfirmation": "{preset} goals set.",
-  "@bmiGoalSetConfirmation": { "placeholders": { "preset": { "type": "String" } } }
+  "@bmiGoalSetConfirmation": { "placeholders": { "preset": { "type": "String" } } },
+  "aiWorkoutSummaryLabel": "Coach's Notes",
+  "aiWorkoutSummaryRevealAction": "See what the coach thinks",
+  "aiWorkoutSummaryGenerating": "Thinking it over…"
 }

@@ -37,6 +37,21 @@ class ApiKeysNotifier extends Notifier<ApiKeysState> {
     );
   }
 
+  // A plain `ref.read(apiKeysProvider).geminiApiKey` right after cold start
+  // can race _load()'s SharedPreferences read and see the empty default
+  // even when a key really is saved — the first camera-scan attempt would
+  // wrongly report "key missing", then work on the very next tap once
+  // _load() had caught up. Go straight to SharedPreferences when the
+  // cached state still looks empty so that check is never wrong just
+  // because of this timing.
+  Future<String> ensureGeminiApiKey() async {
+    if (state.geminiApiKey.isNotEmpty) return state.geminiApiKey;
+    final prefs = await SharedPreferences.getInstance();
+    final key = prefs.getString(_geminiKeyPrefKey) ?? '';
+    if (key.isNotEmpty) state = state.copyWith(geminiApiKey: key);
+    return key;
+  }
+
   Future<void> setGeminiApiKey(String value) async {
     state = state.copyWith(geminiApiKey: value);
     final prefs = await SharedPreferences.getInstance();
