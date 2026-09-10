@@ -237,7 +237,13 @@ class _DaysSection extends ConsumerWidget {
                             child: Row(
                               children: [
                                 Expanded(
-                                  child: Text(day.name, style: Theme.of(context).textTheme.bodyLarge),
+                                  child: Text(
+                                    day.name,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyLarge
+                                        ?.copyWith(fontWeight: FontWeight.w700),
+                                  ),
                                 ),
                                 InkResponse(
                                   onTap: () => onToggleDay(day.id),

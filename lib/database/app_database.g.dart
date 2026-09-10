@@ -2577,6 +2577,17 @@ class $UserProfilesTable extends UserProfiles
     type: DriftSqlType.int,
     requiredDuringInsert: false,
   );
+  static const VerificationMeta _dailyWaterGoalMlMeta = const VerificationMeta(
+    'dailyWaterGoalMl',
+  );
+  @override
+  late final GeneratedColumn<int> dailyWaterGoalMl = GeneratedColumn<int>(
+    'daily_water_goal_ml',
+    aliasedName,
+    true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -2592,6 +2603,7 @@ class $UserProfilesTable extends UserProfiles
     dailyProteinGoalG,
     dailyCarbsGoalG,
     dailyFatGoalG,
+    dailyWaterGoalMl,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -2671,6 +2683,15 @@ class $UserProfilesTable extends UserProfiles
         ),
       );
     }
+    if (data.containsKey('daily_water_goal_ml')) {
+      context.handle(
+        _dailyWaterGoalMlMeta,
+        dailyWaterGoalMl.isAcceptableOrUnknown(
+          data['daily_water_goal_ml']!,
+          _dailyWaterGoalMlMeta,
+        ),
+      );
+    }
     return context;
   }
 
@@ -2741,6 +2762,10 @@ class $UserProfilesTable extends UserProfiles
         DriftSqlType.int,
         data['${effectivePrefix}daily_fat_goal_g'],
       ),
+      dailyWaterGoalMl: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}daily_water_goal_ml'],
+      ),
     );
   }
 
@@ -2787,6 +2812,7 @@ class UserProfile extends DataClass implements Insertable<UserProfile> {
   final int? dailyProteinGoalG;
   final int? dailyCarbsGoalG;
   final int? dailyFatGoalG;
+  final int? dailyWaterGoalMl;
   const UserProfile({
     required this.id,
     this.name,
@@ -2801,6 +2827,7 @@ class UserProfile extends DataClass implements Insertable<UserProfile> {
     this.dailyProteinGoalG,
     this.dailyCarbsGoalG,
     this.dailyFatGoalG,
+    this.dailyWaterGoalMl,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -2852,6 +2879,9 @@ class UserProfile extends DataClass implements Insertable<UserProfile> {
     if (!nullToAbsent || dailyFatGoalG != null) {
       map['daily_fat_goal_g'] = Variable<int>(dailyFatGoalG);
     }
+    if (!nullToAbsent || dailyWaterGoalMl != null) {
+      map['daily_water_goal_ml'] = Variable<int>(dailyWaterGoalMl);
+    }
     return map;
   }
 
@@ -2890,6 +2920,9 @@ class UserProfile extends DataClass implements Insertable<UserProfile> {
       dailyFatGoalG: dailyFatGoalG == null && nullToAbsent
           ? const Value.absent()
           : Value(dailyFatGoalG),
+      dailyWaterGoalMl: dailyWaterGoalMl == null && nullToAbsent
+          ? const Value.absent()
+          : Value(dailyWaterGoalMl),
     );
   }
 
@@ -2919,6 +2952,7 @@ class UserProfile extends DataClass implements Insertable<UserProfile> {
       dailyProteinGoalG: serializer.fromJson<int?>(json['dailyProteinGoalG']),
       dailyCarbsGoalG: serializer.fromJson<int?>(json['dailyCarbsGoalG']),
       dailyFatGoalG: serializer.fromJson<int?>(json['dailyFatGoalG']),
+      dailyWaterGoalMl: serializer.fromJson<int?>(json['dailyWaterGoalMl']),
     );
   }
   @override
@@ -2948,6 +2982,7 @@ class UserProfile extends DataClass implements Insertable<UserProfile> {
       'dailyProteinGoalG': serializer.toJson<int?>(dailyProteinGoalG),
       'dailyCarbsGoalG': serializer.toJson<int?>(dailyCarbsGoalG),
       'dailyFatGoalG': serializer.toJson<int?>(dailyFatGoalG),
+      'dailyWaterGoalMl': serializer.toJson<int?>(dailyWaterGoalMl),
     };
   }
 
@@ -2965,6 +3000,7 @@ class UserProfile extends DataClass implements Insertable<UserProfile> {
     Value<int?> dailyProteinGoalG = const Value.absent(),
     Value<int?> dailyCarbsGoalG = const Value.absent(),
     Value<int?> dailyFatGoalG = const Value.absent(),
+    Value<int?> dailyWaterGoalMl = const Value.absent(),
   }) => UserProfile(
     id: id ?? this.id,
     name: name.present ? name.value : this.name,
@@ -2991,6 +3027,9 @@ class UserProfile extends DataClass implements Insertable<UserProfile> {
     dailyFatGoalG: dailyFatGoalG.present
         ? dailyFatGoalG.value
         : this.dailyFatGoalG,
+    dailyWaterGoalMl: dailyWaterGoalMl.present
+        ? dailyWaterGoalMl.value
+        : this.dailyWaterGoalMl,
   );
   UserProfile copyWithCompanion(UserProfilesCompanion data) {
     return UserProfile(
@@ -3023,6 +3062,9 @@ class UserProfile extends DataClass implements Insertable<UserProfile> {
       dailyFatGoalG: data.dailyFatGoalG.present
           ? data.dailyFatGoalG.value
           : this.dailyFatGoalG,
+      dailyWaterGoalMl: data.dailyWaterGoalMl.present
+          ? data.dailyWaterGoalMl.value
+          : this.dailyWaterGoalMl,
     );
   }
 
@@ -3041,7 +3083,8 @@ class UserProfile extends DataClass implements Insertable<UserProfile> {
           ..write('dailyCalorieGoal: $dailyCalorieGoal, ')
           ..write('dailyProteinGoalG: $dailyProteinGoalG, ')
           ..write('dailyCarbsGoalG: $dailyCarbsGoalG, ')
-          ..write('dailyFatGoalG: $dailyFatGoalG')
+          ..write('dailyFatGoalG: $dailyFatGoalG, ')
+          ..write('dailyWaterGoalMl: $dailyWaterGoalMl')
           ..write(')'))
         .toString();
   }
@@ -3061,6 +3104,7 @@ class UserProfile extends DataClass implements Insertable<UserProfile> {
     dailyProteinGoalG,
     dailyCarbsGoalG,
     dailyFatGoalG,
+    dailyWaterGoalMl,
   );
   @override
   bool operator ==(Object other) =>
@@ -3078,7 +3122,8 @@ class UserProfile extends DataClass implements Insertable<UserProfile> {
           other.dailyCalorieGoal == this.dailyCalorieGoal &&
           other.dailyProteinGoalG == this.dailyProteinGoalG &&
           other.dailyCarbsGoalG == this.dailyCarbsGoalG &&
-          other.dailyFatGoalG == this.dailyFatGoalG);
+          other.dailyFatGoalG == this.dailyFatGoalG &&
+          other.dailyWaterGoalMl == this.dailyWaterGoalMl);
 }
 
 class UserProfilesCompanion extends UpdateCompanion<UserProfile> {
@@ -3095,6 +3140,7 @@ class UserProfilesCompanion extends UpdateCompanion<UserProfile> {
   final Value<int?> dailyProteinGoalG;
   final Value<int?> dailyCarbsGoalG;
   final Value<int?> dailyFatGoalG;
+  final Value<int?> dailyWaterGoalMl;
   const UserProfilesCompanion({
     this.id = const Value.absent(),
     this.name = const Value.absent(),
@@ -3109,6 +3155,7 @@ class UserProfilesCompanion extends UpdateCompanion<UserProfile> {
     this.dailyProteinGoalG = const Value.absent(),
     this.dailyCarbsGoalG = const Value.absent(),
     this.dailyFatGoalG = const Value.absent(),
+    this.dailyWaterGoalMl = const Value.absent(),
   });
   UserProfilesCompanion.insert({
     this.id = const Value.absent(),
@@ -3124,6 +3171,7 @@ class UserProfilesCompanion extends UpdateCompanion<UserProfile> {
     this.dailyProteinGoalG = const Value.absent(),
     this.dailyCarbsGoalG = const Value.absent(),
     this.dailyFatGoalG = const Value.absent(),
+    this.dailyWaterGoalMl = const Value.absent(),
   });
   static Insertable<UserProfile> custom({
     Expression<int>? id,
@@ -3139,6 +3187,7 @@ class UserProfilesCompanion extends UpdateCompanion<UserProfile> {
     Expression<int>? dailyProteinGoalG,
     Expression<int>? dailyCarbsGoalG,
     Expression<int>? dailyFatGoalG,
+    Expression<int>? dailyWaterGoalMl,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -3156,6 +3205,7 @@ class UserProfilesCompanion extends UpdateCompanion<UserProfile> {
       if (dailyProteinGoalG != null) 'daily_protein_goal_g': dailyProteinGoalG,
       if (dailyCarbsGoalG != null) 'daily_carbs_goal_g': dailyCarbsGoalG,
       if (dailyFatGoalG != null) 'daily_fat_goal_g': dailyFatGoalG,
+      if (dailyWaterGoalMl != null) 'daily_water_goal_ml': dailyWaterGoalMl,
     });
   }
 
@@ -3173,6 +3223,7 @@ class UserProfilesCompanion extends UpdateCompanion<UserProfile> {
     Value<int?>? dailyProteinGoalG,
     Value<int?>? dailyCarbsGoalG,
     Value<int?>? dailyFatGoalG,
+    Value<int?>? dailyWaterGoalMl,
   }) {
     return UserProfilesCompanion(
       id: id ?? this.id,
@@ -3188,6 +3239,7 @@ class UserProfilesCompanion extends UpdateCompanion<UserProfile> {
       dailyProteinGoalG: dailyProteinGoalG ?? this.dailyProteinGoalG,
       dailyCarbsGoalG: dailyCarbsGoalG ?? this.dailyCarbsGoalG,
       dailyFatGoalG: dailyFatGoalG ?? this.dailyFatGoalG,
+      dailyWaterGoalMl: dailyWaterGoalMl ?? this.dailyWaterGoalMl,
     );
   }
 
@@ -3245,6 +3297,9 @@ class UserProfilesCompanion extends UpdateCompanion<UserProfile> {
     if (dailyFatGoalG.present) {
       map['daily_fat_goal_g'] = Variable<int>(dailyFatGoalG.value);
     }
+    if (dailyWaterGoalMl.present) {
+      map['daily_water_goal_ml'] = Variable<int>(dailyWaterGoalMl.value);
+    }
     return map;
   }
 
@@ -3263,7 +3318,8 @@ class UserProfilesCompanion extends UpdateCompanion<UserProfile> {
           ..write('dailyCalorieGoal: $dailyCalorieGoal, ')
           ..write('dailyProteinGoalG: $dailyProteinGoalG, ')
           ..write('dailyCarbsGoalG: $dailyCarbsGoalG, ')
-          ..write('dailyFatGoalG: $dailyFatGoalG')
+          ..write('dailyFatGoalG: $dailyFatGoalG, ')
+          ..write('dailyWaterGoalMl: $dailyWaterGoalMl')
           ..write(')'))
         .toString();
   }
@@ -4405,6 +4461,1415 @@ class FoodLogEntriesCompanion extends UpdateCompanion<FoodLogEntry> {
   }
 }
 
+class $SavedFoodsTable extends SavedFoods
+    with TableInfo<$SavedFoodsTable, SavedFood> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $SavedFoodsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _nameMeta = const VerificationMeta('name');
+  @override
+  late final GeneratedColumn<String> name = GeneratedColumn<String>(
+    'name',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _brandMeta = const VerificationMeta('brand');
+  @override
+  late final GeneratedColumn<String> brand = GeneratedColumn<String>(
+    'brand',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _quantityLabelMeta = const VerificationMeta(
+    'quantityLabel',
+  );
+  @override
+  late final GeneratedColumn<String> quantityLabel = GeneratedColumn<String>(
+    'quantity_label',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _caloriesMeta = const VerificationMeta(
+    'calories',
+  );
+  @override
+  late final GeneratedColumn<double> calories = GeneratedColumn<double>(
+    'calories',
+    aliasedName,
+    false,
+    type: DriftSqlType.double,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _proteinGMeta = const VerificationMeta(
+    'proteinG',
+  );
+  @override
+  late final GeneratedColumn<double> proteinG = GeneratedColumn<double>(
+    'protein_g',
+    aliasedName,
+    false,
+    type: DriftSqlType.double,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _carbsGMeta = const VerificationMeta('carbsG');
+  @override
+  late final GeneratedColumn<double> carbsG = GeneratedColumn<double>(
+    'carbs_g',
+    aliasedName,
+    false,
+    type: DriftSqlType.double,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _fatGMeta = const VerificationMeta('fatG');
+  @override
+  late final GeneratedColumn<double> fatG = GeneratedColumn<double>(
+    'fat_g',
+    aliasedName,
+    false,
+    type: DriftSqlType.double,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _isPer100gMeta = const VerificationMeta(
+    'isPer100g',
+  );
+  @override
+  late final GeneratedColumn<bool> isPer100g = GeneratedColumn<bool>(
+    'is_per100g',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_per100g" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  static const VerificationMeta _savedAtMeta = const VerificationMeta(
+    'savedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> savedAt = GeneratedColumn<DateTime>(
+    'saved_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    name,
+    brand,
+    quantityLabel,
+    calories,
+    proteinG,
+    carbsG,
+    fatG,
+    isPer100g,
+    savedAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'saved_foods';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<SavedFood> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('name')) {
+      context.handle(
+        _nameMeta,
+        name.isAcceptableOrUnknown(data['name']!, _nameMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_nameMeta);
+    }
+    if (data.containsKey('brand')) {
+      context.handle(
+        _brandMeta,
+        brand.isAcceptableOrUnknown(data['brand']!, _brandMeta),
+      );
+    }
+    if (data.containsKey('quantity_label')) {
+      context.handle(
+        _quantityLabelMeta,
+        quantityLabel.isAcceptableOrUnknown(
+          data['quantity_label']!,
+          _quantityLabelMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_quantityLabelMeta);
+    }
+    if (data.containsKey('calories')) {
+      context.handle(
+        _caloriesMeta,
+        calories.isAcceptableOrUnknown(data['calories']!, _caloriesMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_caloriesMeta);
+    }
+    if (data.containsKey('protein_g')) {
+      context.handle(
+        _proteinGMeta,
+        proteinG.isAcceptableOrUnknown(data['protein_g']!, _proteinGMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_proteinGMeta);
+    }
+    if (data.containsKey('carbs_g')) {
+      context.handle(
+        _carbsGMeta,
+        carbsG.isAcceptableOrUnknown(data['carbs_g']!, _carbsGMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_carbsGMeta);
+    }
+    if (data.containsKey('fat_g')) {
+      context.handle(
+        _fatGMeta,
+        fatG.isAcceptableOrUnknown(data['fat_g']!, _fatGMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_fatGMeta);
+    }
+    if (data.containsKey('is_per100g')) {
+      context.handle(
+        _isPer100gMeta,
+        isPer100g.isAcceptableOrUnknown(data['is_per100g']!, _isPer100gMeta),
+      );
+    }
+    if (data.containsKey('saved_at')) {
+      context.handle(
+        _savedAtMeta,
+        savedAt.isAcceptableOrUnknown(data['saved_at']!, _savedAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_savedAtMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  SavedFood map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return SavedFood(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      name: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}name'],
+      )!,
+      brand: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}brand'],
+      ),
+      quantityLabel: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}quantity_label'],
+      )!,
+      calories: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}calories'],
+      )!,
+      proteinG: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}protein_g'],
+      )!,
+      carbsG: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}carbs_g'],
+      )!,
+      fatG: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}fat_g'],
+      )!,
+      isPer100g: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_per100g'],
+      )!,
+      savedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}saved_at'],
+      )!,
+    );
+  }
+
+  @override
+  $SavedFoodsTable createAlias(String alias) {
+    return $SavedFoodsTable(attachedDatabase, alias);
+  }
+}
+
+class SavedFood extends DataClass implements Insertable<SavedFood> {
+  final int id;
+  final String name;
+  final String? brand;
+  final String quantityLabel;
+  final double calories;
+  final double proteinG;
+  final double carbsG;
+  final double fatG;
+  final bool isPer100g;
+  final DateTime savedAt;
+  const SavedFood({
+    required this.id,
+    required this.name,
+    this.brand,
+    required this.quantityLabel,
+    required this.calories,
+    required this.proteinG,
+    required this.carbsG,
+    required this.fatG,
+    required this.isPer100g,
+    required this.savedAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['name'] = Variable<String>(name);
+    if (!nullToAbsent || brand != null) {
+      map['brand'] = Variable<String>(brand);
+    }
+    map['quantity_label'] = Variable<String>(quantityLabel);
+    map['calories'] = Variable<double>(calories);
+    map['protein_g'] = Variable<double>(proteinG);
+    map['carbs_g'] = Variable<double>(carbsG);
+    map['fat_g'] = Variable<double>(fatG);
+    map['is_per100g'] = Variable<bool>(isPer100g);
+    map['saved_at'] = Variable<DateTime>(savedAt);
+    return map;
+  }
+
+  SavedFoodsCompanion toCompanion(bool nullToAbsent) {
+    return SavedFoodsCompanion(
+      id: Value(id),
+      name: Value(name),
+      brand: brand == null && nullToAbsent
+          ? const Value.absent()
+          : Value(brand),
+      quantityLabel: Value(quantityLabel),
+      calories: Value(calories),
+      proteinG: Value(proteinG),
+      carbsG: Value(carbsG),
+      fatG: Value(fatG),
+      isPer100g: Value(isPer100g),
+      savedAt: Value(savedAt),
+    );
+  }
+
+  factory SavedFood.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return SavedFood(
+      id: serializer.fromJson<int>(json['id']),
+      name: serializer.fromJson<String>(json['name']),
+      brand: serializer.fromJson<String?>(json['brand']),
+      quantityLabel: serializer.fromJson<String>(json['quantityLabel']),
+      calories: serializer.fromJson<double>(json['calories']),
+      proteinG: serializer.fromJson<double>(json['proteinG']),
+      carbsG: serializer.fromJson<double>(json['carbsG']),
+      fatG: serializer.fromJson<double>(json['fatG']),
+      isPer100g: serializer.fromJson<bool>(json['isPer100g']),
+      savedAt: serializer.fromJson<DateTime>(json['savedAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'name': serializer.toJson<String>(name),
+      'brand': serializer.toJson<String?>(brand),
+      'quantityLabel': serializer.toJson<String>(quantityLabel),
+      'calories': serializer.toJson<double>(calories),
+      'proteinG': serializer.toJson<double>(proteinG),
+      'carbsG': serializer.toJson<double>(carbsG),
+      'fatG': serializer.toJson<double>(fatG),
+      'isPer100g': serializer.toJson<bool>(isPer100g),
+      'savedAt': serializer.toJson<DateTime>(savedAt),
+    };
+  }
+
+  SavedFood copyWith({
+    int? id,
+    String? name,
+    Value<String?> brand = const Value.absent(),
+    String? quantityLabel,
+    double? calories,
+    double? proteinG,
+    double? carbsG,
+    double? fatG,
+    bool? isPer100g,
+    DateTime? savedAt,
+  }) => SavedFood(
+    id: id ?? this.id,
+    name: name ?? this.name,
+    brand: brand.present ? brand.value : this.brand,
+    quantityLabel: quantityLabel ?? this.quantityLabel,
+    calories: calories ?? this.calories,
+    proteinG: proteinG ?? this.proteinG,
+    carbsG: carbsG ?? this.carbsG,
+    fatG: fatG ?? this.fatG,
+    isPer100g: isPer100g ?? this.isPer100g,
+    savedAt: savedAt ?? this.savedAt,
+  );
+  SavedFood copyWithCompanion(SavedFoodsCompanion data) {
+    return SavedFood(
+      id: data.id.present ? data.id.value : this.id,
+      name: data.name.present ? data.name.value : this.name,
+      brand: data.brand.present ? data.brand.value : this.brand,
+      quantityLabel: data.quantityLabel.present
+          ? data.quantityLabel.value
+          : this.quantityLabel,
+      calories: data.calories.present ? data.calories.value : this.calories,
+      proteinG: data.proteinG.present ? data.proteinG.value : this.proteinG,
+      carbsG: data.carbsG.present ? data.carbsG.value : this.carbsG,
+      fatG: data.fatG.present ? data.fatG.value : this.fatG,
+      isPer100g: data.isPer100g.present ? data.isPer100g.value : this.isPer100g,
+      savedAt: data.savedAt.present ? data.savedAt.value : this.savedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('SavedFood(')
+          ..write('id: $id, ')
+          ..write('name: $name, ')
+          ..write('brand: $brand, ')
+          ..write('quantityLabel: $quantityLabel, ')
+          ..write('calories: $calories, ')
+          ..write('proteinG: $proteinG, ')
+          ..write('carbsG: $carbsG, ')
+          ..write('fatG: $fatG, ')
+          ..write('isPer100g: $isPer100g, ')
+          ..write('savedAt: $savedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    name,
+    brand,
+    quantityLabel,
+    calories,
+    proteinG,
+    carbsG,
+    fatG,
+    isPer100g,
+    savedAt,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is SavedFood &&
+          other.id == this.id &&
+          other.name == this.name &&
+          other.brand == this.brand &&
+          other.quantityLabel == this.quantityLabel &&
+          other.calories == this.calories &&
+          other.proteinG == this.proteinG &&
+          other.carbsG == this.carbsG &&
+          other.fatG == this.fatG &&
+          other.isPer100g == this.isPer100g &&
+          other.savedAt == this.savedAt);
+}
+
+class SavedFoodsCompanion extends UpdateCompanion<SavedFood> {
+  final Value<int> id;
+  final Value<String> name;
+  final Value<String?> brand;
+  final Value<String> quantityLabel;
+  final Value<double> calories;
+  final Value<double> proteinG;
+  final Value<double> carbsG;
+  final Value<double> fatG;
+  final Value<bool> isPer100g;
+  final Value<DateTime> savedAt;
+  const SavedFoodsCompanion({
+    this.id = const Value.absent(),
+    this.name = const Value.absent(),
+    this.brand = const Value.absent(),
+    this.quantityLabel = const Value.absent(),
+    this.calories = const Value.absent(),
+    this.proteinG = const Value.absent(),
+    this.carbsG = const Value.absent(),
+    this.fatG = const Value.absent(),
+    this.isPer100g = const Value.absent(),
+    this.savedAt = const Value.absent(),
+  });
+  SavedFoodsCompanion.insert({
+    this.id = const Value.absent(),
+    required String name,
+    this.brand = const Value.absent(),
+    required String quantityLabel,
+    required double calories,
+    required double proteinG,
+    required double carbsG,
+    required double fatG,
+    this.isPer100g = const Value.absent(),
+    required DateTime savedAt,
+  }) : name = Value(name),
+       quantityLabel = Value(quantityLabel),
+       calories = Value(calories),
+       proteinG = Value(proteinG),
+       carbsG = Value(carbsG),
+       fatG = Value(fatG),
+       savedAt = Value(savedAt);
+  static Insertable<SavedFood> custom({
+    Expression<int>? id,
+    Expression<String>? name,
+    Expression<String>? brand,
+    Expression<String>? quantityLabel,
+    Expression<double>? calories,
+    Expression<double>? proteinG,
+    Expression<double>? carbsG,
+    Expression<double>? fatG,
+    Expression<bool>? isPer100g,
+    Expression<DateTime>? savedAt,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (name != null) 'name': name,
+      if (brand != null) 'brand': brand,
+      if (quantityLabel != null) 'quantity_label': quantityLabel,
+      if (calories != null) 'calories': calories,
+      if (proteinG != null) 'protein_g': proteinG,
+      if (carbsG != null) 'carbs_g': carbsG,
+      if (fatG != null) 'fat_g': fatG,
+      if (isPer100g != null) 'is_per100g': isPer100g,
+      if (savedAt != null) 'saved_at': savedAt,
+    });
+  }
+
+  SavedFoodsCompanion copyWith({
+    Value<int>? id,
+    Value<String>? name,
+    Value<String?>? brand,
+    Value<String>? quantityLabel,
+    Value<double>? calories,
+    Value<double>? proteinG,
+    Value<double>? carbsG,
+    Value<double>? fatG,
+    Value<bool>? isPer100g,
+    Value<DateTime>? savedAt,
+  }) {
+    return SavedFoodsCompanion(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      brand: brand ?? this.brand,
+      quantityLabel: quantityLabel ?? this.quantityLabel,
+      calories: calories ?? this.calories,
+      proteinG: proteinG ?? this.proteinG,
+      carbsG: carbsG ?? this.carbsG,
+      fatG: fatG ?? this.fatG,
+      isPer100g: isPer100g ?? this.isPer100g,
+      savedAt: savedAt ?? this.savedAt,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (name.present) {
+      map['name'] = Variable<String>(name.value);
+    }
+    if (brand.present) {
+      map['brand'] = Variable<String>(brand.value);
+    }
+    if (quantityLabel.present) {
+      map['quantity_label'] = Variable<String>(quantityLabel.value);
+    }
+    if (calories.present) {
+      map['calories'] = Variable<double>(calories.value);
+    }
+    if (proteinG.present) {
+      map['protein_g'] = Variable<double>(proteinG.value);
+    }
+    if (carbsG.present) {
+      map['carbs_g'] = Variable<double>(carbsG.value);
+    }
+    if (fatG.present) {
+      map['fat_g'] = Variable<double>(fatG.value);
+    }
+    if (isPer100g.present) {
+      map['is_per100g'] = Variable<bool>(isPer100g.value);
+    }
+    if (savedAt.present) {
+      map['saved_at'] = Variable<DateTime>(savedAt.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('SavedFoodsCompanion(')
+          ..write('id: $id, ')
+          ..write('name: $name, ')
+          ..write('brand: $brand, ')
+          ..write('quantityLabel: $quantityLabel, ')
+          ..write('calories: $calories, ')
+          ..write('proteinG: $proteinG, ')
+          ..write('carbsG: $carbsG, ')
+          ..write('fatG: $fatG, ')
+          ..write('isPer100g: $isPer100g, ')
+          ..write('savedAt: $savedAt')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $WaterLogsTable extends WaterLogs
+    with TableInfo<$WaterLogsTable, WaterLog> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $WaterLogsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _amountMlMeta = const VerificationMeta(
+    'amountMl',
+  );
+  @override
+  late final GeneratedColumn<int> amountMl = GeneratedColumn<int>(
+    'amount_ml',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _loggedAtMeta = const VerificationMeta(
+    'loggedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> loggedAt = GeneratedColumn<DateTime>(
+    'logged_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [id, amountMl, loggedAt];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'water_logs';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<WaterLog> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('amount_ml')) {
+      context.handle(
+        _amountMlMeta,
+        amountMl.isAcceptableOrUnknown(data['amount_ml']!, _amountMlMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_amountMlMeta);
+    }
+    if (data.containsKey('logged_at')) {
+      context.handle(
+        _loggedAtMeta,
+        loggedAt.isAcceptableOrUnknown(data['logged_at']!, _loggedAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_loggedAtMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  WaterLog map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return WaterLog(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      amountMl: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}amount_ml'],
+      )!,
+      loggedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}logged_at'],
+      )!,
+    );
+  }
+
+  @override
+  $WaterLogsTable createAlias(String alias) {
+    return $WaterLogsTable(attachedDatabase, alias);
+  }
+}
+
+class WaterLog extends DataClass implements Insertable<WaterLog> {
+  final int id;
+  final int amountMl;
+  final DateTime loggedAt;
+  const WaterLog({
+    required this.id,
+    required this.amountMl,
+    required this.loggedAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['amount_ml'] = Variable<int>(amountMl);
+    map['logged_at'] = Variable<DateTime>(loggedAt);
+    return map;
+  }
+
+  WaterLogsCompanion toCompanion(bool nullToAbsent) {
+    return WaterLogsCompanion(
+      id: Value(id),
+      amountMl: Value(amountMl),
+      loggedAt: Value(loggedAt),
+    );
+  }
+
+  factory WaterLog.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return WaterLog(
+      id: serializer.fromJson<int>(json['id']),
+      amountMl: serializer.fromJson<int>(json['amountMl']),
+      loggedAt: serializer.fromJson<DateTime>(json['loggedAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'amountMl': serializer.toJson<int>(amountMl),
+      'loggedAt': serializer.toJson<DateTime>(loggedAt),
+    };
+  }
+
+  WaterLog copyWith({int? id, int? amountMl, DateTime? loggedAt}) => WaterLog(
+    id: id ?? this.id,
+    amountMl: amountMl ?? this.amountMl,
+    loggedAt: loggedAt ?? this.loggedAt,
+  );
+  WaterLog copyWithCompanion(WaterLogsCompanion data) {
+    return WaterLog(
+      id: data.id.present ? data.id.value : this.id,
+      amountMl: data.amountMl.present ? data.amountMl.value : this.amountMl,
+      loggedAt: data.loggedAt.present ? data.loggedAt.value : this.loggedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('WaterLog(')
+          ..write('id: $id, ')
+          ..write('amountMl: $amountMl, ')
+          ..write('loggedAt: $loggedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, amountMl, loggedAt);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is WaterLog &&
+          other.id == this.id &&
+          other.amountMl == this.amountMl &&
+          other.loggedAt == this.loggedAt);
+}
+
+class WaterLogsCompanion extends UpdateCompanion<WaterLog> {
+  final Value<int> id;
+  final Value<int> amountMl;
+  final Value<DateTime> loggedAt;
+  const WaterLogsCompanion({
+    this.id = const Value.absent(),
+    this.amountMl = const Value.absent(),
+    this.loggedAt = const Value.absent(),
+  });
+  WaterLogsCompanion.insert({
+    this.id = const Value.absent(),
+    required int amountMl,
+    required DateTime loggedAt,
+  }) : amountMl = Value(amountMl),
+       loggedAt = Value(loggedAt);
+  static Insertable<WaterLog> custom({
+    Expression<int>? id,
+    Expression<int>? amountMl,
+    Expression<DateTime>? loggedAt,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (amountMl != null) 'amount_ml': amountMl,
+      if (loggedAt != null) 'logged_at': loggedAt,
+    });
+  }
+
+  WaterLogsCompanion copyWith({
+    Value<int>? id,
+    Value<int>? amountMl,
+    Value<DateTime>? loggedAt,
+  }) {
+    return WaterLogsCompanion(
+      id: id ?? this.id,
+      amountMl: amountMl ?? this.amountMl,
+      loggedAt: loggedAt ?? this.loggedAt,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (amountMl.present) {
+      map['amount_ml'] = Variable<int>(amountMl.value);
+    }
+    if (loggedAt.present) {
+      map['logged_at'] = Variable<DateTime>(loggedAt.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('WaterLogsCompanion(')
+          ..write('id: $id, ')
+          ..write('amountMl: $amountMl, ')
+          ..write('loggedAt: $loggedAt')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $SupplementsTable extends Supplements
+    with TableInfo<$SupplementsTable, Supplement> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $SupplementsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _nameMeta = const VerificationMeta('name');
+  @override
+  late final GeneratedColumn<String> name = GeneratedColumn<String>(
+    'name',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _dosageLabelMeta = const VerificationMeta(
+    'dosageLabel',
+  );
+  @override
+  late final GeneratedColumn<String> dosageLabel = GeneratedColumn<String>(
+    'dosage_label',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [id, name, dosageLabel, createdAt];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'supplements';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<Supplement> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('name')) {
+      context.handle(
+        _nameMeta,
+        name.isAcceptableOrUnknown(data['name']!, _nameMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_nameMeta);
+    }
+    if (data.containsKey('dosage_label')) {
+      context.handle(
+        _dosageLabelMeta,
+        dosageLabel.isAcceptableOrUnknown(
+          data['dosage_label']!,
+          _dosageLabelMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_dosageLabelMeta);
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_createdAtMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  Supplement map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return Supplement(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      name: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}name'],
+      )!,
+      dosageLabel: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}dosage_label'],
+      )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+    );
+  }
+
+  @override
+  $SupplementsTable createAlias(String alias) {
+    return $SupplementsTable(attachedDatabase, alias);
+  }
+}
+
+class Supplement extends DataClass implements Insertable<Supplement> {
+  final int id;
+  final String name;
+  final String dosageLabel;
+  final DateTime createdAt;
+  const Supplement({
+    required this.id,
+    required this.name,
+    required this.dosageLabel,
+    required this.createdAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['name'] = Variable<String>(name);
+    map['dosage_label'] = Variable<String>(dosageLabel);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    return map;
+  }
+
+  SupplementsCompanion toCompanion(bool nullToAbsent) {
+    return SupplementsCompanion(
+      id: Value(id),
+      name: Value(name),
+      dosageLabel: Value(dosageLabel),
+      createdAt: Value(createdAt),
+    );
+  }
+
+  factory Supplement.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return Supplement(
+      id: serializer.fromJson<int>(json['id']),
+      name: serializer.fromJson<String>(json['name']),
+      dosageLabel: serializer.fromJson<String>(json['dosageLabel']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'name': serializer.toJson<String>(name),
+      'dosageLabel': serializer.toJson<String>(dosageLabel),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+    };
+  }
+
+  Supplement copyWith({
+    int? id,
+    String? name,
+    String? dosageLabel,
+    DateTime? createdAt,
+  }) => Supplement(
+    id: id ?? this.id,
+    name: name ?? this.name,
+    dosageLabel: dosageLabel ?? this.dosageLabel,
+    createdAt: createdAt ?? this.createdAt,
+  );
+  Supplement copyWithCompanion(SupplementsCompanion data) {
+    return Supplement(
+      id: data.id.present ? data.id.value : this.id,
+      name: data.name.present ? data.name.value : this.name,
+      dosageLabel: data.dosageLabel.present
+          ? data.dosageLabel.value
+          : this.dosageLabel,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('Supplement(')
+          ..write('id: $id, ')
+          ..write('name: $name, ')
+          ..write('dosageLabel: $dosageLabel, ')
+          ..write('createdAt: $createdAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, name, dosageLabel, createdAt);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is Supplement &&
+          other.id == this.id &&
+          other.name == this.name &&
+          other.dosageLabel == this.dosageLabel &&
+          other.createdAt == this.createdAt);
+}
+
+class SupplementsCompanion extends UpdateCompanion<Supplement> {
+  final Value<int> id;
+  final Value<String> name;
+  final Value<String> dosageLabel;
+  final Value<DateTime> createdAt;
+  const SupplementsCompanion({
+    this.id = const Value.absent(),
+    this.name = const Value.absent(),
+    this.dosageLabel = const Value.absent(),
+    this.createdAt = const Value.absent(),
+  });
+  SupplementsCompanion.insert({
+    this.id = const Value.absent(),
+    required String name,
+    required String dosageLabel,
+    required DateTime createdAt,
+  }) : name = Value(name),
+       dosageLabel = Value(dosageLabel),
+       createdAt = Value(createdAt);
+  static Insertable<Supplement> custom({
+    Expression<int>? id,
+    Expression<String>? name,
+    Expression<String>? dosageLabel,
+    Expression<DateTime>? createdAt,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (name != null) 'name': name,
+      if (dosageLabel != null) 'dosage_label': dosageLabel,
+      if (createdAt != null) 'created_at': createdAt,
+    });
+  }
+
+  SupplementsCompanion copyWith({
+    Value<int>? id,
+    Value<String>? name,
+    Value<String>? dosageLabel,
+    Value<DateTime>? createdAt,
+  }) {
+    return SupplementsCompanion(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      dosageLabel: dosageLabel ?? this.dosageLabel,
+      createdAt: createdAt ?? this.createdAt,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (name.present) {
+      map['name'] = Variable<String>(name.value);
+    }
+    if (dosageLabel.present) {
+      map['dosage_label'] = Variable<String>(dosageLabel.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('SupplementsCompanion(')
+          ..write('id: $id, ')
+          ..write('name: $name, ')
+          ..write('dosageLabel: $dosageLabel, ')
+          ..write('createdAt: $createdAt')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $SupplementLogsTable extends SupplementLogs
+    with TableInfo<$SupplementLogsTable, SupplementLog> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $SupplementLogsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _supplementIdMeta = const VerificationMeta(
+    'supplementId',
+  );
+  @override
+  late final GeneratedColumn<int> supplementId = GeneratedColumn<int>(
+    'supplement_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES supplements (id) ON DELETE CASCADE',
+    ),
+  );
+  static const VerificationMeta _takenOnMeta = const VerificationMeta(
+    'takenOn',
+  );
+  @override
+  late final GeneratedColumn<DateTime> takenOn = GeneratedColumn<DateTime>(
+    'taken_on',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [id, supplementId, takenOn];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'supplement_logs';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<SupplementLog> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('supplement_id')) {
+      context.handle(
+        _supplementIdMeta,
+        supplementId.isAcceptableOrUnknown(
+          data['supplement_id']!,
+          _supplementIdMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_supplementIdMeta);
+    }
+    if (data.containsKey('taken_on')) {
+      context.handle(
+        _takenOnMeta,
+        takenOn.isAcceptableOrUnknown(data['taken_on']!, _takenOnMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_takenOnMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  SupplementLog map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return SupplementLog(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      supplementId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}supplement_id'],
+      )!,
+      takenOn: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}taken_on'],
+      )!,
+    );
+  }
+
+  @override
+  $SupplementLogsTable createAlias(String alias) {
+    return $SupplementLogsTable(attachedDatabase, alias);
+  }
+}
+
+class SupplementLog extends DataClass implements Insertable<SupplementLog> {
+  final int id;
+  final int supplementId;
+  final DateTime takenOn;
+  const SupplementLog({
+    required this.id,
+    required this.supplementId,
+    required this.takenOn,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['supplement_id'] = Variable<int>(supplementId);
+    map['taken_on'] = Variable<DateTime>(takenOn);
+    return map;
+  }
+
+  SupplementLogsCompanion toCompanion(bool nullToAbsent) {
+    return SupplementLogsCompanion(
+      id: Value(id),
+      supplementId: Value(supplementId),
+      takenOn: Value(takenOn),
+    );
+  }
+
+  factory SupplementLog.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return SupplementLog(
+      id: serializer.fromJson<int>(json['id']),
+      supplementId: serializer.fromJson<int>(json['supplementId']),
+      takenOn: serializer.fromJson<DateTime>(json['takenOn']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'supplementId': serializer.toJson<int>(supplementId),
+      'takenOn': serializer.toJson<DateTime>(takenOn),
+    };
+  }
+
+  SupplementLog copyWith({int? id, int? supplementId, DateTime? takenOn}) =>
+      SupplementLog(
+        id: id ?? this.id,
+        supplementId: supplementId ?? this.supplementId,
+        takenOn: takenOn ?? this.takenOn,
+      );
+  SupplementLog copyWithCompanion(SupplementLogsCompanion data) {
+    return SupplementLog(
+      id: data.id.present ? data.id.value : this.id,
+      supplementId: data.supplementId.present
+          ? data.supplementId.value
+          : this.supplementId,
+      takenOn: data.takenOn.present ? data.takenOn.value : this.takenOn,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('SupplementLog(')
+          ..write('id: $id, ')
+          ..write('supplementId: $supplementId, ')
+          ..write('takenOn: $takenOn')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, supplementId, takenOn);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is SupplementLog &&
+          other.id == this.id &&
+          other.supplementId == this.supplementId &&
+          other.takenOn == this.takenOn);
+}
+
+class SupplementLogsCompanion extends UpdateCompanion<SupplementLog> {
+  final Value<int> id;
+  final Value<int> supplementId;
+  final Value<DateTime> takenOn;
+  const SupplementLogsCompanion({
+    this.id = const Value.absent(),
+    this.supplementId = const Value.absent(),
+    this.takenOn = const Value.absent(),
+  });
+  SupplementLogsCompanion.insert({
+    this.id = const Value.absent(),
+    required int supplementId,
+    required DateTime takenOn,
+  }) : supplementId = Value(supplementId),
+       takenOn = Value(takenOn);
+  static Insertable<SupplementLog> custom({
+    Expression<int>? id,
+    Expression<int>? supplementId,
+    Expression<DateTime>? takenOn,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (supplementId != null) 'supplement_id': supplementId,
+      if (takenOn != null) 'taken_on': takenOn,
+    });
+  }
+
+  SupplementLogsCompanion copyWith({
+    Value<int>? id,
+    Value<int>? supplementId,
+    Value<DateTime>? takenOn,
+  }) {
+    return SupplementLogsCompanion(
+      id: id ?? this.id,
+      supplementId: supplementId ?? this.supplementId,
+      takenOn: takenOn ?? this.takenOn,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (supplementId.present) {
+      map['supplement_id'] = Variable<int>(supplementId.value);
+    }
+    if (takenOn.present) {
+      map['taken_on'] = Variable<DateTime>(takenOn.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('SupplementLogsCompanion(')
+          ..write('id: $id, ')
+          ..write('supplementId: $supplementId, ')
+          ..write('takenOn: $takenOn')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
@@ -4421,6 +5886,10 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $BodyweightLogsTable bodyweightLogs = $BodyweightLogsTable(this);
   late final $RestDaysTable restDays = $RestDaysTable(this);
   late final $FoodLogEntriesTable foodLogEntries = $FoodLogEntriesTable(this);
+  late final $SavedFoodsTable savedFoods = $SavedFoodsTable(this);
+  late final $WaterLogsTable waterLogs = $WaterLogsTable(this);
+  late final $SupplementsTable supplements = $SupplementsTable(this);
+  late final $SupplementLogsTable supplementLogs = $SupplementLogsTable(this);
   late final Index exerciseNameIdx = Index(
     'exercise_name_idx',
     'CREATE INDEX exercise_name_idx ON exercises (name)',
@@ -4453,6 +5922,14 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     'food_log_logged_at_idx',
     'CREATE INDEX food_log_logged_at_idx ON food_log_entries (logged_at)',
   );
+  late final Index waterLogLoggedAtIdx = Index(
+    'water_log_logged_at_idx',
+    'CREATE INDEX water_log_logged_at_idx ON water_logs (logged_at)',
+  );
+  late final Index supplementLogTakenOnIdx = Index(
+    'supplement_log_taken_on_idx',
+    'CREATE INDEX supplement_log_taken_on_idx ON supplement_logs (supplement_id, taken_on)',
+  );
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -4468,6 +5945,10 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     bodyweightLogs,
     restDays,
     foodLogEntries,
+    savedFoods,
+    waterLogs,
+    supplements,
+    supplementLogs,
     exerciseNameIdx,
     workoutSetSessionIdx,
     workoutSetExerciseCompletedIdx,
@@ -4476,6 +5957,8 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     bodyweightLogLoggedAtIdx,
     restDayDateIdx,
     foodLogLoggedAtIdx,
+    waterLogLoggedAtIdx,
+    supplementLogTakenOnIdx,
   ];
   @override
   StreamQueryUpdateRules get streamUpdateRules => const StreamQueryUpdateRules([
@@ -4506,6 +5989,13 @@ abstract class _$AppDatabase extends GeneratedDatabase {
         limitUpdateKind: UpdateKind.delete,
       ),
       result: [TableUpdate('split_day_exercises', kind: UpdateKind.delete)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'supplements',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('supplement_logs', kind: UpdateKind.delete)],
     ),
   ]);
 }
@@ -7029,6 +8519,7 @@ typedef $$UserProfilesTableCreateCompanionBuilder =
       Value<int?> dailyProteinGoalG,
       Value<int?> dailyCarbsGoalG,
       Value<int?> dailyFatGoalG,
+      Value<int?> dailyWaterGoalMl,
     });
 typedef $$UserProfilesTableUpdateCompanionBuilder =
     UserProfilesCompanion Function({
@@ -7045,6 +8536,7 @@ typedef $$UserProfilesTableUpdateCompanionBuilder =
       Value<int?> dailyProteinGoalG,
       Value<int?> dailyCarbsGoalG,
       Value<int?> dailyFatGoalG,
+      Value<int?> dailyWaterGoalMl,
     });
 
 class $$UserProfilesTableFilterComposer
@@ -7124,6 +8616,11 @@ class $$UserProfilesTableFilterComposer
     column: $table.dailyFatGoalG,
     builder: (column) => ColumnFilters(column),
   );
+
+  ColumnFilters<int> get dailyWaterGoalMl => $composableBuilder(
+    column: $table.dailyWaterGoalMl,
+    builder: (column) => ColumnFilters(column),
+  );
 }
 
 class $$UserProfilesTableOrderingComposer
@@ -7199,6 +8696,11 @@ class $$UserProfilesTableOrderingComposer
     column: $table.dailyFatGoalG,
     builder: (column) => ColumnOrderings(column),
   );
+
+  ColumnOrderings<int> get dailyWaterGoalMl => $composableBuilder(
+    column: $table.dailyWaterGoalMl,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$UserProfilesTableAnnotationComposer
@@ -7267,6 +8769,11 @@ class $$UserProfilesTableAnnotationComposer
     column: $table.dailyFatGoalG,
     builder: (column) => column,
   );
+
+  GeneratedColumn<int> get dailyWaterGoalMl => $composableBuilder(
+    column: $table.dailyWaterGoalMl,
+    builder: (column) => column,
+  );
 }
 
 class $$UserProfilesTableTableManager
@@ -7313,6 +8820,7 @@ class $$UserProfilesTableTableManager
                 Value<int?> dailyProteinGoalG = const Value.absent(),
                 Value<int?> dailyCarbsGoalG = const Value.absent(),
                 Value<int?> dailyFatGoalG = const Value.absent(),
+                Value<int?> dailyWaterGoalMl = const Value.absent(),
               }) => UserProfilesCompanion(
                 id: id,
                 name: name,
@@ -7327,6 +8835,7 @@ class $$UserProfilesTableTableManager
                 dailyProteinGoalG: dailyProteinGoalG,
                 dailyCarbsGoalG: dailyCarbsGoalG,
                 dailyFatGoalG: dailyFatGoalG,
+                dailyWaterGoalMl: dailyWaterGoalMl,
               ),
           createCompanionCallback:
               ({
@@ -7343,6 +8852,7 @@ class $$UserProfilesTableTableManager
                 Value<int?> dailyProteinGoalG = const Value.absent(),
                 Value<int?> dailyCarbsGoalG = const Value.absent(),
                 Value<int?> dailyFatGoalG = const Value.absent(),
+                Value<int?> dailyWaterGoalMl = const Value.absent(),
               }) => UserProfilesCompanion.insert(
                 id: id,
                 name: name,
@@ -7357,6 +8867,7 @@ class $$UserProfilesTableTableManager
                 dailyProteinGoalG: dailyProteinGoalG,
                 dailyCarbsGoalG: dailyCarbsGoalG,
                 dailyFatGoalG: dailyFatGoalG,
+                dailyWaterGoalMl: dailyWaterGoalMl,
               ),
           withReferenceMapper: (p0) => p0
               .map(
@@ -8030,6 +9541,1018 @@ typedef $$FoodLogEntriesTableProcessedTableManager =
       FoodLogEntry,
       PrefetchHooks Function()
     >;
+typedef $$SavedFoodsTableCreateCompanionBuilder = SavedFoodsCompanion Function({
+  Value<int> id,
+  required String name,
+  Value<String?> brand,
+  required String quantityLabel,
+  required double calories,
+  required double proteinG,
+  required double carbsG,
+  required double fatG,
+  Value<bool> isPer100g,
+  required DateTime savedAt,
+});
+typedef $$SavedFoodsTableUpdateCompanionBuilder = SavedFoodsCompanion Function({
+  Value<int> id,
+  Value<String> name,
+  Value<String?> brand,
+  Value<String> quantityLabel,
+  Value<double> calories,
+  Value<double> proteinG,
+  Value<double> carbsG,
+  Value<double> fatG,
+  Value<bool> isPer100g,
+  Value<DateTime> savedAt,
+});
+
+class $$SavedFoodsTableFilterComposer
+    extends Composer<_$AppDatabase, $SavedFoodsTable> {
+  $$SavedFoodsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get brand => $composableBuilder(
+    column: $table.brand,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get quantityLabel => $composableBuilder(
+    column: $table.quantityLabel,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get calories => $composableBuilder(
+    column: $table.calories,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get proteinG => $composableBuilder(
+    column: $table.proteinG,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get carbsG => $composableBuilder(
+    column: $table.carbsG,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get fatG => $composableBuilder(
+    column: $table.fatG,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get isPer100g => $composableBuilder(
+    column: $table.isPer100g,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get savedAt => $composableBuilder(
+    column: $table.savedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$SavedFoodsTableOrderingComposer
+    extends Composer<_$AppDatabase, $SavedFoodsTable> {
+  $$SavedFoodsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get brand => $composableBuilder(
+    column: $table.brand,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get quantityLabel => $composableBuilder(
+    column: $table.quantityLabel,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get calories => $composableBuilder(
+    column: $table.calories,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get proteinG => $composableBuilder(
+    column: $table.proteinG,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get carbsG => $composableBuilder(
+    column: $table.carbsG,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get fatG => $composableBuilder(
+    column: $table.fatG,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get isPer100g => $composableBuilder(
+    column: $table.isPer100g,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get savedAt => $composableBuilder(
+    column: $table.savedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$SavedFoodsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $SavedFoodsTable> {
+  $$SavedFoodsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get name =>
+      $composableBuilder(column: $table.name, builder: (column) => column);
+
+  GeneratedColumn<String> get brand =>
+      $composableBuilder(column: $table.brand, builder: (column) => column);
+
+  GeneratedColumn<String> get quantityLabel => $composableBuilder(
+    column: $table.quantityLabel,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<double> get calories =>
+      $composableBuilder(column: $table.calories, builder: (column) => column);
+
+  GeneratedColumn<double> get proteinG =>
+      $composableBuilder(column: $table.proteinG, builder: (column) => column);
+
+  GeneratedColumn<double> get carbsG =>
+      $composableBuilder(column: $table.carbsG, builder: (column) => column);
+
+  GeneratedColumn<double> get fatG =>
+      $composableBuilder(column: $table.fatG, builder: (column) => column);
+
+  GeneratedColumn<bool> get isPer100g =>
+      $composableBuilder(column: $table.isPer100g, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get savedAt =>
+      $composableBuilder(column: $table.savedAt, builder: (column) => column);
+}
+
+class $$SavedFoodsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $SavedFoodsTable,
+          SavedFood,
+          $$SavedFoodsTableFilterComposer,
+          $$SavedFoodsTableOrderingComposer,
+          $$SavedFoodsTableAnnotationComposer,
+          $$SavedFoodsTableCreateCompanionBuilder,
+          $$SavedFoodsTableUpdateCompanionBuilder,
+          (
+            SavedFood,
+            BaseReferences<_$AppDatabase, $SavedFoodsTable, SavedFood>,
+          ),
+          SavedFood,
+          PrefetchHooks Function()
+        > {
+  $$SavedFoodsTableTableManager(_$AppDatabase db, $SavedFoodsTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$SavedFoodsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$SavedFoodsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$SavedFoodsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<String> name = const Value.absent(),
+                Value<String?> brand = const Value.absent(),
+                Value<String> quantityLabel = const Value.absent(),
+                Value<double> calories = const Value.absent(),
+                Value<double> proteinG = const Value.absent(),
+                Value<double> carbsG = const Value.absent(),
+                Value<double> fatG = const Value.absent(),
+                Value<bool> isPer100g = const Value.absent(),
+                Value<DateTime> savedAt = const Value.absent(),
+              }) => SavedFoodsCompanion(
+                id: id,
+                name: name,
+                brand: brand,
+                quantityLabel: quantityLabel,
+                calories: calories,
+                proteinG: proteinG,
+                carbsG: carbsG,
+                fatG: fatG,
+                isPer100g: isPer100g,
+                savedAt: savedAt,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                required String name,
+                Value<String?> brand = const Value.absent(),
+                required String quantityLabel,
+                required double calories,
+                required double proteinG,
+                required double carbsG,
+                required double fatG,
+                Value<bool> isPer100g = const Value.absent(),
+                required DateTime savedAt,
+              }) => SavedFoodsCompanion.insert(
+                id: id,
+                name: name,
+                brand: brand,
+                quantityLabel: quantityLabel,
+                calories: calories,
+                proteinG: proteinG,
+                carbsG: carbsG,
+                fatG: fatG,
+                isPer100g: isPer100g,
+                savedAt: savedAt,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<$SavedFoodsTable, SavedFood>(table),
+                  BaseReferences<_$AppDatabase, $SavedFoodsTable, SavedFood>(
+                    db,
+                    table,
+                    e,
+                  ),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$SavedFoodsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $SavedFoodsTable,
+      SavedFood,
+      $$SavedFoodsTableFilterComposer,
+      $$SavedFoodsTableOrderingComposer,
+      $$SavedFoodsTableAnnotationComposer,
+      $$SavedFoodsTableCreateCompanionBuilder,
+      $$SavedFoodsTableUpdateCompanionBuilder,
+      (SavedFood, BaseReferences<_$AppDatabase, $SavedFoodsTable, SavedFood>),
+      SavedFood,
+      PrefetchHooks Function()
+    >;
+typedef $$WaterLogsTableCreateCompanionBuilder = WaterLogsCompanion Function({
+  Value<int> id,
+  required int amountMl,
+  required DateTime loggedAt,
+});
+typedef $$WaterLogsTableUpdateCompanionBuilder = WaterLogsCompanion Function({
+  Value<int> id,
+  Value<int> amountMl,
+  Value<DateTime> loggedAt,
+});
+
+class $$WaterLogsTableFilterComposer
+    extends Composer<_$AppDatabase, $WaterLogsTable> {
+  $$WaterLogsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get amountMl => $composableBuilder(
+    column: $table.amountMl,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get loggedAt => $composableBuilder(
+    column: $table.loggedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$WaterLogsTableOrderingComposer
+    extends Composer<_$AppDatabase, $WaterLogsTable> {
+  $$WaterLogsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get amountMl => $composableBuilder(
+    column: $table.amountMl,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get loggedAt => $composableBuilder(
+    column: $table.loggedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$WaterLogsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $WaterLogsTable> {
+  $$WaterLogsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<int> get amountMl =>
+      $composableBuilder(column: $table.amountMl, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get loggedAt =>
+      $composableBuilder(column: $table.loggedAt, builder: (column) => column);
+}
+
+class $$WaterLogsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $WaterLogsTable,
+          WaterLog,
+          $$WaterLogsTableFilterComposer,
+          $$WaterLogsTableOrderingComposer,
+          $$WaterLogsTableAnnotationComposer,
+          $$WaterLogsTableCreateCompanionBuilder,
+          $$WaterLogsTableUpdateCompanionBuilder,
+          (WaterLog, BaseReferences<_$AppDatabase, $WaterLogsTable, WaterLog>),
+          WaterLog,
+          PrefetchHooks Function()
+        > {
+  $$WaterLogsTableTableManager(_$AppDatabase db, $WaterLogsTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$WaterLogsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$WaterLogsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$WaterLogsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<int> amountMl = const Value.absent(),
+                Value<DateTime> loggedAt = const Value.absent(),
+              }) => WaterLogsCompanion(
+                id: id,
+                amountMl: amountMl,
+                loggedAt: loggedAt,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                required int amountMl,
+                required DateTime loggedAt,
+              }) => WaterLogsCompanion.insert(
+                id: id,
+                amountMl: amountMl,
+                loggedAt: loggedAt,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<$WaterLogsTable, WaterLog>(table),
+                  BaseReferences<_$AppDatabase, $WaterLogsTable, WaterLog>(
+                    db,
+                    table,
+                    e,
+                  ),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$WaterLogsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $WaterLogsTable,
+      WaterLog,
+      $$WaterLogsTableFilterComposer,
+      $$WaterLogsTableOrderingComposer,
+      $$WaterLogsTableAnnotationComposer,
+      $$WaterLogsTableCreateCompanionBuilder,
+      $$WaterLogsTableUpdateCompanionBuilder,
+      (WaterLog, BaseReferences<_$AppDatabase, $WaterLogsTable, WaterLog>),
+      WaterLog,
+      PrefetchHooks Function()
+    >;
+typedef $$SupplementsTableCreateCompanionBuilder =
+    SupplementsCompanion Function({
+      Value<int> id,
+      required String name,
+      required String dosageLabel,
+      required DateTime createdAt,
+    });
+typedef $$SupplementsTableUpdateCompanionBuilder =
+    SupplementsCompanion Function({
+      Value<int> id,
+      Value<String> name,
+      Value<String> dosageLabel,
+      Value<DateTime> createdAt,
+    });
+
+final class $$SupplementsTableReferences
+    extends BaseReferences<_$AppDatabase, $SupplementsTable, Supplement> {
+  $$SupplementsTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static MultiTypedResultKey<$SupplementLogsTable, List<SupplementLog>>
+  _supplementLogsRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
+    db.supplementLogs,
+    aliasName: 'supplements__id__supplement_logs__supplement_id',
+  );
+
+  $$SupplementLogsTableProcessedTableManager get supplementLogsRefs {
+    final manager = $$SupplementLogsTableTableManager(
+      $_db,
+      $_db.supplementLogs,
+    ).filter((f) => f.supplementId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_supplementLogsRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+}
+
+class $$SupplementsTableFilterComposer
+    extends Composer<_$AppDatabase, $SupplementsTable> {
+  $$SupplementsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get dosageLabel => $composableBuilder(
+    column: $table.dosageLabel,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  Expression<bool> supplementLogsRefs(
+    Expression<bool> Function($$SupplementLogsTableFilterComposer f) f,
+  ) {
+    final $$SupplementLogsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.supplementLogs,
+      getReferencedColumn: (t) => t.supplementId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$SupplementLogsTableFilterComposer(
+            $db: $db,
+            $table: $db.supplementLogs,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+}
+
+class $$SupplementsTableOrderingComposer
+    extends Composer<_$AppDatabase, $SupplementsTable> {
+  $$SupplementsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get dosageLabel => $composableBuilder(
+    column: $table.dosageLabel,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$SupplementsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $SupplementsTable> {
+  $$SupplementsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get name =>
+      $composableBuilder(column: $table.name, builder: (column) => column);
+
+  GeneratedColumn<String> get dosageLabel => $composableBuilder(
+    column: $table.dosageLabel,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  Expression<T> supplementLogsRefs<T extends Object>(
+    Expression<T> Function($$SupplementLogsTableAnnotationComposer a) f,
+  ) {
+    final $$SupplementLogsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.supplementLogs,
+      getReferencedColumn: (t) => t.supplementId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$SupplementLogsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.supplementLogs,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+}
+
+class $$SupplementsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $SupplementsTable,
+          Supplement,
+          $$SupplementsTableFilterComposer,
+          $$SupplementsTableOrderingComposer,
+          $$SupplementsTableAnnotationComposer,
+          $$SupplementsTableCreateCompanionBuilder,
+          $$SupplementsTableUpdateCompanionBuilder,
+          (Supplement, $$SupplementsTableReferences),
+          Supplement,
+          PrefetchHooks Function({bool supplementLogsRefs})
+        > {
+  $$SupplementsTableTableManager(_$AppDatabase db, $SupplementsTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$SupplementsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$SupplementsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$SupplementsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<String> name = const Value.absent(),
+                Value<String> dosageLabel = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+              }) => SupplementsCompanion(
+                id: id,
+                name: name,
+                dosageLabel: dosageLabel,
+                createdAt: createdAt,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                required String name,
+                required String dosageLabel,
+                required DateTime createdAt,
+              }) => SupplementsCompanion.insert(
+                id: id,
+                name: name,
+                dosageLabel: dosageLabel,
+                createdAt: createdAt,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<$SupplementsTable, Supplement>(table),
+                  $$SupplementsTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: ({supplementLogsRefs = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [
+                if (supplementLogsRefs) db.supplementLogs,
+              ],
+              addJoins: null,
+              getPrefetchedDataCallback: (items) async {
+                return [
+                  if (supplementLogsRefs)
+                    await $_getPrefetchedData<
+                      Supplement,
+                      $SupplementsTable,
+                      SupplementLog
+                    >(
+                      currentTable: table,
+                      referencedTable: $$SupplementsTableReferences
+                          ._supplementLogsRefsTable(db),
+                      managerFromTypedResult: (p0) =>
+                          $$SupplementsTableReferences(
+                            db,
+                            table,
+                            p0,
+                          ).supplementLogsRefs,
+                      referencedItemsForCurrentItem: (item, referencedItems) =>
+                          referencedItems.where(
+                            (e) => e.supplementId == item.id,
+                          ),
+                      typedResults: items,
+                    ),
+                ];
+              },
+            );
+          },
+        ),
+      );
+}
+
+typedef $$SupplementsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $SupplementsTable,
+      Supplement,
+      $$SupplementsTableFilterComposer,
+      $$SupplementsTableOrderingComposer,
+      $$SupplementsTableAnnotationComposer,
+      $$SupplementsTableCreateCompanionBuilder,
+      $$SupplementsTableUpdateCompanionBuilder,
+      (Supplement, $$SupplementsTableReferences),
+      Supplement,
+      PrefetchHooks Function({bool supplementLogsRefs})
+    >;
+typedef $$SupplementLogsTableCreateCompanionBuilder =
+    SupplementLogsCompanion Function({
+      Value<int> id,
+      required int supplementId,
+      required DateTime takenOn,
+    });
+typedef $$SupplementLogsTableUpdateCompanionBuilder =
+    SupplementLogsCompanion Function({
+      Value<int> id,
+      Value<int> supplementId,
+      Value<DateTime> takenOn,
+    });
+
+final class $$SupplementLogsTableReferences
+    extends BaseReferences<_$AppDatabase, $SupplementLogsTable, SupplementLog> {
+  $$SupplementLogsTableReferences(
+    super.$_db,
+    super.$_table,
+    super.$_typedResult,
+  );
+
+  static $SupplementsTable _supplementIdTable(_$AppDatabase db) => db
+      .supplements
+      .createAlias('supplement_logs__supplement_id__supplements__id');
+
+  $$SupplementsTableProcessedTableManager get supplementId {
+    final $_column = $_itemColumn<int>('supplement_id')!;
+
+    final manager = $$SupplementsTableTableManager(
+      $_db,
+      $_db.supplements,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_supplementIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
+
+class $$SupplementLogsTableFilterComposer
+    extends Composer<_$AppDatabase, $SupplementLogsTable> {
+  $$SupplementLogsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get takenOn => $composableBuilder(
+    column: $table.takenOn,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  $$SupplementsTableFilterComposer get supplementId {
+    final $$SupplementsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.supplementId,
+      referencedTable: $db.supplements,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$SupplementsTableFilterComposer(
+            $db: $db,
+            $table: $db.supplements,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$SupplementLogsTableOrderingComposer
+    extends Composer<_$AppDatabase, $SupplementLogsTable> {
+  $$SupplementLogsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get takenOn => $composableBuilder(
+    column: $table.takenOn,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  $$SupplementsTableOrderingComposer get supplementId {
+    final $$SupplementsTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.supplementId,
+      referencedTable: $db.supplements,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$SupplementsTableOrderingComposer(
+            $db: $db,
+            $table: $db.supplements,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$SupplementLogsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $SupplementLogsTable> {
+  $$SupplementLogsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get takenOn =>
+      $composableBuilder(column: $table.takenOn, builder: (column) => column);
+
+  $$SupplementsTableAnnotationComposer get supplementId {
+    final $$SupplementsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.supplementId,
+      referencedTable: $db.supplements,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$SupplementsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.supplements,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$SupplementLogsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $SupplementLogsTable,
+          SupplementLog,
+          $$SupplementLogsTableFilterComposer,
+          $$SupplementLogsTableOrderingComposer,
+          $$SupplementLogsTableAnnotationComposer,
+          $$SupplementLogsTableCreateCompanionBuilder,
+          $$SupplementLogsTableUpdateCompanionBuilder,
+          (SupplementLog, $$SupplementLogsTableReferences),
+          SupplementLog,
+          PrefetchHooks Function({bool supplementId})
+        > {
+  $$SupplementLogsTableTableManager(
+    _$AppDatabase db,
+    $SupplementLogsTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$SupplementLogsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$SupplementLogsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$SupplementLogsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<int> supplementId = const Value.absent(),
+                Value<DateTime> takenOn = const Value.absent(),
+              }) => SupplementLogsCompanion(
+                id: id,
+                supplementId: supplementId,
+                takenOn: takenOn,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                required int supplementId,
+                required DateTime takenOn,
+              }) => SupplementLogsCompanion.insert(
+                id: id,
+                supplementId: supplementId,
+                takenOn: takenOn,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<$SupplementLogsTable, SupplementLog>(table),
+                  $$SupplementLogsTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: ({supplementId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins:
+                  <
+                    T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic
+                    >
+                  >(state) {
+                    if (supplementId) {
+                      state = state.withJoin(
+                        currentTable: table,
+                        currentColumn: table.supplementId,
+                        referencedTable: $$SupplementLogsTableReferences
+                            ._supplementIdTable(db),
+                        referencedColumn: $$SupplementLogsTableReferences
+                            ._supplementIdTable(db)
+                            .id,
+                      ) as T;
+                    }
+
+                    return state;
+                  },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
+        ),
+      );
+}
+
+typedef $$SupplementLogsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $SupplementLogsTable,
+      SupplementLog,
+      $$SupplementLogsTableFilterComposer,
+      $$SupplementLogsTableOrderingComposer,
+      $$SupplementLogsTableAnnotationComposer,
+      $$SupplementLogsTableCreateCompanionBuilder,
+      $$SupplementLogsTableUpdateCompanionBuilder,
+      (SupplementLog, $$SupplementLogsTableReferences),
+      SupplementLog,
+      PrefetchHooks Function({bool supplementId})
+    >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -8054,4 +10577,12 @@ class $AppDatabaseManager {
       $$RestDaysTableTableManager(_db, _db.restDays);
   $$FoodLogEntriesTableTableManager get foodLogEntries =>
       $$FoodLogEntriesTableTableManager(_db, _db.foodLogEntries);
+  $$SavedFoodsTableTableManager get savedFoods =>
+      $$SavedFoodsTableTableManager(_db, _db.savedFoods);
+  $$WaterLogsTableTableManager get waterLogs =>
+      $$WaterLogsTableTableManager(_db, _db.waterLogs);
+  $$SupplementsTableTableManager get supplements =>
+      $$SupplementsTableTableManager(_db, _db.supplements);
+  $$SupplementLogsTableTableManager get supplementLogs =>
+      $$SupplementLogsTableTableManager(_db, _db.supplementLogs);
 }

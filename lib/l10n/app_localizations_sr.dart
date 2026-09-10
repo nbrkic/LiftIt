@@ -40,6 +40,9 @@ class AppLocalizationsSr extends AppLocalizations {
   String get drawerStreaks => 'Nizovi';
 
   @override
+  String get drawerBmiCalculator => 'BMI kalkulator';
+
+  @override
   String get drawerSettings => 'Podešavanja';
 
   @override
@@ -225,6 +228,9 @@ class AppLocalizationsSr extends AppLocalizations {
   String get nutritionCaloriesLabel => 'Kalorije';
 
   @override
+  String get nutritionCaloriesUnitShort => 'cal';
+
+  @override
   String get nutritionProteinLabel => 'Proteini';
 
   @override
@@ -232,6 +238,40 @@ class AppLocalizationsSr extends AppLocalizations {
 
   @override
   String get nutritionFatLabel => 'Masti';
+
+  @override
+  String get nutritionWaterLabel => 'Voda';
+
+  @override
+  String get nutritionUndoWaterAction => 'Poništi poslednje';
+
+  @override
+  String get dailyWaterGoalLabel => 'Cilj za vodu (L)';
+
+  @override
+  String get nutritionSupplementsLabel => 'Suplementi';
+
+  @override
+  String get nutritionManageSupplementsAction => 'Upravljaj suplementima';
+
+  @override
+  String get nutritionAddSupplementTitle => 'Dodaj suplement';
+
+  @override
+  String get nutritionSupplementNameLabel => 'Naziv suplementa';
+
+  @override
+  String get nutritionSupplementDosageLabel => 'Dnevna količina (npr. 5g)';
+
+  @override
+  String get nutritionSupplementsEmpty => 'Još nema dodatih suplemenata.';
+
+  @override
+  String get deleteSupplementDialogTitle => 'Obrisati suplement?';
+
+  @override
+  String get deleteSupplementDialogContent =>
+      'Ovo će trajno obrisati ovaj suplement i njegovu istoriju.';
 
   @override
   String get nutritionEmptyDay =>
@@ -245,6 +285,30 @@ class AppLocalizationsSr extends AppLocalizations {
 
   @override
   String get nutritionQuantityLabel => 'Količina (npr. 150 g)';
+
+  @override
+  String get nutritionEntryModeTotal => 'Ukupna količina';
+
+  @override
+  String get nutritionEntryModePer100g => 'Na 100 g';
+
+  @override
+  String get nutritionPer100gCaloriesLabel => 'Kalorije /100g';
+
+  @override
+  String get nutritionPer100gProteinLabel => 'Proteini /100g';
+
+  @override
+  String get nutritionPer100gCarbsLabel => 'Ugljeni hidrati /100g';
+
+  @override
+  String get nutritionPer100gFatLabel => 'Masti /100g';
+
+  @override
+  String get nutritionCalculatedTotalLabel => 'Izračunato ukupno';
+
+  @override
+  String get nutritionSaveFoodOption => 'Sačuvaj hranu';
 
   @override
   String get nutritionLogButton => 'Uloguj';
@@ -267,6 +331,105 @@ class AppLocalizationsSr extends AppLocalizations {
   @override
   String get deleteFoodDialogContent =>
       'Ovo će trajno obrisati ovaj unos hrane.';
+
+  @override
+  String get deleteSavedFoodDialogTitle => 'Obrisati sačuvanu hranu?';
+
+  @override
+  String get deleteSavedFoodDialogContent =>
+      'Ovo će trajno obrisati ovu sačuvanu hranu.';
+
+  @override
+  String get nutritionAddFoodTitle => 'Dodaj hranu';
+
+  @override
+  String get nutritionSearchOption => 'Pretraga';
+
+  @override
+  String get nutritionManualOption => 'Ručni unos';
+
+  @override
+  String get nutritionLoadValuesOption => 'Učitaj vrednosti';
+
+  @override
+  String get nutritionSavedFoodTitle => 'Sačuvana hrana';
+
+  @override
+  String get nutritionSavedFoodEmpty => 'Još nema sačuvane hrane.';
+
+  @override
+  String get nutritionPer100gBadge => 'na 100 g';
+
+  @override
+  String get nutritionSearchFoodHint => 'Pretraži hranu';
+
+  @override
+  String get nutritionSearchEmptyResults => 'Nema rezultata.';
+
+  @override
+  String get nutritionQuantityGramsLabel => 'Količina (g)';
+
+  @override
+  String get apiKeysSectionLabel => 'API ključevi';
+
+  @override
+  String get apiKeysDescription =>
+      'Opciono i besplatno. Tvoji sopstveni ključevi ostaju samo na ovom uređaju i koriste se samo za pretragu USDA baze hrane i analizu slika hrane preko Gemini-ja.';
+
+  @override
+  String get geminiApiKeyLabel => 'Gemini API ključ';
+
+  @override
+  String get usdaApiKeyLabel => 'USDA API ključ';
+
+  @override
+  String get nutritionUsdaKeyMissingHint =>
+      'Dodaj besplatan USDA API ključ u Podešavanjima da bi pretraživao i generičku hranu, ne samo pakovane proizvode.';
+
+  @override
+  String get nutritionScanBarcodeOption => 'Skeniraj bar kod';
+
+  @override
+  String get nutritionBarcodeNotFound =>
+      'Proizvod nije pronađen — i dalje možeš da ga uneseš ručno.';
+
+  @override
+  String get nutritionCameraPermissionDenied =>
+      'Potreban je pristup kameri za skeniranje bar koda. Omogući ga u Podešavanja > Aplikacije > Lift It > Dozvole.';
+
+  @override
+  String get nutritionScannerUnsupported =>
+      'Skeniranje bar koda nije podržano na ovom uređaju.';
+
+  @override
+  String get nutritionPhotoOption => 'Slika';
+
+  @override
+  String get nutritionAiProcessing =>
+      'Analiziram… ovo može potrajati i do minut.';
+
+  @override
+  String get nutritionGeminiKeyMissing =>
+      'Dodaj besplatan Gemini API ključ u Podešavanjima da bi koristio prepoznavanje sa slike.';
+
+  @override
+  String get nutritionNoItemsRecognized =>
+      'Nisam uspeo da prepoznam hranu na toj slici. Probaj ponovo ili unesi ručno.';
+
+  @override
+  String get nutritionPhotoResultsTitle => 'Prepoznate stavke';
+
+  @override
+  String get nutritionDescribeFoodTitle => 'Opiši obrok';
+
+  @override
+  String get nutritionDescribeFoodHint => 'npr. 2 jajeta i tost';
+
+  @override
+  String get nutritionEstimateButton => 'Proceni';
+
+  @override
+  String get nutritionTryAiEstimateAction => 'Probaj AI procenu';
 
   @override
   String get bodyweightTitle => 'Telesna težina';
@@ -458,6 +621,40 @@ class AppLocalizationsSr extends AppLocalizations {
   @override
   String get tapEditToFillProfile =>
       'Dodirni ikonicu za izmenu da popuniš profil.';
+
+  @override
+  String get basicInfoSectionLabel => 'Osnovni podaci';
+
+  @override
+  String get editNutritionGoalsTitle => 'Izmeni nutritivne ciljeve';
+
+  @override
+  String get noNutritionGoalsSet => 'Nutritivni ciljevi još nisu podešeni.';
+
+  @override
+  String dailyCalorieGoalValueLabel(int value) {
+    return 'Cilj kalorija: $value cal';
+  }
+
+  @override
+  String dailyProteinGoalValueLabel(int value) {
+    return 'Cilj proteina: $value g';
+  }
+
+  @override
+  String dailyCarbsGoalValueLabel(int value) {
+    return 'Cilj ugljenih hidrata: $value g';
+  }
+
+  @override
+  String dailyFatGoalValueLabel(int value) {
+    return 'Cilj masti: $value g';
+  }
+
+  @override
+  String dailyWaterGoalValueLabel(String value) {
+    return 'Cilj za vodu: $value L';
+  }
 
   @override
   String get settingsTitle => 'Podešavanja';
@@ -798,4 +995,83 @@ class AppLocalizationsSr extends AppLocalizations {
 
   @override
   String get equipmentOther => 'Ostalo';
+
+  @override
+  String get bmiCalculatorTitle => 'BMI kalkulator';
+
+  @override
+  String get bmiWeightLabel => 'Težina (kg)';
+
+  @override
+  String get bmiAgeLabel => 'Godine';
+
+  @override
+  String get bmiActivityLevelLabel => 'Nivo aktivnosti';
+
+  @override
+  String get activityLevelSedentary => 'Sedentaran (malo ili nimalo vežbanja)';
+
+  @override
+  String get activityLevelLight => 'Lako aktivan (1-3 dana nedeljno)';
+
+  @override
+  String get activityLevelModerate => 'Umereno aktivan (3-5 dana nedeljno)';
+
+  @override
+  String get activityLevelActive => 'Vrlo aktivan (6-7 dana nedeljno)';
+
+  @override
+  String get activityLevelVeryActive =>
+      'Ekstra aktivan (teško vežbanje + fizički posao)';
+
+  @override
+  String bmiResultLabel(String value) {
+    return 'BMI: $value';
+  }
+
+  @override
+  String get bmiCategoryUnderweight => 'Pothranjenost';
+
+  @override
+  String get bmiCategoryNormal => 'Normalna težina';
+
+  @override
+  String get bmiCategoryOverweight => 'Prekomerna težina';
+
+  @override
+  String get bmiCategoryObese => 'Gojaznost';
+
+  @override
+  String get bmiMissingInputsHint => 'Unesi težinu i visinu da vidiš svoj BMI.';
+
+  @override
+  String get bmiGoalsSectionLabel =>
+      'Dnevni ciljevi kalorija i makronutrijenata';
+
+  @override
+  String get bmiGoalsMissingInputsHint =>
+      'Unesi težinu, visinu i godine da vidiš procenu kalorija.';
+
+  @override
+  String get bmiGoalAggressiveCut => 'Agresivan cut';
+
+  @override
+  String get bmiGoalCut => 'Cut';
+
+  @override
+  String get bmiGoalMaintenance => 'Održavanje';
+
+  @override
+  String get bmiGoalBulk => 'Bulk';
+
+  @override
+  String get bmiGoalAggressiveBulk => 'Agresivan bulk';
+
+  @override
+  String get bmiSetAsGoalAction => 'Postavi kao cilj';
+
+  @override
+  String bmiGoalSetConfirmation(String preset) {
+    return 'Ciljevi za \"$preset\" su podešeni.';
+  }
 }

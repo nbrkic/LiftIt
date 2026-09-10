@@ -40,6 +40,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get drawerStreaks => 'Streaks';
 
   @override
+  String get drawerBmiCalculator => 'BMI Calculator';
+
+  @override
   String get drawerSettings => 'Settings';
 
   @override
@@ -224,6 +227,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get nutritionCaloriesLabel => 'Calories';
 
   @override
+  String get nutritionCaloriesUnitShort => 'cal';
+
+  @override
   String get nutritionProteinLabel => 'Protein';
 
   @override
@@ -231,6 +237,40 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get nutritionFatLabel => 'Fat';
+
+  @override
+  String get nutritionWaterLabel => 'Water';
+
+  @override
+  String get nutritionUndoWaterAction => 'Undo last';
+
+  @override
+  String get dailyWaterGoalLabel => 'Water goal (L)';
+
+  @override
+  String get nutritionSupplementsLabel => 'Supplements';
+
+  @override
+  String get nutritionManageSupplementsAction => 'Manage supplements';
+
+  @override
+  String get nutritionAddSupplementTitle => 'Add Supplement';
+
+  @override
+  String get nutritionSupplementNameLabel => 'Supplement name';
+
+  @override
+  String get nutritionSupplementDosageLabel => 'Daily amount (e.g. 5g)';
+
+  @override
+  String get nutritionSupplementsEmpty => 'No supplements added yet.';
+
+  @override
+  String get deleteSupplementDialogTitle => 'Delete supplement?';
+
+  @override
+  String get deleteSupplementDialogContent =>
+      'This will permanently delete this supplement and its history.';
 
   @override
   String get nutritionEmptyDay => 'No food logged yet — tap + to add.';
@@ -243,6 +283,30 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get nutritionQuantityLabel => 'Quantity (e.g. 150 g)';
+
+  @override
+  String get nutritionEntryModeTotal => 'Total amount';
+
+  @override
+  String get nutritionEntryModePer100g => 'Per 100 g';
+
+  @override
+  String get nutritionPer100gCaloriesLabel => 'Calories /100g';
+
+  @override
+  String get nutritionPer100gProteinLabel => 'Protein /100g';
+
+  @override
+  String get nutritionPer100gCarbsLabel => 'Carbs /100g';
+
+  @override
+  String get nutritionPer100gFatLabel => 'Fat /100g';
+
+  @override
+  String get nutritionCalculatedTotalLabel => 'Calculated total';
+
+  @override
+  String get nutritionSaveFoodOption => 'Save food';
 
   @override
   String get nutritionLogButton => 'Log';
@@ -265,6 +329,105 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get deleteFoodDialogContent =>
       'This will permanently delete this food log entry.';
+
+  @override
+  String get deleteSavedFoodDialogTitle => 'Delete saved food?';
+
+  @override
+  String get deleteSavedFoodDialogContent =>
+      'This will permanently delete this saved food.';
+
+  @override
+  String get nutritionAddFoodTitle => 'Add Food';
+
+  @override
+  String get nutritionSearchOption => 'Search';
+
+  @override
+  String get nutritionManualOption => 'Enter Manually';
+
+  @override
+  String get nutritionLoadValuesOption => 'Load Values';
+
+  @override
+  String get nutritionSavedFoodTitle => 'Saved Food';
+
+  @override
+  String get nutritionSavedFoodEmpty => 'No saved food yet.';
+
+  @override
+  String get nutritionPer100gBadge => 'per 100 g';
+
+  @override
+  String get nutritionSearchFoodHint => 'Search food';
+
+  @override
+  String get nutritionSearchEmptyResults => 'No results found.';
+
+  @override
+  String get nutritionQuantityGramsLabel => 'Quantity (g)';
+
+  @override
+  String get apiKeysSectionLabel => 'API Keys';
+
+  @override
+  String get apiKeysDescription =>
+      'Optional and free. Your own keys stay on this device and are used only to search USDA\'s food database and analyze food photos with Gemini.';
+
+  @override
+  String get geminiApiKeyLabel => 'Gemini API key';
+
+  @override
+  String get usdaApiKeyLabel => 'USDA API key';
+
+  @override
+  String get nutritionUsdaKeyMissingHint =>
+      'Add a free USDA API key in Settings to also search generic foods, not just packaged products.';
+
+  @override
+  String get nutritionScanBarcodeOption => 'Scan Barcode';
+
+  @override
+  String get nutritionBarcodeNotFound =>
+      'Product not found — you can still log it manually.';
+
+  @override
+  String get nutritionCameraPermissionDenied =>
+      'Camera access is needed to scan barcodes. Enable it in system Settings > Apps > Lift It > Permissions.';
+
+  @override
+  String get nutritionScannerUnsupported =>
+      'Barcode scanning isn\'t supported on this device.';
+
+  @override
+  String get nutritionPhotoOption => 'Photo';
+
+  @override
+  String get nutritionAiProcessing =>
+      'Analyzing… this can take up to a minute.';
+
+  @override
+  String get nutritionGeminiKeyMissing =>
+      'Add a free Gemini API key in Settings to use photo recognition.';
+
+  @override
+  String get nutritionNoItemsRecognized =>
+      'Couldn\'t recognize any food in that photo. Try again or enter manually.';
+
+  @override
+  String get nutritionPhotoResultsTitle => 'Recognized Items';
+
+  @override
+  String get nutritionDescribeFoodTitle => 'Describe the meal';
+
+  @override
+  String get nutritionDescribeFoodHint => 'e.g. 2 eggs and toast';
+
+  @override
+  String get nutritionEstimateButton => 'Estimate';
+
+  @override
+  String get nutritionTryAiEstimateAction => 'Try AI estimate';
 
   @override
   String get bodyweightTitle => 'Bodyweight';
@@ -455,6 +618,40 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get tapEditToFillProfile =>
       'Tap the edit icon to fill in your profile.';
+
+  @override
+  String get basicInfoSectionLabel => 'Basic Info';
+
+  @override
+  String get editNutritionGoalsTitle => 'Edit Nutrition Goals';
+
+  @override
+  String get noNutritionGoalsSet => 'No nutrition goals set yet.';
+
+  @override
+  String dailyCalorieGoalValueLabel(int value) {
+    return 'Calorie goal: $value cal';
+  }
+
+  @override
+  String dailyProteinGoalValueLabel(int value) {
+    return 'Protein goal: $value g';
+  }
+
+  @override
+  String dailyCarbsGoalValueLabel(int value) {
+    return 'Carbs goal: $value g';
+  }
+
+  @override
+  String dailyFatGoalValueLabel(int value) {
+    return 'Fat goal: $value g';
+  }
+
+  @override
+  String dailyWaterGoalValueLabel(String value) {
+    return 'Water goal: $value L';
+  }
 
   @override
   String get settingsTitle => 'Settings';
@@ -792,4 +989,82 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get equipmentOther => 'Other';
+
+  @override
+  String get bmiCalculatorTitle => 'BMI Calculator';
+
+  @override
+  String get bmiWeightLabel => 'Weight (kg)';
+
+  @override
+  String get bmiAgeLabel => 'Age';
+
+  @override
+  String get bmiActivityLevelLabel => 'Activity level';
+
+  @override
+  String get activityLevelSedentary => 'Sedentary (little or no exercise)';
+
+  @override
+  String get activityLevelLight => 'Lightly active (1-3 days/week)';
+
+  @override
+  String get activityLevelModerate => 'Moderately active (3-5 days/week)';
+
+  @override
+  String get activityLevelActive => 'Very active (6-7 days/week)';
+
+  @override
+  String get activityLevelVeryActive =>
+      'Extra active (hard exercise + physical job)';
+
+  @override
+  String bmiResultLabel(String value) {
+    return 'BMI: $value';
+  }
+
+  @override
+  String get bmiCategoryUnderweight => 'Underweight';
+
+  @override
+  String get bmiCategoryNormal => 'Normal weight';
+
+  @override
+  String get bmiCategoryOverweight => 'Overweight';
+
+  @override
+  String get bmiCategoryObese => 'Obese';
+
+  @override
+  String get bmiMissingInputsHint => 'Enter weight and height to see your BMI.';
+
+  @override
+  String get bmiGoalsSectionLabel => 'Daily Calorie & Macro Goals';
+
+  @override
+  String get bmiGoalsMissingInputsHint =>
+      'Enter weight, height, and age to see calorie estimates.';
+
+  @override
+  String get bmiGoalAggressiveCut => 'Aggressive Cut';
+
+  @override
+  String get bmiGoalCut => 'Cut';
+
+  @override
+  String get bmiGoalMaintenance => 'Maintenance';
+
+  @override
+  String get bmiGoalBulk => 'Bulk';
+
+  @override
+  String get bmiGoalAggressiveBulk => 'Aggressive Bulk';
+
+  @override
+  String get bmiSetAsGoalAction => 'Set as goal';
+
+  @override
+  String bmiGoalSetConfirmation(String preset) {
+    return '$preset goals set.';
+  }
 }

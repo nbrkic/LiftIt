@@ -158,6 +158,12 @@ abstract class AppLocalizations {
   /// **'Streaks'**
   String get drawerStreaks;
 
+  /// No description provided for @drawerBmiCalculator.
+  ///
+  /// In en, this message translates to:
+  /// **'BMI Calculator'**
+  String get drawerBmiCalculator;
+
   /// No description provided for @drawerSettings.
   ///
   /// In en, this message translates to:
@@ -488,6 +494,12 @@ abstract class AppLocalizations {
   /// **'Calories'**
   String get nutritionCaloriesLabel;
 
+  /// No description provided for @nutritionCaloriesUnitShort.
+  ///
+  /// In en, this message translates to:
+  /// **'cal'**
+  String get nutritionCaloriesUnitShort;
+
   /// No description provided for @nutritionProteinLabel.
   ///
   /// In en, this message translates to:
@@ -505,6 +517,72 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Fat'**
   String get nutritionFatLabel;
+
+  /// No description provided for @nutritionWaterLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Water'**
+  String get nutritionWaterLabel;
+
+  /// No description provided for @nutritionUndoWaterAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Undo last'**
+  String get nutritionUndoWaterAction;
+
+  /// No description provided for @dailyWaterGoalLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Water goal (L)'**
+  String get dailyWaterGoalLabel;
+
+  /// No description provided for @nutritionSupplementsLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Supplements'**
+  String get nutritionSupplementsLabel;
+
+  /// No description provided for @nutritionManageSupplementsAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage supplements'**
+  String get nutritionManageSupplementsAction;
+
+  /// No description provided for @nutritionAddSupplementTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Supplement'**
+  String get nutritionAddSupplementTitle;
+
+  /// No description provided for @nutritionSupplementNameLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Supplement name'**
+  String get nutritionSupplementNameLabel;
+
+  /// No description provided for @nutritionSupplementDosageLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily amount (e.g. 5g)'**
+  String get nutritionSupplementDosageLabel;
+
+  /// No description provided for @nutritionSupplementsEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No supplements added yet.'**
+  String get nutritionSupplementsEmpty;
+
+  /// No description provided for @deleteSupplementDialogTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete supplement?'**
+  String get deleteSupplementDialogTitle;
+
+  /// No description provided for @deleteSupplementDialogContent.
+  ///
+  /// In en, this message translates to:
+  /// **'This will permanently delete this supplement and its history.'**
+  String get deleteSupplementDialogContent;
 
   /// No description provided for @nutritionEmptyDay.
   ///
@@ -529,6 +607,54 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Quantity (e.g. 150 g)'**
   String get nutritionQuantityLabel;
+
+  /// No description provided for @nutritionEntryModeTotal.
+  ///
+  /// In en, this message translates to:
+  /// **'Total amount'**
+  String get nutritionEntryModeTotal;
+
+  /// No description provided for @nutritionEntryModePer100g.
+  ///
+  /// In en, this message translates to:
+  /// **'Per 100 g'**
+  String get nutritionEntryModePer100g;
+
+  /// No description provided for @nutritionPer100gCaloriesLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Calories /100g'**
+  String get nutritionPer100gCaloriesLabel;
+
+  /// No description provided for @nutritionPer100gProteinLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Protein /100g'**
+  String get nutritionPer100gProteinLabel;
+
+  /// No description provided for @nutritionPer100gCarbsLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Carbs /100g'**
+  String get nutritionPer100gCarbsLabel;
+
+  /// No description provided for @nutritionPer100gFatLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Fat /100g'**
+  String get nutritionPer100gFatLabel;
+
+  /// No description provided for @nutritionCalculatedTotalLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Calculated total'**
+  String get nutritionCalculatedTotalLabel;
+
+  /// No description provided for @nutritionSaveFoodOption.
+  ///
+  /// In en, this message translates to:
+  /// **'Save food'**
+  String get nutritionSaveFoodOption;
 
   /// No description provided for @nutritionLogButton.
   ///
@@ -571,6 +697,186 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'This will permanently delete this food log entry.'**
   String get deleteFoodDialogContent;
+
+  /// No description provided for @deleteSavedFoodDialogTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete saved food?'**
+  String get deleteSavedFoodDialogTitle;
+
+  /// No description provided for @deleteSavedFoodDialogContent.
+  ///
+  /// In en, this message translates to:
+  /// **'This will permanently delete this saved food.'**
+  String get deleteSavedFoodDialogContent;
+
+  /// No description provided for @nutritionAddFoodTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Food'**
+  String get nutritionAddFoodTitle;
+
+  /// No description provided for @nutritionSearchOption.
+  ///
+  /// In en, this message translates to:
+  /// **'Search'**
+  String get nutritionSearchOption;
+
+  /// No description provided for @nutritionManualOption.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter Manually'**
+  String get nutritionManualOption;
+
+  /// No description provided for @nutritionLoadValuesOption.
+  ///
+  /// In en, this message translates to:
+  /// **'Load Values'**
+  String get nutritionLoadValuesOption;
+
+  /// No description provided for @nutritionSavedFoodTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved Food'**
+  String get nutritionSavedFoodTitle;
+
+  /// No description provided for @nutritionSavedFoodEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No saved food yet.'**
+  String get nutritionSavedFoodEmpty;
+
+  /// No description provided for @nutritionPer100gBadge.
+  ///
+  /// In en, this message translates to:
+  /// **'per 100 g'**
+  String get nutritionPer100gBadge;
+
+  /// No description provided for @nutritionSearchFoodHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Search food'**
+  String get nutritionSearchFoodHint;
+
+  /// No description provided for @nutritionSearchEmptyResults.
+  ///
+  /// In en, this message translates to:
+  /// **'No results found.'**
+  String get nutritionSearchEmptyResults;
+
+  /// No description provided for @nutritionQuantityGramsLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Quantity (g)'**
+  String get nutritionQuantityGramsLabel;
+
+  /// No description provided for @apiKeysSectionLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'API Keys'**
+  String get apiKeysSectionLabel;
+
+  /// No description provided for @apiKeysDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Optional and free. Your own keys stay on this device and are used only to search USDA\'s food database and analyze food photos with Gemini.'**
+  String get apiKeysDescription;
+
+  /// No description provided for @geminiApiKeyLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Gemini API key'**
+  String get geminiApiKeyLabel;
+
+  /// No description provided for @usdaApiKeyLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'USDA API key'**
+  String get usdaApiKeyLabel;
+
+  /// No description provided for @nutritionUsdaKeyMissingHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a free USDA API key in Settings to also search generic foods, not just packaged products.'**
+  String get nutritionUsdaKeyMissingHint;
+
+  /// No description provided for @nutritionScanBarcodeOption.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan Barcode'**
+  String get nutritionScanBarcodeOption;
+
+  /// No description provided for @nutritionBarcodeNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'Product not found — you can still log it manually.'**
+  String get nutritionBarcodeNotFound;
+
+  /// No description provided for @nutritionCameraPermissionDenied.
+  ///
+  /// In en, this message translates to:
+  /// **'Camera access is needed to scan barcodes. Enable it in system Settings > Apps > Lift It > Permissions.'**
+  String get nutritionCameraPermissionDenied;
+
+  /// No description provided for @nutritionScannerUnsupported.
+  ///
+  /// In en, this message translates to:
+  /// **'Barcode scanning isn\'t supported on this device.'**
+  String get nutritionScannerUnsupported;
+
+  /// No description provided for @nutritionPhotoOption.
+  ///
+  /// In en, this message translates to:
+  /// **'Photo'**
+  String get nutritionPhotoOption;
+
+  /// No description provided for @nutritionAiProcessing.
+  ///
+  /// In en, this message translates to:
+  /// **'Analyzing… this can take up to a minute.'**
+  String get nutritionAiProcessing;
+
+  /// No description provided for @nutritionGeminiKeyMissing.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a free Gemini API key in Settings to use photo recognition.'**
+  String get nutritionGeminiKeyMissing;
+
+  /// No description provided for @nutritionNoItemsRecognized.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t recognize any food in that photo. Try again or enter manually.'**
+  String get nutritionNoItemsRecognized;
+
+  /// No description provided for @nutritionPhotoResultsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Recognized Items'**
+  String get nutritionPhotoResultsTitle;
+
+  /// No description provided for @nutritionDescribeFoodTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Describe the meal'**
+  String get nutritionDescribeFoodTitle;
+
+  /// No description provided for @nutritionDescribeFoodHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. 2 eggs and toast'**
+  String get nutritionDescribeFoodHint;
+
+  /// No description provided for @nutritionEstimateButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Estimate'**
+  String get nutritionEstimateButton;
+
+  /// No description provided for @nutritionTryAiEstimateAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Try AI estimate'**
+  String get nutritionTryAiEstimateAction;
 
   /// No description provided for @bodyweightTitle.
   ///
@@ -907,6 +1213,54 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Tap the edit icon to fill in your profile.'**
   String get tapEditToFillProfile;
+
+  /// No description provided for @basicInfoSectionLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Basic Info'**
+  String get basicInfoSectionLabel;
+
+  /// No description provided for @editNutritionGoalsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Nutrition Goals'**
+  String get editNutritionGoalsTitle;
+
+  /// No description provided for @noNutritionGoalsSet.
+  ///
+  /// In en, this message translates to:
+  /// **'No nutrition goals set yet.'**
+  String get noNutritionGoalsSet;
+
+  /// No description provided for @dailyCalorieGoalValueLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Calorie goal: {value} cal'**
+  String dailyCalorieGoalValueLabel(int value);
+
+  /// No description provided for @dailyProteinGoalValueLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Protein goal: {value} g'**
+  String dailyProteinGoalValueLabel(int value);
+
+  /// No description provided for @dailyCarbsGoalValueLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Carbs goal: {value} g'**
+  String dailyCarbsGoalValueLabel(int value);
+
+  /// No description provided for @dailyFatGoalValueLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Fat goal: {value} g'**
+  String dailyFatGoalValueLabel(int value);
+
+  /// No description provided for @dailyWaterGoalValueLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Water goal: {value} L'**
+  String dailyWaterGoalValueLabel(String value);
 
   /// No description provided for @settingsTitle.
   ///
@@ -1531,6 +1885,150 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Other'**
   String get equipmentOther;
+
+  /// No description provided for @bmiCalculatorTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'BMI Calculator'**
+  String get bmiCalculatorTitle;
+
+  /// No description provided for @bmiWeightLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Weight (kg)'**
+  String get bmiWeightLabel;
+
+  /// No description provided for @bmiAgeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Age'**
+  String get bmiAgeLabel;
+
+  /// No description provided for @bmiActivityLevelLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Activity level'**
+  String get bmiActivityLevelLabel;
+
+  /// No description provided for @activityLevelSedentary.
+  ///
+  /// In en, this message translates to:
+  /// **'Sedentary (little or no exercise)'**
+  String get activityLevelSedentary;
+
+  /// No description provided for @activityLevelLight.
+  ///
+  /// In en, this message translates to:
+  /// **'Lightly active (1-3 days/week)'**
+  String get activityLevelLight;
+
+  /// No description provided for @activityLevelModerate.
+  ///
+  /// In en, this message translates to:
+  /// **'Moderately active (3-5 days/week)'**
+  String get activityLevelModerate;
+
+  /// No description provided for @activityLevelActive.
+  ///
+  /// In en, this message translates to:
+  /// **'Very active (6-7 days/week)'**
+  String get activityLevelActive;
+
+  /// No description provided for @activityLevelVeryActive.
+  ///
+  /// In en, this message translates to:
+  /// **'Extra active (hard exercise + physical job)'**
+  String get activityLevelVeryActive;
+
+  /// No description provided for @bmiResultLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'BMI: {value}'**
+  String bmiResultLabel(String value);
+
+  /// No description provided for @bmiCategoryUnderweight.
+  ///
+  /// In en, this message translates to:
+  /// **'Underweight'**
+  String get bmiCategoryUnderweight;
+
+  /// No description provided for @bmiCategoryNormal.
+  ///
+  /// In en, this message translates to:
+  /// **'Normal weight'**
+  String get bmiCategoryNormal;
+
+  /// No description provided for @bmiCategoryOverweight.
+  ///
+  /// In en, this message translates to:
+  /// **'Overweight'**
+  String get bmiCategoryOverweight;
+
+  /// No description provided for @bmiCategoryObese.
+  ///
+  /// In en, this message translates to:
+  /// **'Obese'**
+  String get bmiCategoryObese;
+
+  /// No description provided for @bmiMissingInputsHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter weight and height to see your BMI.'**
+  String get bmiMissingInputsHint;
+
+  /// No description provided for @bmiGoalsSectionLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily Calorie & Macro Goals'**
+  String get bmiGoalsSectionLabel;
+
+  /// No description provided for @bmiGoalsMissingInputsHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter weight, height, and age to see calorie estimates.'**
+  String get bmiGoalsMissingInputsHint;
+
+  /// No description provided for @bmiGoalAggressiveCut.
+  ///
+  /// In en, this message translates to:
+  /// **'Aggressive Cut'**
+  String get bmiGoalAggressiveCut;
+
+  /// No description provided for @bmiGoalCut.
+  ///
+  /// In en, this message translates to:
+  /// **'Cut'**
+  String get bmiGoalCut;
+
+  /// No description provided for @bmiGoalMaintenance.
+  ///
+  /// In en, this message translates to:
+  /// **'Maintenance'**
+  String get bmiGoalMaintenance;
+
+  /// No description provided for @bmiGoalBulk.
+  ///
+  /// In en, this message translates to:
+  /// **'Bulk'**
+  String get bmiGoalBulk;
+
+  /// No description provided for @bmiGoalAggressiveBulk.
+  ///
+  /// In en, this message translates to:
+  /// **'Aggressive Bulk'**
+  String get bmiGoalAggressiveBulk;
+
+  /// No description provided for @bmiSetAsGoalAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Set as goal'**
+  String get bmiSetAsGoalAction;
+
+  /// No description provided for @bmiGoalSetConfirmation.
+  ///
+  /// In en, this message translates to:
+  /// **'{preset} goals set.'**
+  String bmiGoalSetConfirmation(String preset);
 }
 
 class _AppLocalizationsDelegate

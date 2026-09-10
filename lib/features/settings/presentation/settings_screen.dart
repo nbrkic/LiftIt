@@ -10,14 +10,31 @@ import '../../../database/backup_service.dart';
 import '../../../design/tokens/app_colors.dart';
 import '../../../design/tokens/app_spacing.dart';
 import '../../../l10n/app_localizations.dart';
+import '../../../providers/api_keys_provider.dart';
 import '../../../providers/database_provider.dart';
 import '../../../providers/locale_provider.dart';
 import '../../../providers/theme_provider.dart';
 
 const _appVersion = '1.0.0';
 
-class SettingsScreen extends ConsumerWidget {
+class SettingsScreen extends ConsumerStatefulWidget {
   const SettingsScreen({super.key});
+
+  @override
+  ConsumerState<SettingsScreen> createState() => _SettingsScreenState();
+}
+
+class _SettingsScreenState extends ConsumerState<SettingsScreen> {
+  final _geminiKeyController = TextEditingController();
+  final _usdaKeyController = TextEditingController();
+  bool _apiKeysSynced = false;
+
+  @override
+  void dispose() {
+    _geminiKeyController.dispose();
+    _usdaKeyController.dispose();
+    super.dispose();
+  }
 
   Future<void> _exportBackup(BuildContext context, WidgetRef ref) async {
     final messenger = ScaffoldMessenger.of(context);
@@ -82,11 +99,22 @@ class SettingsScreen extends ConsumerWidget {
   }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final c = context.colors;
     final themeMode = ref.watch(themeModeProvider);
     final locale = ref.watch(localeProvider);
+    final apiKeys = ref.watch(apiKeysProvider);
     final l10n = AppLocalizations.of(context)!;
+
+    // apiKeysProvider loads from SharedPreferences asynchronously after the
+    // first build — sync the controllers once real values arrive instead of
+    // relying on TextFormField's initialValue, which only applies once.
+    if (!_apiKeysSynced &&
+        (apiKeys.geminiApiKey.isNotEmpty || apiKeys.usdaApiKey.isNotEmpty)) {
+      _geminiKeyController.text = apiKeys.geminiApiKey;
+      _usdaKeyController.text = apiKeys.usdaApiKey;
+      _apiKeysSynced = true;
+    }
 
     return Scaffold(
       appBar: AppBar(title: Text(l10n.settingsTitle)),
@@ -153,6 +181,25 @@ class SettingsScreen extends ConsumerWidget {
               onPressed: () => _restoreBackup(context, ref),
               icon: const Icon(Icons.download_outlined),
               label: Text(l10n.restoreFromBackupButton),
+            ),
+            const SizedBox(height: AppSpacing.xxxl),
+            Text(l10n.apiKeysSectionLabel.toUpperCase(), style: Theme.of(context).textTheme.labelMedium),
+            const SizedBox(height: AppSpacing.sm),
+            Text(
+              l10n.apiKeysDescription,
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(color: c.textSecondary),
+            ),
+            const SizedBox(height: AppSpacing.lg),
+            TextFormField(
+              controller: _usdaKeyController,
+              decoration: InputDecoration(labelText: l10n.usdaApiKeyLabel),
+              onChanged: (value) => ref.read(apiKeysProvider.notifier).setUsdaApiKey(value.trim()),
+            ),
+            const SizedBox(height: AppSpacing.md),
+            TextFormField(
+              controller: _geminiKeyController,
+              decoration: InputDecoration(labelText: l10n.geminiApiKeyLabel),
+              onChanged: (value) => ref.read(apiKeysProvider.notifier).setGeminiApiKey(value.trim()),
             ),
             const SizedBox(height: AppSpacing.xxxl),
             Text(l10n.aboutLabel.toUpperCase(), style: Theme.of(context).textTheme.labelMedium),

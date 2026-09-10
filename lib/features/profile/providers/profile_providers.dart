@@ -39,6 +39,7 @@ class ProfileController {
     int? dailyProteinGoalG,
     int? dailyCarbsGoalG,
     int? dailyFatGoalG,
+    int? dailyWaterGoalMl,
   }) {
     return _db.upsertProfile(
       name: name,
@@ -53,6 +54,7 @@ class ProfileController {
       dailyProteinGoalG: dailyProteinGoalG,
       dailyCarbsGoalG: dailyCarbsGoalG,
       dailyFatGoalG: dailyFatGoalG,
+      dailyWaterGoalMl: dailyWaterGoalMl,
     );
   }
 

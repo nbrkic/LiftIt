@@ -20,6 +20,7 @@ extension ProfileQueries on AppDatabase {
     int? dailyProteinGoalG,
     int? dailyCarbsGoalG,
     int? dailyFatGoalG,
+    int? dailyWaterGoalMl,
   }) async {
     final existing = await (select(userProfiles)..limit(1)).getSingleOrNull();
     final companion = UserProfilesCompanion(
@@ -35,6 +36,7 @@ extension ProfileQueries on AppDatabase {
       dailyProteinGoalG: Value(dailyProteinGoalG),
       dailyCarbsGoalG: Value(dailyCarbsGoalG),
       dailyFatGoalG: Value(dailyFatGoalG),
+      dailyWaterGoalMl: Value(dailyWaterGoalMl),
     );
     if (existing == null) {
       await into(userProfiles).insert(companion);

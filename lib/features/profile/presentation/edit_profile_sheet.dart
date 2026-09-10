@@ -7,6 +7,11 @@ import '../../../design/widgets/lift_button.dart';
 import '../../../l10n/app_localizations.dart';
 import '../providers/profile_providers.dart';
 
+// Basic profile info only — nutrition/water goals live in their own sheet
+// (EditNutritionGoalsSheet) so the two can be edited and shown separately in
+// ProfileScreen. Nutrition/water fields aren't touched here, so they're
+// passed straight through from `existing` on submit to avoid clobbering
+// them with nulls.
 class EditProfileSheet extends ConsumerStatefulWidget {
   final UserProfile? existing;
 
@@ -21,10 +26,6 @@ class _EditProfileSheetState extends ConsumerState<EditProfileSheet> {
   late final TextEditingController _nameController;
   late final TextEditingController _heightController;
   late final TextEditingController _weeklyGoalController;
-  late final TextEditingController _calorieGoalController;
-  late final TextEditingController _proteinGoalController;
-  late final TextEditingController _carbsGoalController;
-  late final TextEditingController _fatGoalController;
   DateTime? _birthDate;
   Gender? _gender;
   ExperienceLevel? _experienceLevel;
@@ -38,10 +39,6 @@ class _EditProfileSheetState extends ConsumerState<EditProfileSheet> {
     _nameController = TextEditingController(text: p?.name ?? '');
     _heightController = TextEditingController(text: p?.heightCm?.toString() ?? '');
     _weeklyGoalController = TextEditingController(text: p?.weeklyTrainingGoal?.toString() ?? '');
-    _calorieGoalController = TextEditingController(text: p?.dailyCalorieGoal?.toString() ?? '');
-    _proteinGoalController = TextEditingController(text: p?.dailyProteinGoalG?.toString() ?? '');
-    _carbsGoalController = TextEditingController(text: p?.dailyCarbsGoalG?.toString() ?? '');
-    _fatGoalController = TextEditingController(text: p?.dailyFatGoalG?.toString() ?? '');
     _birthDate = p?.birthDate;
     _gender = p?.gender;
     _experienceLevel = p?.experienceLevel;
@@ -54,10 +51,6 @@ class _EditProfileSheetState extends ConsumerState<EditProfileSheet> {
     _nameController.dispose();
     _heightController.dispose();
     _weeklyGoalController.dispose();
-    _calorieGoalController.dispose();
-    _proteinGoalController.dispose();
-    _carbsGoalController.dispose();
-    _fatGoalController.dispose();
     super.dispose();
   }
 
@@ -74,6 +67,7 @@ class _EditProfileSheetState extends ConsumerState<EditProfileSheet> {
 
   Future<void> _submit() async {
     if (!_formKey.currentState!.validate()) return;
+    final existing = widget.existing;
     await ref.read(profileControllerProvider).saveProfile(
           name: _nameController.text.trim().isEmpty ? null : _nameController.text.trim(),
           birthDate: _birthDate,
@@ -83,10 +77,11 @@ class _EditProfileSheetState extends ConsumerState<EditProfileSheet> {
           primaryGoal: _primaryGoal,
           preferredWeightUnit: _weightUnit,
           weeklyTrainingGoal: int.tryParse(_weeklyGoalController.text),
-          dailyCalorieGoal: int.tryParse(_calorieGoalController.text),
-          dailyProteinGoalG: int.tryParse(_proteinGoalController.text),
-          dailyCarbsGoalG: int.tryParse(_carbsGoalController.text),
-          dailyFatGoalG: int.tryParse(_fatGoalController.text),
+          dailyCalorieGoal: existing?.dailyCalorieGoal,
+          dailyProteinGoalG: existing?.dailyProteinGoalG,
+          dailyCarbsGoalG: existing?.dailyCarbsGoalG,
+          dailyFatGoalG: existing?.dailyFatGoalG,
+          dailyWaterGoalMl: existing?.dailyWaterGoalMl,
         );
     if (mounted) Navigator.of(context).pop();
   }
@@ -185,43 +180,6 @@ class _EditProfileSheetState extends ConsumerState<EditProfileSheet> {
                       controller: _weeklyGoalController,
                       keyboardType: TextInputType.number,
                       decoration: InputDecoration(labelText: l10n.weeklyTrainingGoalLabel),
-                    ),
-                    const SizedBox(height: AppSpacing.xl),
-                    Text(l10n.nutritionGoalsSectionLabel.toUpperCase(),
-                        style: Theme.of(context).textTheme.labelMedium),
-                    const SizedBox(height: AppSpacing.md),
-                    TextFormField(
-                      controller: _calorieGoalController,
-                      keyboardType: TextInputType.number,
-                      decoration: InputDecoration(labelText: l10n.dailyCalorieGoalLabel),
-                    ),
-                    const SizedBox(height: AppSpacing.md),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: TextFormField(
-                            controller: _proteinGoalController,
-                            keyboardType: TextInputType.number,
-                            decoration: InputDecoration(labelText: l10n.dailyProteinGoalLabel),
-                          ),
-                        ),
-                        const SizedBox(width: AppSpacing.md),
-                        Expanded(
-                          child: TextFormField(
-                            controller: _carbsGoalController,
-                            keyboardType: TextInputType.number,
-                            decoration: InputDecoration(labelText: l10n.dailyCarbsGoalLabel),
-                          ),
-                        ),
-                        const SizedBox(width: AppSpacing.md),
-                        Expanded(
-                          child: TextFormField(
-                            controller: _fatGoalController,
-                            keyboardType: TextInputType.number,
-                            decoration: InputDecoration(labelText: l10n.dailyFatGoalLabel),
-                          ),
-                        ),
-                      ],
                     ),
                   ],
                 ),

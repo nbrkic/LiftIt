@@ -57,6 +57,14 @@ class AppDrawer extends StatelessWidget {
               },
             ),
             _DrawerItem(
+              icon: Icons.calculate_outlined,
+              label: l10n.drawerBmiCalculator,
+              onTap: () {
+                Navigator.of(context).pop();
+                context.push('/bmi-calculator');
+              },
+            ),
+            _DrawerItem(
               icon: Icons.settings_outlined,
               label: l10n.drawerSettings,
               onTap: () {

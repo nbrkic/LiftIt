@@ -18,4 +18,5 @@ class UserProfiles extends Table {
   IntColumn get dailyProteinGoalG => integer().nullable()();
   IntColumn get dailyCarbsGoalG => integer().nullable()();
   IntColumn get dailyFatGoalG => integer().nullable()();
+  IntColumn get dailyWaterGoalMl => integer().nullable()();
 }

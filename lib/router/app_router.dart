@@ -14,6 +14,13 @@ import '../features/settings/presentation/settings_screen.dart';
 import '../features/bodyweight/presentation/bodyweight_screen.dart';
 import '../features/streaks/presentation/streak_levels_screen.dart';
 import '../features/nutrition/presentation/nutrition_diary_screen.dart';
+import '../features/nutrition/presentation/food_search_screen.dart';
+import '../features/nutrition/presentation/barcode_scan_screen.dart';
+import '../features/nutrition/presentation/photo_results_screen.dart';
+import '../features/nutrition/presentation/saved_foods_screen.dart';
+import '../features/nutrition/presentation/supplements_screen.dart';
+import '../features/nutrition/services/food_search_result.dart';
+import '../features/bmi_calculator/presentation/bmi_calculator_screen.dart';
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
 
@@ -96,6 +103,21 @@ final appRouter = GoRouter(
       path: '/nutrition',
       parentNavigatorKey: _rootNavigatorKey,
       builder: (c, s) => const NutritionDiaryScreen(),
+      routes: [
+        GoRoute(path: 'search', builder: (c, s) => const FoodSearchScreen()),
+        GoRoute(path: 'scan', builder: (c, s) => const BarcodeScanScreen()),
+        GoRoute(path: 'saved', builder: (c, s) => const SavedFoodsScreen()),
+        GoRoute(path: 'supplements', builder: (c, s) => const SupplementsScreen()),
+        GoRoute(
+          path: 'photo-results',
+          builder: (c, s) => PhotoResultsScreen(items: s.extra as List<GeminiFoodItem>),
+        ),
+      ],
+    ),
+    GoRoute(
+      path: '/bmi-calculator',
+      parentNavigatorKey: _rootNavigatorKey,
+      builder: (c, s) => const BmiCalculatorScreen(),
     ),
   ],
 );

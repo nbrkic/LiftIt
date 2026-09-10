@@ -9,6 +9,9 @@ import 'tables/user_profile_table.dart';
 import 'tables/bodyweight_logs_table.dart';
 import 'tables/rest_days_table.dart';
 import 'tables/food_log_entries_table.dart';
+import 'tables/saved_foods_table.dart';
+import 'tables/water_logs_table.dart';
+import 'tables/supplements_table.dart';
 import 'seed/exercise_seed_data.dart';
 
 part 'app_database.g.dart';
@@ -25,6 +28,10 @@ part 'app_database.g.dart';
     BodyweightLogs,
     RestDays,
     FoodLogEntries,
+    SavedFoods,
+    WaterLogs,
+    Supplements,
+    SupplementLogs,
   ],
 )
 class AppDatabase extends _$AppDatabase {
@@ -32,7 +39,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase.forTesting(super.executor);
 
   @override
-  int get schemaVersion => 5;
+  int get schemaVersion => 8;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -68,6 +75,17 @@ class AppDatabase extends _$AppDatabase {
             await m.addColumn(userProfiles, userProfiles.dailyProteinGoalG);
             await m.addColumn(userProfiles, userProfiles.dailyCarbsGoalG);
             await m.addColumn(userProfiles, userProfiles.dailyFatGoalG);
+          }
+          if (from < 6) {
+            await m.createTable(savedFoods);
+          }
+          if (from < 7) {
+            await m.createTable(waterLogs);
+            await m.addColumn(userProfiles, userProfiles.dailyWaterGoalMl);
+          }
+          if (from < 8) {
+            await m.createTable(supplements);
+            await m.createTable(supplementLogs);
           }
         },
         // SQLite does not enforce FK constraints unless explicitly turned on

@@ -1,25 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../common/date_utils.dart';
+import '../../../common/number_format_utils.dart';
 import '../../../database/enums.dart';
 import '../../../design/tokens/app_colors.dart';
 import '../../../design/tokens/app_spacing.dart';
 import '../../../l10n/app_localizations.dart';
 import '../providers/profile_providers.dart';
+import 'edit_nutrition_goals_sheet.dart';
 import 'edit_profile_sheet.dart';
 
 class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({super.key});
-
-  int? _ageFrom(DateTime? birthDate) {
-    if (birthDate == null) return null;
-    final now = DateTime.now();
-    var age = now.year - birthDate.year;
-    if (now.month < birthDate.month ||
-        (now.month == birthDate.month && now.day < birthDate.day)) {
-      age--;
-    }
-    return age;
-  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -36,24 +28,14 @@ class ProfileScreen extends ConsumerWidget {
           icon: const Icon(Icons.menu),
           onPressed: () => Scaffold.of(context).openDrawer(),
         ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.edit_outlined),
-            onPressed: () => showModalBottomSheet(
-              context: context,
-              isScrollControlled: true,
-              builder: (_) => EditProfileSheet(existing: profileAsync.value),
-            ),
-          ),
-        ],
       ),
       body: profileAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (error, stack) => Center(child: Text(l10n.errorMessage('$error'))),
         data: (profile) {
-          final age = _ageFrom(profile?.birthDate);
+          final age = ageFrom(profile?.birthDate);
 
-          final rows = <String>[
+          final basicRows = <String>[
             if (age != null) l10n.ageLabel(age),
             if (profile?.gender != null) l10n.genderValueLabel(profile!.gender!.label(context)),
             if (profile?.heightCm != null) l10n.heightValueLabel('${profile!.heightCm}'),
@@ -64,6 +46,19 @@ class ProfileScreen extends ConsumerWidget {
             if (profile?.weeklyTrainingGoal != null)
               l10n.weeklyGoalValueLabel(profile!.weeklyTrainingGoal!),
             l10n.preferredUnitValueLabel(unit.label(context)),
+          ];
+
+          final nutritionRows = <String>[
+            if (profile?.dailyCalorieGoal != null)
+              l10n.dailyCalorieGoalValueLabel(profile!.dailyCalorieGoal!),
+            if (profile?.dailyProteinGoalG != null)
+              l10n.dailyProteinGoalValueLabel(profile!.dailyProteinGoalG!),
+            if (profile?.dailyCarbsGoalG != null)
+              l10n.dailyCarbsGoalValueLabel(profile!.dailyCarbsGoalG!),
+            if (profile?.dailyFatGoalG != null)
+              l10n.dailyFatGoalValueLabel(profile!.dailyFatGoalG!),
+            if (profile?.dailyWaterGoalMl != null)
+              l10n.dailyWaterGoalValueLabel(formatLiters(profile!.dailyWaterGoalMl!)),
           ];
 
           return ListView(
@@ -79,23 +74,85 @@ class ProfileScreen extends ConsumerWidget {
                     style: theme.textTheme.bodyMedium?.copyWith(color: c.textSecondary)),
               ],
               const SizedBox(height: AppSpacing.xxl),
+              _SectionHeader(
+                label: l10n.basicInfoSectionLabel,
+                onEdit: () => showModalBottomSheet(
+                  context: context,
+                  isScrollControlled: true,
+                  builder: (_) => EditProfileSheet(existing: profile),
+                ),
+              ),
               Divider(height: 1, color: c.divider),
-              ...rows.map((row) => Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: AppSpacing.md),
-                        child: Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text(row, style: theme.textTheme.bodyMedium),
-                        ),
-                      ),
-                      Divider(height: 1, color: c.divider),
-                    ],
-                  )),
+              ...basicRows.map((row) => _ProfileRow(text: row)),
+              const SizedBox(height: AppSpacing.xxl),
+              _SectionHeader(
+                label: l10n.nutritionGoalsSectionLabel,
+                onEdit: () => showModalBottomSheet(
+                  context: context,
+                  isScrollControlled: true,
+                  builder: (_) => EditNutritionGoalsSheet(existing: profile),
+                ),
+              ),
+              Divider(height: 1, color: c.divider),
+              if (nutritionRows.isEmpty)
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: AppSpacing.md),
+                  child: Text(l10n.noNutritionGoalsSet,
+                      style: theme.textTheme.bodyMedium?.copyWith(color: c.textSecondary)),
+                )
+              else
+                ...nutritionRows.map((row) => _ProfileRow(text: row)),
             ],
           );
         },
       ),
+    );
+  }
+}
+
+class _SectionHeader extends StatelessWidget {
+  final String label;
+  final VoidCallback onEdit;
+
+  const _SectionHeader({required this.label, required this.onEdit});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(label.toUpperCase(), style: Theme.of(context).textTheme.labelMedium),
+        IconButton(
+          icon: const Icon(Icons.edit_outlined, size: 20),
+          onPressed: onEdit,
+          visualDensity: VisualDensity.compact,
+          padding: EdgeInsets.zero,
+          constraints: const BoxConstraints(),
+        ),
+      ],
+    );
+  }
+}
+
+class _ProfileRow extends StatelessWidget {
+  final String text;
+
+  const _ProfileRow({required this.text});
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.colors;
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: AppSpacing.md),
+          child: Align(
+            alignment: Alignment.centerLeft,
+            child: Text(text, style: Theme.of(context).textTheme.bodyMedium),
+          ),
+        ),
+        Divider(height: 1, color: c.divider),
+      ],
     );
   }
 }
