@@ -9,7 +9,9 @@ import 'confirm_food_sheet.dart';
 // now, barcode/photo once their stages land) without ever blocking manual
 // entry, since every external source can independently fail.
 class AddFoodSheet extends StatelessWidget {
-  const AddFoodSheet({super.key});
+  final DateTime selectedDay;
+
+  const AddFoodSheet({super.key, required this.selectedDay});
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +37,7 @@ class AddFoodSheet extends StatelessWidget {
             label: l10n.nutritionScanBarcodeOption,
             onTap: () {
               Navigator.of(context).pop();
-              context.push('/nutrition/scan');
+              context.push('/nutrition/scan', extra: selectedDay);
             },
           ),
           Divider(height: 1, color: c.divider),
@@ -44,7 +46,7 @@ class AddFoodSheet extends StatelessWidget {
             label: l10n.nutritionSearchOption,
             onTap: () {
               Navigator.of(context).pop();
-              context.push('/nutrition/search');
+              context.push('/nutrition/search', extra: selectedDay);
             },
           ),
           Divider(height: 1, color: c.divider),
@@ -68,7 +70,7 @@ class AddFoodSheet extends StatelessWidget {
               showModalBottomSheet(
                 context: context,
                 isScrollControlled: true,
-                builder: (_) => const ConfirmFoodSheet(),
+                builder: (_) => ConfirmFoodSheet(day: selectedDay),
               );
             },
           ),
@@ -78,7 +80,7 @@ class AddFoodSheet extends StatelessWidget {
             label: l10n.nutritionLoadValuesOption,
             onTap: () {
               Navigator.of(context).pop();
-              context.push('/nutrition/saved');
+              context.push('/nutrition/saved', extra: selectedDay);
             },
           ),
         ],

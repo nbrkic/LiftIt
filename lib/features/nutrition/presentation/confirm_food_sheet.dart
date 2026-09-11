@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../common/date_utils.dart';
 import '../../../database/enums.dart';
 import '../../../design/tokens/app_colors.dart';
 import '../../../design/tokens/app_spacing.dart';
@@ -32,6 +33,11 @@ class ConfirmFoodSheet extends ConsumerStatefulWidget {
   final double? initialFatG;
   final FoodLogSource source;
   final String? sourceId;
+  // The diary day this entry is being logged into — not necessarily today,
+  // since the diary lets you browse to a past day and log/fix entries
+  // there. Combined with the current wall-clock time at submit so entries
+  // still order sensibly within that day.
+  final DateTime day;
 
   const ConfirmFoodSheet({
     super.key,
@@ -44,6 +50,7 @@ class ConfirmFoodSheet extends ConsumerStatefulWidget {
     this.initialFatG,
     this.source = FoodLogSource.manual,
     this.sourceId,
+    required this.day,
   });
 
   @override
@@ -222,6 +229,7 @@ class _ConfirmFoodSheetState extends ConsumerState<ConfirmFoodSheet> {
           fatG: _num(_fatController),
           source: widget.searchResult?.source ?? widget.source,
           sourceId: widget.searchResult?.sourceId ?? widget.sourceId,
+          loggedAt: combineDayWithCurrentTime(widget.day),
         );
     await _maybeSaveToMyFoods();
     if (mounted) Navigator.of(context).pop(true);

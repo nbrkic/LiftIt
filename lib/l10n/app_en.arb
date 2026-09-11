@@ -33,6 +33,7 @@
   "@repsRange": { "placeholders": { "low": { "type": "int" }, "high": { "type": "int" } } },
   "repsNotSet": "reps not set",
   "lastTimeLabel": "Last time",
+  "suggestedNextSetLabel": "Suggested",
   "newPrTag": "New PR",
   "restDismiss": "Dismiss",
   "setsLabel": "Sets",
@@ -386,5 +387,17 @@
   "@bmiGoalSetConfirmation": { "placeholders": { "preset": { "type": "String" } } },
   "aiWorkoutSummaryLabel": "Coach's Notes",
   "aiWorkoutSummaryRevealAction": "See what the coach thinks",
-  "aiWorkoutSummaryGenerating": "Thinking it over…"
+  "aiWorkoutSummaryGenerating": "Thinking it over…",
+  "nutritionTrendsTitle": "Nutrition Trends",
+  "nutritionTrendsEmpty": "No food logged yet — trends will appear here once you start tracking.",
+  "nutritionTrendsCaloriesLabel": "Average Daily Calories",
+  "nutritionTrendsMacrosLabel": "Average Daily Macros",
+  "progressPhotosTitle": "Progress Photos",
+  "progressPhotosEmpty": "No photos yet — tap + to add your first one.",
+  "progressPhotoAddTitle": "Add Photo",
+  "progressPhotoTakeAction": "Take Photo",
+  "progressPhotoChooseAction": "Choose from Gallery",
+  "deleteProgressPhotoDialogTitle": "Delete photo?",
+  "deleteProgressPhotoDialogContent": "This will permanently delete this photo.",
+  "progressPhotoAiSummaryLabel": "Coach's Notes"
 }

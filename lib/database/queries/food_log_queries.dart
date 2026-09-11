@@ -40,4 +40,10 @@ extension FoodLogQueries on AppDatabase {
 
   Future<void> deleteFoodLogEntry(int id) =>
       (delete(foodLogEntries)..where((f) => f.id.equals(id))).go();
+
+  // Full history, ascending — the weekly-bucketing for trend charts happens
+  // in Dart, same split as watchSessionVolumes/computeWeeklyVolume.
+  Stream<List<FoodLogEntry>> watchAllFoodLogEntries() {
+    return (select(foodLogEntries)..orderBy([(f) => OrderingTerm.asc(f.loggedAt)])).watch();
+  }
 }

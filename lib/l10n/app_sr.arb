@@ -27,6 +27,7 @@
   "repsRange": "{low}-{high} ponavljanja",
   "repsNotSet": "ponavljanja nisu podešena",
   "lastTimeLabel": "Prošli put",
+  "suggestedNextSetLabel": "Predlog",
   "newPrTag": "Novi rekord",
   "restDismiss": "Sakrij",
   "setsLabel": "Serije",
@@ -351,5 +352,17 @@
   "bmiGoalSetConfirmation": "Ciljevi za \"{preset}\" su podešeni.",
   "aiWorkoutSummaryLabel": "Beleške trenera",
   "aiWorkoutSummaryRevealAction": "Pogledaj šta kaže trener",
-  "aiWorkoutSummaryGenerating": "Razmišlja…"
+  "aiWorkoutSummaryGenerating": "Razmišlja…",
+  "nutritionTrendsTitle": "Trendovi ishrane",
+  "nutritionTrendsEmpty": "Još ništa nije ulogovano — trendovi će se pojaviti ovde kada počneš da pratiš ishranu.",
+  "nutritionTrendsCaloriesLabel": "Prosečne dnevne kalorije",
+  "nutritionTrendsMacrosLabel": "Prosečni dnevni makronutrijenti",
+  "progressPhotosTitle": "Progres fotografije",
+  "progressPhotosEmpty": "Još nema fotografija — dodirni + da dodaš prvu.",
+  "progressPhotoAddTitle": "Dodaj fotografiju",
+  "progressPhotoTakeAction": "Slikaj",
+  "progressPhotoChooseAction": "Izaberi iz galerije",
+  "deleteProgressPhotoDialogTitle": "Obrisati fotografiju?",
+  "deleteProgressPhotoDialogContent": "Ovo će trajno obrisati ovu fotografiju.",
+  "progressPhotoAiSummaryLabel": "Beleške trenera"
 }

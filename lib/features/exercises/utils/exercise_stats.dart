@@ -61,6 +61,63 @@ List<WorkoutSet> previousSessionSets(List<WorkoutSet> allSets, int excludingSess
   return prior.where((s) => s.workoutSessionId == lastSessionId).toList();
 }
 
+class NextSetSuggestion {
+  final double weight; // kg
+  final int reps;
+  final double previousWeight; // kg — last session's top set, for context
+  final int previousReps;
+
+  const NextSetSuggestion({
+    required this.weight,
+    required this.reps,
+    required this.previousWeight,
+    required this.previousReps,
+  });
+}
+
+// A standard double-progression heuristic, the same one most strength
+// programs and lifting apps use: once the last session's top set reached a
+// rep ceiling, nudge the weight up and drop reps back down to make the
+// heavier weight achievable; otherwise just ask for one more rep at the
+// same weight. Deliberately local/deterministic rather than an AI call —
+// this is well-established arithmetic, not judgment, and it needs to be
+// instant every time a set is logged, not a network round-trip.
+// `allSets` must already be ordered ascending by completedAt, same
+// precondition as previousSessionSets.
+NextSetSuggestion? suggestNextSet(
+  List<WorkoutSet> allSets,
+  int excludingSessionId, {
+  double weightIncrementKg = 2.5,
+  int repCeiling = 12,
+}) {
+  final lastSession = previousSessionSets(allSets, excludingSessionId);
+  if (lastSession.isEmpty) return null;
+
+  var topSet = lastSession.first;
+  for (final set in lastSession.skip(1)) {
+    if (set.weight > topSet.weight || (set.weight == topSet.weight && set.reps > topSet.reps)) {
+      topSet = set;
+    }
+  }
+
+  final double weight;
+  final int reps;
+  if (topSet.reps >= repCeiling) {
+    weight = topSet.weight + weightIncrementKg;
+    reps = topSet.reps - 2;
+  } else {
+    weight = topSet.weight;
+    reps = topSet.reps + 1;
+  }
+
+  return NextSetSuggestion(
+    weight: weight,
+    reps: reps,
+    previousWeight: topSet.weight,
+    previousReps: topSet.reps,
+  );
+}
+
 // One "top set" per training session — the heaviest non-warm-up set logged
 // for this exercise that session (in most training styles that's simply the
 // first working set). Tracks real logged weight/reps progress over time,

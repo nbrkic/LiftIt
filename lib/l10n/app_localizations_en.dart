@@ -97,6 +97,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get lastTimeLabel => 'Last time';
 
   @override
+  String get suggestedNextSetLabel => 'Suggested';
+
+  @override
   String get newPrTag => 'New PR';
 
   @override
@@ -1080,4 +1083,43 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get aiWorkoutSummaryGenerating => 'Thinking it over…';
+
+  @override
+  String get nutritionTrendsTitle => 'Nutrition Trends';
+
+  @override
+  String get nutritionTrendsEmpty =>
+      'No food logged yet — trends will appear here once you start tracking.';
+
+  @override
+  String get nutritionTrendsCaloriesLabel => 'Average Daily Calories';
+
+  @override
+  String get nutritionTrendsMacrosLabel => 'Average Daily Macros';
+
+  @override
+  String get progressPhotosTitle => 'Progress Photos';
+
+  @override
+  String get progressPhotosEmpty =>
+      'No photos yet — tap + to add your first one.';
+
+  @override
+  String get progressPhotoAddTitle => 'Add Photo';
+
+  @override
+  String get progressPhotoTakeAction => 'Take Photo';
+
+  @override
+  String get progressPhotoChooseAction => 'Choose from Gallery';
+
+  @override
+  String get deleteProgressPhotoDialogTitle => 'Delete photo?';
+
+  @override
+  String get deleteProgressPhotoDialogContent =>
+      'This will permanently delete this photo.';
+
+  @override
+  String get progressPhotoAiSummaryLabel => 'Coach\'s Notes';
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../common/weight_format.dart';
 import '../../../database/app_database.dart';
+import '../../../database/enums.dart';
 import '../../../design/tokens/app_colors.dart';
 import '../../../design/tokens/app_spacing.dart';
 import '../../../design/tokens/app_typography.dart';
@@ -65,6 +66,15 @@ class _LogSetSheetState extends ConsumerState<LogSetSheet> {
     if (mounted) Navigator.of(context).pop(id);
   }
 
+  void _applySuggestion(NextSetSuggestion suggestion, WeightUnit unit) {
+    final displayVal = displayWeight(suggestion.weight, unit);
+    setState(() {
+      _weightController.text =
+          displayVal % 1 == 0 ? displayVal.toInt().toString() : displayVal.toStringAsFixed(1);
+      _repsController.text = '${suggestion.reps}';
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final c = context.colors;
@@ -76,6 +86,13 @@ class _LogSetSheetState extends ConsumerState<LogSetSheet> {
     final previous = historyAsync.value != null
         ? previousSessionSets(historyAsync.value!, widget.sessionId)
         : const <WorkoutSet>[];
+    final suggestion = historyAsync.value != null
+        ? suggestNextSet(
+            historyAsync.value!,
+            widget.sessionId,
+            weightIncrementKg: unit == WeightUnit.kg ? 2.5 : lbToKg(5),
+          )
+        : null;
 
     return Padding(
       padding: EdgeInsets.only(
@@ -100,6 +117,24 @@ class _LogSetSheetState extends ConsumerState<LogSetSheet> {
               Text(
                 '${l10n.lastTimeLabel}: ${previous.map((s) => '${formatWeight(s.weight, unit)}×${s.reps}').join(', ')}',
                 style: theme.textTheme.bodySmall?.copyWith(color: c.violetLight),
+              ),
+            ],
+            if (suggestion != null) ...[
+              const SizedBox(height: AppSpacing.xs),
+              InkWell(
+                onTap: () => _applySuggestion(suggestion, unit),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(Icons.bolt, size: 14, color: c.violet),
+                    const SizedBox(width: AppSpacing.xs),
+                    Text(
+                      '${l10n.suggestedNextSetLabel}: ${formatWeight(suggestion.weight, unit)}×${suggestion.reps}',
+                      style: theme.textTheme.bodySmall
+                          ?.copyWith(color: c.violet, fontWeight: FontWeight.w700),
+                    ),
+                  ],
+                ),
               ),
             ],
             const SizedBox(height: AppSpacing.xl),

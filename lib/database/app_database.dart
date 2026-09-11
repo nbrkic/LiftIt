@@ -12,6 +12,7 @@ import 'tables/food_log_entries_table.dart';
 import 'tables/saved_foods_table.dart';
 import 'tables/water_logs_table.dart';
 import 'tables/supplements_table.dart';
+import 'tables/progress_photos_table.dart';
 import 'seed/exercise_seed_data.dart';
 
 part 'app_database.g.dart';
@@ -32,6 +33,7 @@ part 'app_database.g.dart';
     WaterLogs,
     Supplements,
     SupplementLogs,
+    ProgressPhotos,
   ],
 )
 class AppDatabase extends _$AppDatabase {
@@ -39,7 +41,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase.forTesting(super.executor);
 
   @override
-  int get schemaVersion => 9;
+  int get schemaVersion => 11;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -89,6 +91,12 @@ class AppDatabase extends _$AppDatabase {
           }
           if (from < 9) {
             await m.addColumn(workoutSessions, workoutSessions.aiSummary);
+          }
+          if (from < 10) {
+            await m.createTable(progressPhotos);
+          }
+          if (from < 11) {
+            await m.addColumn(progressPhotos, progressPhotos.aiSummary);
           }
         },
         // SQLite does not enforce FK constraints unless explicitly turned on

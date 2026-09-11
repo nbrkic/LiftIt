@@ -81,15 +81,29 @@ class GeminiService {
   // Plain free-text generation (no JSON schema) — used for prose like the
   // workout summary, where the output is meant to be read directly, not
   // parsed.
-  Future<String> generateText(String prompt, String apiKey) async {
+  Future<String> generateText(String prompt, String apiKey) {
+    return _generateText(apiKey, parts: [
+      {'text': prompt},
+    ]);
+  }
+
+  // Same as generateText, but with one or more images attached alongside
+  // the prompt — e.g. comparing two progress photos in a single request.
+  Future<String> generateTextWithImages(String prompt, List<Uint8List> images, String apiKey) {
+    return _generateText(apiKey, parts: [
+      {'text': prompt},
+      for (final image in images)
+        {
+          'inline_data': {'mime_type': 'image/jpeg', 'data': base64Encode(image)},
+        },
+    ]);
+  }
+
+  Future<String> _generateText(String apiKey, {required List<Map<String, Object>> parts}) async {
     final uri = Uri.parse(_base).replace(queryParameters: {'key': apiKey});
     final requestBody = jsonEncode({
       'contents': [
-        {
-          'parts': [
-            {'text': prompt},
-          ],
-        },
+        {'parts': parts},
       ],
     });
 

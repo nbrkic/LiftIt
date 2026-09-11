@@ -1,6 +1,7 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import '../../../common/weight_format.dart';
 import '../../../database/app_database.dart';
 import '../../../database/enums.dart';
@@ -26,7 +27,16 @@ class BodyweightScreen extends ConsumerWidget {
     final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
-      appBar: AppBar(title: Text(l10n.bodyweightTitle)),
+      appBar: AppBar(
+        title: Text(l10n.bodyweightTitle),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.photo_library_outlined),
+            tooltip: l10n.progressPhotosTitle,
+            onPressed: () => context.push('/progress-photos'),
+          ),
+        ],
+      ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => showModalBottomSheet(
           context: context,

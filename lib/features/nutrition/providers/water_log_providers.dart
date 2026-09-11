@@ -17,7 +17,8 @@ class WaterLogController {
   final AppDatabase _db;
   WaterLogController(this._db);
 
-  Future<int> addWater(int amountMl) => _db.insertWaterLog(amountMl);
+  Future<int> addWater(int amountMl, {DateTime? loggedAt}) =>
+      _db.insertWaterLog(amountMl, loggedAt: loggedAt);
 
   Future<void> deleteEntry(int id) => _db.deleteWaterLog(id);
 }

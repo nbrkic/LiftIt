@@ -11,7 +11,9 @@ import '../services/food_search_result.dart';
 import 'confirm_food_sheet.dart';
 
 class SavedFoodsScreen extends ConsumerWidget {
-  const SavedFoodsScreen({super.key});
+  final DateTime day;
+
+  const SavedFoodsScreen({super.key, required this.day});
 
   Future<bool> _confirmDelete(BuildContext context) async {
     final l10n = AppLocalizations.of(context)!;
@@ -50,6 +52,7 @@ class SavedFoodsScreen extends ConsumerWidget {
                 fatPer100g: food.fatG,
                 source: FoodLogSource.manual,
               ),
+              day: day,
             )
           : ConfirmFoodSheet(
               initialName: food.name,
@@ -58,6 +61,7 @@ class SavedFoodsScreen extends ConsumerWidget {
               initialProteinG: food.proteinG,
               initialCarbsG: food.carbsG,
               initialFatG: food.fatG,
+              day: day,
             ),
     );
     if (logged == true && context.mounted) Navigator.of(context).pop();

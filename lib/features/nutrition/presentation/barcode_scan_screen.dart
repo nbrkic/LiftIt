@@ -9,7 +9,9 @@ import '../services/open_food_facts_service.dart';
 import 'confirm_food_sheet.dart';
 
 class BarcodeScanScreen extends StatefulWidget {
-  const BarcodeScanScreen({super.key});
+  final DateTime day;
+
+  const BarcodeScanScreen({super.key, required this.day});
 
   @override
   State<BarcodeScanScreen> createState() => _BarcodeScanScreenState();
@@ -73,7 +75,7 @@ class _BarcodeScanScreenState extends State<BarcodeScanScreen> {
     return showModalBottomSheet<bool>(
       context: context,
       isScrollControlled: true,
-      builder: (_) => ConfirmFoodSheet(searchResult: result),
+      builder: (_) => ConfirmFoodSheet(searchResult: result, day: widget.day),
     );
   }
 
@@ -81,7 +83,7 @@ class _BarcodeScanScreenState extends State<BarcodeScanScreen> {
     final logged = await showModalBottomSheet<bool>(
       context: context,
       isScrollControlled: true,
-      builder: (_) => const ConfirmFoodSheet(),
+      builder: (_) => ConfirmFoodSheet(day: widget.day),
     );
     if (logged == true && mounted) Navigator.of(context).pop();
   }

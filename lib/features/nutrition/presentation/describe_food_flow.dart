@@ -13,6 +13,7 @@ import '../services/gemini_service.dart';
 Future<void> showDescribeFoodFlow(
   BuildContext context,
   WidgetRef ref, {
+  required DateTime day,
   String? initialDescription,
 }) async {
   final l10n = AppLocalizations.of(context)!;
@@ -72,7 +73,7 @@ Future<void> showDescribeFoodFlow(
           .showSnackBar(SnackBar(content: Text(l10n.nutritionNoItemsRecognized)));
       return;
     }
-    context.push('/nutrition/photo-results', extra: items);
+    context.push('/nutrition/photo-results', extra: (items: items, day: day));
   } catch (e) {
     if (!context.mounted) return;
     Navigator.of(context).pop(); // dismiss the processing dialog

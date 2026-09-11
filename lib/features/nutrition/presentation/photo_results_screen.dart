@@ -12,8 +12,9 @@ import 'confirm_food_sheet.dart';
 // before logging (bulk "log all" is left for later polish).
 class PhotoResultsScreen extends StatelessWidget {
   final List<GeminiFoodItem> items;
+  final DateTime day;
 
-  const PhotoResultsScreen({super.key, required this.items});
+  const PhotoResultsScreen({super.key, required this.items, required this.day});
 
   Future<void> _confirm(BuildContext context, GeminiFoodItem item) async {
     final logged = await showModalBottomSheet<bool>(
@@ -27,6 +28,7 @@ class PhotoResultsScreen extends StatelessWidget {
         initialCarbsG: item.carbsG,
         initialFatG: item.fatG,
         source: FoodLogSource.gemini,
+        day: day,
       ),
     );
     if (logged == true && context.mounted) Navigator.of(context).pop();

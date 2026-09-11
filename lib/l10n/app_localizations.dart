@@ -248,6 +248,12 @@ abstract class AppLocalizations {
   /// **'Last time'**
   String get lastTimeLabel;
 
+  /// No description provided for @suggestedNextSetLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Suggested'**
+  String get suggestedNextSetLabel;
+
   /// No description provided for @newPrTag.
   ///
   /// In en, this message translates to:
@@ -2053,6 +2059,78 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Thinking it over…'**
   String get aiWorkoutSummaryGenerating;
+
+  /// No description provided for @nutritionTrendsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Nutrition Trends'**
+  String get nutritionTrendsTitle;
+
+  /// No description provided for @nutritionTrendsEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No food logged yet — trends will appear here once you start tracking.'**
+  String get nutritionTrendsEmpty;
+
+  /// No description provided for @nutritionTrendsCaloriesLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Average Daily Calories'**
+  String get nutritionTrendsCaloriesLabel;
+
+  /// No description provided for @nutritionTrendsMacrosLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Average Daily Macros'**
+  String get nutritionTrendsMacrosLabel;
+
+  /// No description provided for @progressPhotosTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Progress Photos'**
+  String get progressPhotosTitle;
+
+  /// No description provided for @progressPhotosEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No photos yet — tap + to add your first one.'**
+  String get progressPhotosEmpty;
+
+  /// No description provided for @progressPhotoAddTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Photo'**
+  String get progressPhotoAddTitle;
+
+  /// No description provided for @progressPhotoTakeAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Take Photo'**
+  String get progressPhotoTakeAction;
+
+  /// No description provided for @progressPhotoChooseAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose from Gallery'**
+  String get progressPhotoChooseAction;
+
+  /// No description provided for @deleteProgressPhotoDialogTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete photo?'**
+  String get deleteProgressPhotoDialogTitle;
+
+  /// No description provided for @deleteProgressPhotoDialogContent.
+  ///
+  /// In en, this message translates to:
+  /// **'This will permanently delete this photo.'**
+  String get deleteProgressPhotoDialogContent;
+
+  /// No description provided for @progressPhotoAiSummaryLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Coach\'s Notes'**
+  String get progressPhotoAiSummaryLabel;
 }
 
 class _AppLocalizationsDelegate

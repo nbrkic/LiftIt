@@ -11,7 +11,9 @@ import 'confirm_food_sheet.dart';
 import 'describe_food_flow.dart';
 
 class FoodSearchScreen extends ConsumerStatefulWidget {
-  const FoodSearchScreen({super.key});
+  final DateTime day;
+
+  const FoodSearchScreen({super.key, required this.day});
 
   @override
   ConsumerState<FoodSearchScreen> createState() => _FoodSearchScreenState();
@@ -38,13 +40,13 @@ class _FoodSearchScreenState extends ConsumerState<FoodSearchScreen> {
     final logged = await showModalBottomSheet<bool>(
       context: context,
       isScrollControlled: true,
-      builder: (_) => ConfirmFoodSheet(searchResult: result),
+      builder: (_) => ConfirmFoodSheet(searchResult: result, day: widget.day),
     );
     if (logged == true && mounted) Navigator.of(context).pop();
   }
 
   Future<void> _tryAiEstimate() async {
-    await showDescribeFoodFlow(context, ref, initialDescription: _submittedQuery);
+    await showDescribeFoodFlow(context, ref, initialDescription: _submittedQuery, day: widget.day);
   }
 
   @override

@@ -5919,6 +5919,366 @@ class SupplementLogsCompanion extends UpdateCompanion<SupplementLog> {
   }
 }
 
+class $ProgressPhotosTable extends ProgressPhotos
+    with TableInfo<$ProgressPhotosTable, ProgressPhoto> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $ProgressPhotosTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _imageBytesMeta = const VerificationMeta(
+    'imageBytes',
+  );
+  @override
+  late final GeneratedColumn<Uint8List> imageBytes = GeneratedColumn<Uint8List>(
+    'image_bytes',
+    aliasedName,
+    false,
+    type: DriftSqlType.blob,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _takenAtMeta = const VerificationMeta(
+    'takenAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> takenAt = GeneratedColumn<DateTime>(
+    'taken_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _notesMeta = const VerificationMeta('notes');
+  @override
+  late final GeneratedColumn<String> notes = GeneratedColumn<String>(
+    'notes',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _aiSummaryMeta = const VerificationMeta(
+    'aiSummary',
+  );
+  @override
+  late final GeneratedColumn<String> aiSummary = GeneratedColumn<String>(
+    'ai_summary',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    imageBytes,
+    takenAt,
+    notes,
+    aiSummary,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'progress_photos';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<ProgressPhoto> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('image_bytes')) {
+      context.handle(
+        _imageBytesMeta,
+        imageBytes.isAcceptableOrUnknown(data['image_bytes']!, _imageBytesMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_imageBytesMeta);
+    }
+    if (data.containsKey('taken_at')) {
+      context.handle(
+        _takenAtMeta,
+        takenAt.isAcceptableOrUnknown(data['taken_at']!, _takenAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_takenAtMeta);
+    }
+    if (data.containsKey('notes')) {
+      context.handle(
+        _notesMeta,
+        notes.isAcceptableOrUnknown(data['notes']!, _notesMeta),
+      );
+    }
+    if (data.containsKey('ai_summary')) {
+      context.handle(
+        _aiSummaryMeta,
+        aiSummary.isAcceptableOrUnknown(data['ai_summary']!, _aiSummaryMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  ProgressPhoto map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return ProgressPhoto(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      imageBytes: attachedDatabase.typeMapping.read(
+        DriftSqlType.blob,
+        data['${effectivePrefix}image_bytes'],
+      )!,
+      takenAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}taken_at'],
+      )!,
+      notes: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}notes'],
+      ),
+      aiSummary: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}ai_summary'],
+      ),
+    );
+  }
+
+  @override
+  $ProgressPhotosTable createAlias(String alias) {
+    return $ProgressPhotosTable(attachedDatabase, alias);
+  }
+}
+
+class ProgressPhoto extends DataClass implements Insertable<ProgressPhoto> {
+  final int id;
+  final Uint8List imageBytes;
+  final DateTime takenAt;
+  final String? notes;
+  final String? aiSummary;
+  const ProgressPhoto({
+    required this.id,
+    required this.imageBytes,
+    required this.takenAt,
+    this.notes,
+    this.aiSummary,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['image_bytes'] = Variable<Uint8List>(imageBytes);
+    map['taken_at'] = Variable<DateTime>(takenAt);
+    if (!nullToAbsent || notes != null) {
+      map['notes'] = Variable<String>(notes);
+    }
+    if (!nullToAbsent || aiSummary != null) {
+      map['ai_summary'] = Variable<String>(aiSummary);
+    }
+    return map;
+  }
+
+  ProgressPhotosCompanion toCompanion(bool nullToAbsent) {
+    return ProgressPhotosCompanion(
+      id: Value(id),
+      imageBytes: Value(imageBytes),
+      takenAt: Value(takenAt),
+      notes: notes == null && nullToAbsent
+          ? const Value.absent()
+          : Value(notes),
+      aiSummary: aiSummary == null && nullToAbsent
+          ? const Value.absent()
+          : Value(aiSummary),
+    );
+  }
+
+  factory ProgressPhoto.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return ProgressPhoto(
+      id: serializer.fromJson<int>(json['id']),
+      imageBytes: serializer.fromJson<Uint8List>(json['imageBytes']),
+      takenAt: serializer.fromJson<DateTime>(json['takenAt']),
+      notes: serializer.fromJson<String?>(json['notes']),
+      aiSummary: serializer.fromJson<String?>(json['aiSummary']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'imageBytes': serializer.toJson<Uint8List>(imageBytes),
+      'takenAt': serializer.toJson<DateTime>(takenAt),
+      'notes': serializer.toJson<String?>(notes),
+      'aiSummary': serializer.toJson<String?>(aiSummary),
+    };
+  }
+
+  ProgressPhoto copyWith({
+    int? id,
+    Uint8List? imageBytes,
+    DateTime? takenAt,
+    Value<String?> notes = const Value.absent(),
+    Value<String?> aiSummary = const Value.absent(),
+  }) => ProgressPhoto(
+    id: id ?? this.id,
+    imageBytes: imageBytes ?? this.imageBytes,
+    takenAt: takenAt ?? this.takenAt,
+    notes: notes.present ? notes.value : this.notes,
+    aiSummary: aiSummary.present ? aiSummary.value : this.aiSummary,
+  );
+  ProgressPhoto copyWithCompanion(ProgressPhotosCompanion data) {
+    return ProgressPhoto(
+      id: data.id.present ? data.id.value : this.id,
+      imageBytes: data.imageBytes.present
+          ? data.imageBytes.value
+          : this.imageBytes,
+      takenAt: data.takenAt.present ? data.takenAt.value : this.takenAt,
+      notes: data.notes.present ? data.notes.value : this.notes,
+      aiSummary: data.aiSummary.present ? data.aiSummary.value : this.aiSummary,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ProgressPhoto(')
+          ..write('id: $id, ')
+          ..write('imageBytes: $imageBytes, ')
+          ..write('takenAt: $takenAt, ')
+          ..write('notes: $notes, ')
+          ..write('aiSummary: $aiSummary')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    $driftBlobEquality.hash(imageBytes),
+    takenAt,
+    notes,
+    aiSummary,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is ProgressPhoto &&
+          other.id == this.id &&
+          $driftBlobEquality.equals(other.imageBytes, this.imageBytes) &&
+          other.takenAt == this.takenAt &&
+          other.notes == this.notes &&
+          other.aiSummary == this.aiSummary);
+}
+
+class ProgressPhotosCompanion extends UpdateCompanion<ProgressPhoto> {
+  final Value<int> id;
+  final Value<Uint8List> imageBytes;
+  final Value<DateTime> takenAt;
+  final Value<String?> notes;
+  final Value<String?> aiSummary;
+  const ProgressPhotosCompanion({
+    this.id = const Value.absent(),
+    this.imageBytes = const Value.absent(),
+    this.takenAt = const Value.absent(),
+    this.notes = const Value.absent(),
+    this.aiSummary = const Value.absent(),
+  });
+  ProgressPhotosCompanion.insert({
+    this.id = const Value.absent(),
+    required Uint8List imageBytes,
+    required DateTime takenAt,
+    this.notes = const Value.absent(),
+    this.aiSummary = const Value.absent(),
+  }) : imageBytes = Value(imageBytes),
+       takenAt = Value(takenAt);
+  static Insertable<ProgressPhoto> custom({
+    Expression<int>? id,
+    Expression<Uint8List>? imageBytes,
+    Expression<DateTime>? takenAt,
+    Expression<String>? notes,
+    Expression<String>? aiSummary,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (imageBytes != null) 'image_bytes': imageBytes,
+      if (takenAt != null) 'taken_at': takenAt,
+      if (notes != null) 'notes': notes,
+      if (aiSummary != null) 'ai_summary': aiSummary,
+    });
+  }
+
+  ProgressPhotosCompanion copyWith({
+    Value<int>? id,
+    Value<Uint8List>? imageBytes,
+    Value<DateTime>? takenAt,
+    Value<String?>? notes,
+    Value<String?>? aiSummary,
+  }) {
+    return ProgressPhotosCompanion(
+      id: id ?? this.id,
+      imageBytes: imageBytes ?? this.imageBytes,
+      takenAt: takenAt ?? this.takenAt,
+      notes: notes ?? this.notes,
+      aiSummary: aiSummary ?? this.aiSummary,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (imageBytes.present) {
+      map['image_bytes'] = Variable<Uint8List>(imageBytes.value);
+    }
+    if (takenAt.present) {
+      map['taken_at'] = Variable<DateTime>(takenAt.value);
+    }
+    if (notes.present) {
+      map['notes'] = Variable<String>(notes.value);
+    }
+    if (aiSummary.present) {
+      map['ai_summary'] = Variable<String>(aiSummary.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ProgressPhotosCompanion(')
+          ..write('id: $id, ')
+          ..write('imageBytes: $imageBytes, ')
+          ..write('takenAt: $takenAt, ')
+          ..write('notes: $notes, ')
+          ..write('aiSummary: $aiSummary')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
@@ -5939,6 +6299,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $WaterLogsTable waterLogs = $WaterLogsTable(this);
   late final $SupplementsTable supplements = $SupplementsTable(this);
   late final $SupplementLogsTable supplementLogs = $SupplementLogsTable(this);
+  late final $ProgressPhotosTable progressPhotos = $ProgressPhotosTable(this);
   late final Index exerciseNameIdx = Index(
     'exercise_name_idx',
     'CREATE INDEX exercise_name_idx ON exercises (name)',
@@ -5998,6 +6359,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     waterLogs,
     supplements,
     supplementLogs,
+    progressPhotos,
     exerciseNameIdx,
     workoutSetSessionIdx,
     workoutSetExerciseCompletedIdx,
@@ -10621,6 +10983,213 @@ typedef $$SupplementLogsTableProcessedTableManager =
       SupplementLog,
       PrefetchHooks Function({bool supplementId})
     >;
+typedef $$ProgressPhotosTableCreateCompanionBuilder =
+    ProgressPhotosCompanion Function({
+      Value<int> id,
+      required Uint8List imageBytes,
+      required DateTime takenAt,
+      Value<String?> notes,
+      Value<String?> aiSummary,
+    });
+typedef $$ProgressPhotosTableUpdateCompanionBuilder =
+    ProgressPhotosCompanion Function({
+      Value<int> id,
+      Value<Uint8List> imageBytes,
+      Value<DateTime> takenAt,
+      Value<String?> notes,
+      Value<String?> aiSummary,
+    });
+
+class $$ProgressPhotosTableFilterComposer
+    extends Composer<_$AppDatabase, $ProgressPhotosTable> {
+  $$ProgressPhotosTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<Uint8List> get imageBytes => $composableBuilder(
+    column: $table.imageBytes,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get takenAt => $composableBuilder(
+    column: $table.takenAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get notes => $composableBuilder(
+    column: $table.notes,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get aiSummary => $composableBuilder(
+    column: $table.aiSummary,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$ProgressPhotosTableOrderingComposer
+    extends Composer<_$AppDatabase, $ProgressPhotosTable> {
+  $$ProgressPhotosTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<Uint8List> get imageBytes => $composableBuilder(
+    column: $table.imageBytes,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get takenAt => $composableBuilder(
+    column: $table.takenAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get notes => $composableBuilder(
+    column: $table.notes,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get aiSummary => $composableBuilder(
+    column: $table.aiSummary,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$ProgressPhotosTableAnnotationComposer
+    extends Composer<_$AppDatabase, $ProgressPhotosTable> {
+  $$ProgressPhotosTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<Uint8List> get imageBytes => $composableBuilder(
+    column: $table.imageBytes,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get takenAt =>
+      $composableBuilder(column: $table.takenAt, builder: (column) => column);
+
+  GeneratedColumn<String> get notes =>
+      $composableBuilder(column: $table.notes, builder: (column) => column);
+
+  GeneratedColumn<String> get aiSummary =>
+      $composableBuilder(column: $table.aiSummary, builder: (column) => column);
+}
+
+class $$ProgressPhotosTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $ProgressPhotosTable,
+          ProgressPhoto,
+          $$ProgressPhotosTableFilterComposer,
+          $$ProgressPhotosTableOrderingComposer,
+          $$ProgressPhotosTableAnnotationComposer,
+          $$ProgressPhotosTableCreateCompanionBuilder,
+          $$ProgressPhotosTableUpdateCompanionBuilder,
+          (
+            ProgressPhoto,
+            BaseReferences<_$AppDatabase, $ProgressPhotosTable, ProgressPhoto>,
+          ),
+          ProgressPhoto,
+          PrefetchHooks Function()
+        > {
+  $$ProgressPhotosTableTableManager(
+    _$AppDatabase db,
+    $ProgressPhotosTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$ProgressPhotosTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$ProgressPhotosTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$ProgressPhotosTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<Uint8List> imageBytes = const Value.absent(),
+                Value<DateTime> takenAt = const Value.absent(),
+                Value<String?> notes = const Value.absent(),
+                Value<String?> aiSummary = const Value.absent(),
+              }) => ProgressPhotosCompanion(
+                id: id,
+                imageBytes: imageBytes,
+                takenAt: takenAt,
+                notes: notes,
+                aiSummary: aiSummary,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                required Uint8List imageBytes,
+                required DateTime takenAt,
+                Value<String?> notes = const Value.absent(),
+                Value<String?> aiSummary = const Value.absent(),
+              }) => ProgressPhotosCompanion.insert(
+                id: id,
+                imageBytes: imageBytes,
+                takenAt: takenAt,
+                notes: notes,
+                aiSummary: aiSummary,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<$ProgressPhotosTable, ProgressPhoto>(table),
+                  BaseReferences<
+                    _$AppDatabase,
+                    $ProgressPhotosTable,
+                    ProgressPhoto
+                  >(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$ProgressPhotosTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $ProgressPhotosTable,
+      ProgressPhoto,
+      $$ProgressPhotosTableFilterComposer,
+      $$ProgressPhotosTableOrderingComposer,
+      $$ProgressPhotosTableAnnotationComposer,
+      $$ProgressPhotosTableCreateCompanionBuilder,
+      $$ProgressPhotosTableUpdateCompanionBuilder,
+      (
+        ProgressPhoto,
+        BaseReferences<_$AppDatabase, $ProgressPhotosTable, ProgressPhoto>,
+      ),
+      ProgressPhoto,
+      PrefetchHooks Function()
+    >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -10653,4 +11222,6 @@ class $AppDatabaseManager {
       $$SupplementsTableTableManager(_db, _db.supplements);
   $$SupplementLogsTableTableManager get supplementLogs =>
       $$SupplementLogsTableTableManager(_db, _db.supplementLogs);
+  $$ProgressPhotosTableTableManager get progressPhotos =>
+      $$ProgressPhotosTableTableManager(_db, _db.progressPhotos);
 }

@@ -97,6 +97,9 @@ class AppLocalizationsSr extends AppLocalizations {
   String get lastTimeLabel => 'Prošli put';
 
   @override
+  String get suggestedNextSetLabel => 'Predlog';
+
+  @override
   String get newPrTag => 'Novi rekord';
 
   @override
@@ -1087,4 +1090,43 @@ class AppLocalizationsSr extends AppLocalizations {
 
   @override
   String get aiWorkoutSummaryGenerating => 'Razmišlja…';
+
+  @override
+  String get nutritionTrendsTitle => 'Trendovi ishrane';
+
+  @override
+  String get nutritionTrendsEmpty =>
+      'Još ništa nije ulogovano — trendovi će se pojaviti ovde kada počneš da pratiš ishranu.';
+
+  @override
+  String get nutritionTrendsCaloriesLabel => 'Prosečne dnevne kalorije';
+
+  @override
+  String get nutritionTrendsMacrosLabel => 'Prosečni dnevni makronutrijenti';
+
+  @override
+  String get progressPhotosTitle => 'Progres fotografije';
+
+  @override
+  String get progressPhotosEmpty =>
+      'Još nema fotografija — dodirni + da dodaš prvu.';
+
+  @override
+  String get progressPhotoAddTitle => 'Dodaj fotografiju';
+
+  @override
+  String get progressPhotoTakeAction => 'Slikaj';
+
+  @override
+  String get progressPhotoChooseAction => 'Izaberi iz galerije';
+
+  @override
+  String get deleteProgressPhotoDialogTitle => 'Obrisati fotografiju?';
+
+  @override
+  String get deleteProgressPhotoDialogContent =>
+      'Ovo će trajno obrisati ovu fotografiju.';
+
+  @override
+  String get progressPhotoAiSummaryLabel => 'Beleške trenera';
 }

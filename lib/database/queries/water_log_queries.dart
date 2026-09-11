@@ -11,10 +11,10 @@ extension WaterLogQueries on AppDatabase {
         .watch();
   }
 
-  Future<int> insertWaterLog(int amountMl) {
+  Future<int> insertWaterLog(int amountMl, {DateTime? loggedAt}) {
     return into(waterLogs).insert(WaterLogsCompanion.insert(
       amountMl: amountMl,
-      loggedAt: DateTime.now(),
+      loggedAt: loggedAt ?? DateTime.now(),
     ));
   }
 

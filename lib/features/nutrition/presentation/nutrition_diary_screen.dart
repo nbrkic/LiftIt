@@ -85,12 +85,12 @@ class _NutritionDiaryScreenState extends ConsumerState<NutritionDiaryScreen> {
     final choice = await showModalBottomSheet<String>(
       context: context,
       isScrollControlled: true,
-      builder: (_) => const AddFoodSheet(),
+      builder: (_) => AddFoodSheet(selectedDay: _selectedDay),
     );
     if (choice == 'photo' && context.mounted) {
       await _pickAndAnalyzePhoto(context);
     } else if (choice == 'describe' && context.mounted) {
-      await showDescribeFoodFlow(context, ref);
+      await showDescribeFoodFlow(context, ref, day: _selectedDay);
     }
   }
 
@@ -141,7 +141,7 @@ class _NutritionDiaryScreenState extends ConsumerState<NutritionDiaryScreen> {
             .showSnackBar(SnackBar(content: Text(l10n.nutritionNoItemsRecognized)));
         return;
       }
-      context.push('/nutrition/photo-results', extra: items);
+      context.push('/nutrition/photo-results', extra: (items: items, day: _selectedDay));
     } catch (e) {
       if (!context.mounted) return;
       Navigator.of(context).pop(); // dismiss the analyzing dialog
@@ -151,7 +151,9 @@ class _NutritionDiaryScreenState extends ConsumerState<NutritionDiaryScreen> {
   }
 
   Future<void> _addWater(int amountMl) async {
-    await ref.read(waterLogControllerProvider).addWater(amountMl);
+    await ref
+        .read(waterLogControllerProvider)
+        .addWater(amountMl, loggedAt: combineDayWithCurrentTime(_selectedDay));
   }
 
   @override
@@ -172,6 +174,11 @@ class _NutritionDiaryScreenState extends ConsumerState<NutritionDiaryScreen> {
       appBar: AppBar(
         title: Text(l10n.nutritionTitle),
         actions: [
+          IconButton(
+            icon: const Icon(Icons.show_chart),
+            tooltip: l10n.nutritionTrendsTitle,
+            onPressed: () => context.push('/nutrition/trends'),
+          ),
           IconButton(
             icon: const Icon(Icons.medication_outlined),
             tooltip: l10n.nutritionManageSupplementsAction,
