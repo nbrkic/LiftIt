@@ -403,6 +403,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get nutritionPhotoOption => 'Photo';
 
   @override
+  String get nutritionDescribeOption => 'Describe Food';
+
+  @override
   String get nutritionAiProcessing =>
       'Analyzing… this can take up to a minute.';
 
@@ -421,7 +424,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get nutritionDescribeFoodTitle => 'Describe the meal';
 
   @override
-  String get nutritionDescribeFoodHint => 'e.g. 2 eggs and toast';
+  String get nutritionDescribeFoodHint =>
+      'e.g. 200g grilled chicken breast with rice, cooked in olive oil';
 
   @override
   String get nutritionEstimateButton => 'Estimate';

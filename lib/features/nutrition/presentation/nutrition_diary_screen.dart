@@ -16,6 +16,7 @@ import '../providers/supplement_providers.dart';
 import '../providers/water_log_providers.dart';
 import '../services/gemini_service.dart';
 import 'add_food_sheet.dart';
+import 'describe_food_flow.dart';
 
 class NutritionDiaryScreen extends ConsumerStatefulWidget {
   const NutritionDiaryScreen({super.key});
@@ -88,6 +89,8 @@ class _NutritionDiaryScreenState extends ConsumerState<NutritionDiaryScreen> {
     );
     if (choice == 'photo' && context.mounted) {
       await _pickAndAnalyzePhoto(context);
+    } else if (choice == 'describe' && context.mounted) {
+      await showDescribeFoodFlow(context, ref);
     }
   }
 

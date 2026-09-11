@@ -405,6 +405,9 @@ class AppLocalizationsSr extends AppLocalizations {
   String get nutritionPhotoOption => 'Slika';
 
   @override
+  String get nutritionDescribeOption => 'Opiši hranu';
+
+  @override
   String get nutritionAiProcessing =>
       'Analiziram… ovo može potrajati i do minut.';
 
@@ -423,7 +426,8 @@ class AppLocalizationsSr extends AppLocalizations {
   String get nutritionDescribeFoodTitle => 'Opiši obrok';
 
   @override
-  String get nutritionDescribeFoodHint => 'npr. 2 jajeta i tost';
+  String get nutritionDescribeFoodHint =>
+      'npr. 200g piletine na žaru sa pirinčem, kuvano na maslinovom ulju';
 
   @override
   String get nutritionEstimateButton => 'Proceni';

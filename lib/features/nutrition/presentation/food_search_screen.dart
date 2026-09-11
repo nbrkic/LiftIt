@@ -1,16 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 import '../../../database/enums.dart';
 import '../../../design/tokens/app_colors.dart';
 import '../../../design/tokens/app_spacing.dart';
 import '../../../design/widgets/empty_state.dart';
 import '../../../l10n/app_localizations.dart';
-import '../../../providers/api_keys_provider.dart';
 import '../providers/api_search_providers.dart';
 import '../services/food_search_result.dart';
-import '../services/gemini_service.dart';
 import 'confirm_food_sheet.dart';
+import 'describe_food_flow.dart';
 
 class FoodSearchScreen extends ConsumerStatefulWidget {
   const FoodSearchScreen({super.key});
@@ -46,69 +44,7 @@ class _FoodSearchScreenState extends ConsumerState<FoodSearchScreen> {
   }
 
   Future<void> _tryAiEstimate() async {
-    final l10n = AppLocalizations.of(context)!;
-    final apiKey = (await ref.read(apiKeysProvider.notifier).ensureGeminiApiKey()).trim();
-    if (!mounted) return;
-    if (apiKey.isEmpty) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text(l10n.nutritionGeminiKeyMissing)));
-      return;
-    }
-
-    final descController = TextEditingController(text: _submittedQuery ?? '');
-    final description = await showDialog<String>(
-      context: context,
-      builder: (dialogContext) => AlertDialog(
-        title: Text(l10n.nutritionDescribeFoodTitle),
-        content: TextField(
-          controller: descController,
-          autofocus: true,
-          decoration: InputDecoration(hintText: l10n.nutritionDescribeFoodHint),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(dialogContext).pop(),
-            child: Text(l10n.cancelButton),
-          ),
-          FilledButton(
-            onPressed: () => Navigator.of(dialogContext).pop(descController.text.trim()),
-            child: Text(l10n.nutritionEstimateButton),
-          ),
-        ],
-      ),
-    );
-    if (description == null || description.isEmpty || !mounted) return;
-
-    showDialog<void>(
-      context: context,
-      barrierDismissible: false,
-      builder: (_) => AlertDialog(
-        content: Row(
-          children: [
-            const CircularProgressIndicator(),
-            const SizedBox(width: AppSpacing.lg),
-            Expanded(child: Text(l10n.nutritionAiProcessing)),
-          ],
-        ),
-      ),
-    );
-
-    try {
-      final items = await GeminiService().estimateFromDescription(description, apiKey);
-      if (!mounted) return;
-      Navigator.of(context).pop(); // dismiss the processing dialog
-      if (items.isEmpty) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text(l10n.nutritionNoItemsRecognized)));
-        return;
-      }
-      context.push('/nutrition/photo-results', extra: items);
-    } catch (e) {
-      if (!mounted) return;
-      Navigator.of(context).pop(); // dismiss the processing dialog
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text(l10n.errorMessage('$e'))));
-    }
+    await showDescribeFoodFlow(context, ref, initialDescription: _submittedQuery);
   }
 
   @override

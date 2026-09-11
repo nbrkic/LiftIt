@@ -55,6 +55,12 @@ class AddFoodSheet extends StatelessWidget {
           ),
           Divider(height: 1, color: c.divider),
           _AddFoodOption(
+            icon: Icons.notes_outlined,
+            label: l10n.nutritionDescribeOption,
+            onTap: () => Navigator.of(context).pop('describe'),
+          ),
+          Divider(height: 1, color: c.divider),
+          _AddFoodOption(
             icon: Icons.edit_outlined,
             label: l10n.nutritionManualOption,
             onTap: () {

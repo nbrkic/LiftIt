@@ -830,6 +830,12 @@ abstract class AppLocalizations {
   /// **'Photo'**
   String get nutritionPhotoOption;
 
+  /// No description provided for @nutritionDescribeOption.
+  ///
+  /// In en, this message translates to:
+  /// **'Describe Food'**
+  String get nutritionDescribeOption;
+
   /// No description provided for @nutritionAiProcessing.
   ///
   /// In en, this message translates to:
@@ -863,7 +869,7 @@ abstract class AppLocalizations {
   /// No description provided for @nutritionDescribeFoodHint.
   ///
   /// In en, this message translates to:
-  /// **'e.g. 2 eggs and toast'**
+  /// **'e.g. 200g grilled chicken breast with rice, cooked in olive oil'**
   String get nutritionDescribeFoodHint;
 
   /// No description provided for @nutritionEstimateButton.
