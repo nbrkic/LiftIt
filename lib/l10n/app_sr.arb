@@ -35,6 +35,9 @@
   "doneButton": "Gotovo",
   "deleteWorkoutDialogTitle": "Obrisati trening?",
   "deleteWorkoutDialogContent": "Ovo će trajno obrisati ovaj trening i sve njegove ulogovane serije. Ova akcija se ne može poništiti.",
+  "deleteExerciseDialogTitle": "Obrisati vežbu?",
+  "deleteExerciseDialogContent": "Ovo će trajno obrisati ovu vežbu iz tvoje biblioteke.",
+  "exerciseDeleteInUseError": "Ova vežba se koristi u treningu ili splitu, pa ne može da se obriše.",
   "deleteButton": "Obriši",
 
   "homeStartFreestyleWorkout": "Započni slobodni trening",
@@ -169,6 +172,7 @@
   "noSetsLogged": "Nema ulogovanih serija",
   "minutesLabel": "minuta",
   "volumeLabel": "volumen",
+  "exercisesCompletedLabel": "vežbe",
   "exerciseLabelSingular": "vežba",
   "exerciseLabelPlural": "vežbi",
 

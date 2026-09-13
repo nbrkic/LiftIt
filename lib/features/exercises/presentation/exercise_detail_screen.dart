@@ -21,6 +21,37 @@ class ExerciseDetailScreen extends ConsumerWidget {
 
   const ExerciseDetailScreen({super.key, required this.exerciseId});
 
+  Future<void> _delete(BuildContext context, WidgetRef ref) async {
+    final l10n = AppLocalizations.of(context)!;
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: Text(l10n.deleteExerciseDialogTitle),
+        content: Text(l10n.deleteExerciseDialogContent),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(false),
+            child: Text(l10n.cancelButton),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.of(dialogContext).pop(true),
+            child: Text(l10n.deleteButton),
+          ),
+        ],
+      ),
+    );
+    if (confirmed != true || !context.mounted) return;
+    try {
+      await ref.read(deleteExerciseProvider)(exerciseId);
+      if (context.mounted) Navigator.of(context).pop();
+    } catch (e) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(l10n.exerciseDeleteInUseError)));
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final c = context.colors;
@@ -38,7 +69,16 @@ class ExerciseDetailScreen extends ConsumerWidget {
     }
 
     return Scaffold(
-      appBar: AppBar(title: Text(exercise?.name ?? l10n.exerciseFallbackTitle)),
+      appBar: AppBar(
+        title: Text(exercise?.name ?? l10n.exerciseFallbackTitle),
+        actions: [
+          if (exercise?.isCustom == true)
+            IconButton(
+              icon: const Icon(Icons.delete_outline),
+              onPressed: () => _delete(context, ref),
+            ),
+        ],
+      ),
       body: setsAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (error, stack) => Center(child: Text(l10n.errorMessage('$error'))),

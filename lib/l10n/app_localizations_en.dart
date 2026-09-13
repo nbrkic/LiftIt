@@ -122,6 +122,17 @@ class AppLocalizationsEn extends AppLocalizations {
       'This will permanently delete this workout and all its logged sets. This cannot be undone.';
 
   @override
+  String get deleteExerciseDialogTitle => 'Delete exercise?';
+
+  @override
+  String get deleteExerciseDialogContent =>
+      'This will permanently delete this exercise from your library.';
+
+  @override
+  String get exerciseDeleteInUseError =>
+      'This exercise is used in a workout or split, so it can\'t be deleted.';
+
+  @override
   String get deleteButton => 'Delete';
 
   @override
@@ -520,6 +531,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get volumeLabel => 'volume';
+
+  @override
+  String get exercisesCompletedLabel => 'exercises';
 
   @override
   String get exerciseLabelSingular => 'exercise';

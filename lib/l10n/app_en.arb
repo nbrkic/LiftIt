@@ -41,6 +41,9 @@
   "doneButton": "Done",
   "deleteWorkoutDialogTitle": "Delete workout?",
   "deleteWorkoutDialogContent": "This will permanently delete this workout and all its logged sets. This cannot be undone.",
+  "deleteExerciseDialogTitle": "Delete exercise?",
+  "deleteExerciseDialogContent": "This will permanently delete this exercise from your library.",
+  "exerciseDeleteInUseError": "This exercise is used in a workout or split, so it can't be deleted.",
   "deleteButton": "Delete",
 
   "homeStartFreestyleWorkout": "Start Freestyle Workout",
@@ -180,6 +183,7 @@
   "noSetsLogged": "No sets logged",
   "minutesLabel": "minutes",
   "volumeLabel": "volume",
+  "exercisesCompletedLabel": "exercises",
   "exerciseLabelSingular": "exercise",
   "exerciseLabelPlural": "exercises",
 

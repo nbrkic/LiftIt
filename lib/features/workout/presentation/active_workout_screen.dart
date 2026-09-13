@@ -247,6 +247,26 @@ class _ActiveWorkoutScreenState extends ConsumerState<ActiveWorkoutScreen> {
                 final volume = sets
                     .where((s) => !s.set.isWarmup)
                     .fold(0.0, (sum, s) => sum + s.set.weight * s.set.reps);
+
+                // Only meaningful when the workout follows a split day's
+                // list — "completed" means every set the plan calls for
+                // has been logged, matching the same X/Y sets-progress
+                // count already shown per exercise card below.
+                final planned = plannedAsync?.value;
+                int? completedExercises;
+                int? totalPlannedExercises;
+                if (planned != null && planned.isNotEmpty) {
+                  final loggedCountByExercise = <int, int>{};
+                  for (final entry in sets) {
+                    loggedCountByExercise[entry.exercise.id] =
+                        (loggedCountByExercise[entry.exercise.id] ?? 0) + 1;
+                  }
+                  totalPlannedExercises = planned.length;
+                  completedExercises = planned
+                      .where((p) => (loggedCountByExercise[p.exercise.id] ?? 0) >= p.planned.targetSets)
+                      .length;
+                }
+
                 return Padding(
                   padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xxl, vertical: AppSpacing.lg),
                   child: Row(
@@ -258,6 +278,14 @@ class _ActiveWorkoutScreenState extends ConsumerState<ActiveWorkoutScreen> {
                         label: l10n.volumeLabel,
                         valueSize: 26,
                       ),
+                      if (totalPlannedExercises != null) ...[
+                        const SizedBox(width: AppSpacing.xxxl),
+                        StatBlock(
+                          value: '$completedExercises/$totalPlannedExercises',
+                          label: l10n.exercisesCompletedLabel,
+                          valueSize: 26,
+                        ),
+                      ],
                     ],
                   ),
                 );

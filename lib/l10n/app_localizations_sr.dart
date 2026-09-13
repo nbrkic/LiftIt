@@ -122,6 +122,17 @@ class AppLocalizationsSr extends AppLocalizations {
       'Ovo će trajno obrisati ovaj trening i sve njegove ulogovane serije. Ova akcija se ne može poništiti.';
 
   @override
+  String get deleteExerciseDialogTitle => 'Obrisati vežbu?';
+
+  @override
+  String get deleteExerciseDialogContent =>
+      'Ovo će trajno obrisati ovu vežbu iz tvoje biblioteke.';
+
+  @override
+  String get exerciseDeleteInUseError =>
+      'Ova vežba se koristi u treningu ili splitu, pa ne može da se obriše.';
+
+  @override
   String get deleteButton => 'Obriši';
 
   @override
@@ -523,6 +534,9 @@ class AppLocalizationsSr extends AppLocalizations {
 
   @override
   String get volumeLabel => 'volumen';
+
+  @override
+  String get exercisesCompletedLabel => 'vežbe';
 
   @override
   String get exerciseLabelSingular => 'vežba';

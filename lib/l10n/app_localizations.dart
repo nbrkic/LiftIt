@@ -296,6 +296,24 @@ abstract class AppLocalizations {
   /// **'This will permanently delete this workout and all its logged sets. This cannot be undone.'**
   String get deleteWorkoutDialogContent;
 
+  /// No description provided for @deleteExerciseDialogTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete exercise?'**
+  String get deleteExerciseDialogTitle;
+
+  /// No description provided for @deleteExerciseDialogContent.
+  ///
+  /// In en, this message translates to:
+  /// **'This will permanently delete this exercise from your library.'**
+  String get deleteExerciseDialogContent;
+
+  /// No description provided for @exerciseDeleteInUseError.
+  ///
+  /// In en, this message translates to:
+  /// **'This exercise is used in a workout or split, so it can\'t be deleted.'**
+  String get exerciseDeleteInUseError;
+
   /// No description provided for @deleteButton.
   ///
   /// In en, this message translates to:
@@ -1045,6 +1063,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'volume'**
   String get volumeLabel;
+
+  /// No description provided for @exercisesCompletedLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'exercises'**
+  String get exercisesCompletedLabel;
 
   /// No description provided for @exerciseLabelSingular.
   ///

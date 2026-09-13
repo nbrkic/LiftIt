@@ -8,6 +8,11 @@ final exerciseListProvider = StreamProvider<List<Exercise>>((ref) {
   return ref.watch(appDatabaseProvider).watchAllExercises();
 });
 
+final deleteExerciseProvider = Provider<Future<void> Function(int id)>((ref) {
+  final db = ref.watch(appDatabaseProvider);
+  return (id) => db.deleteExercise(id);
+});
+
 final addCustomExerciseProvider =
     Provider<Future<int> Function({required String name, required MuscleGroup muscleGroup, required Equipment equipment})>(
   (ref) {
