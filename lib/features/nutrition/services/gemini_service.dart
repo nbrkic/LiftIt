@@ -35,8 +35,15 @@ class GeminiService {
   // short per-attempt timeout plus a couple of retries on a brand-new
   // connection each time, rather than one long wait on a connection that
   // may already be stuck.
+  // Capped at 2, not 3 — every attempt costs up to _perAttemptTimeout, and
+  // this is a foreground wait a user is staring at (a "Describe Food" or
+  // photo-scan dialog). Google's own guidance for a *sustained* overload is
+  // "wait ~5 minutes", which one more in-app retry can't fix anyway — this
+  // budget is only meant to ride out a genuinely brief blip, not to keep
+  // hammering a service that's actually down, and shouldn't leave someone
+  // watching a spinner for the better part of a minute either way.
   static const _perAttemptTimeout = Duration(seconds: 25);
-  static const _maxAttempts = 3;
+  static const _maxAttempts = 2;
 
   static const _itemSchema = {
     'type': 'ARRAY',
@@ -202,7 +209,7 @@ class GeminiService {
         // overloaded model.
         if ((response.statusCode == 503 || response.statusCode == 429) && attempt < _maxAttempts) {
           debugPrint('[Gemini] attempt $attempt got HTTP ${response.statusCode}, retrying after backoff');
-          await Future.delayed(Duration(seconds: attempt * 2));
+          await Future.delayed(const Duration(seconds: 2));
           continue;
         }
         return response;
