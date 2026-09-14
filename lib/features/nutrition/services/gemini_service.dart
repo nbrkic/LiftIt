@@ -195,6 +195,16 @@ class GeminiService {
             .timeout(_perAttemptTimeout);
         debugPrint('[Gemini] attempt $attempt responded in ${stopwatch.elapsedMilliseconds}ms '
             '(status ${response.statusCode})');
+        // 503 (model overloaded) and 429 (rate limited) are Google's own
+        // documented "safe to retry shortly" statuses, unlike a 4xx
+        // auth/validation error which retrying can't fix — back off a
+        // little longer each attempt rather than hammering an already
+        // overloaded model.
+        if ((response.statusCode == 503 || response.statusCode == 429) && attempt < _maxAttempts) {
+          debugPrint('[Gemini] attempt $attempt got HTTP ${response.statusCode}, retrying after backoff');
+          await Future.delayed(Duration(seconds: attempt * 2));
+          continue;
+        }
         return response;
       } on TimeoutException {
         debugPrint('[Gemini] attempt $attempt stalled past ${_perAttemptTimeout.inSeconds}s, '
