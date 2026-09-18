@@ -10,8 +10,12 @@ import '../../../design/widgets/empty_state.dart';
 import '../../../design/widgets/set_row.dart';
 import '../../../design/widgets/stat_block.dart';
 import '../../../l10n/app_localizations.dart';
+import '../../../providers/api_keys_provider.dart';
+import '../../exercises/providers/exercise_stats_providers.dart';
+import '../../exercises/utils/exercise_stats.dart';
 import '../../profile/providers/profile_providers.dart';
 import '../../splits/providers/split_providers.dart';
+import '../../workout/providers/active_workout_providers.dart';
 import '../providers/history_providers.dart';
 
 class SessionDetailScreen extends ConsumerWidget {
@@ -140,6 +144,9 @@ class SessionDetailScreen extends ConsumerWidget {
                       ],
                     ),
                   ),
+                ] else if (session != null) ...[
+                  const SizedBox(height: AppSpacing.xxxl),
+                  _GenerateCoachNotesButton(sessionId: sessionId, sets: sets),
                 ],
                 const SizedBox(height: AppSpacing.xxxl),
                 ...groupOrder.map((exerciseId) {
@@ -180,5 +187,84 @@ class SessionDetailScreen extends ConsumerWidget {
     final weekday = DateFormat.EEEE(locale).format(date);
     final month = DateFormat.MMMM(locale).format(date);
     return '$weekday, ${date.day} $month';
+  }
+}
+
+// Covers both a failed/never-attempted background generation (e.g. Gemini
+// was down right after this workout finished) and sessions logged before
+// this feature existed — either way, `aiSummary` is just null, so this
+// button lets the user ask for it explicitly instead of it staying
+// permanently blank.
+class _GenerateCoachNotesButton extends ConsumerStatefulWidget {
+  final int sessionId;
+  final List<WorkoutSetWithExercise> sets;
+
+  const _GenerateCoachNotesButton({required this.sessionId, required this.sets});
+
+  @override
+  ConsumerState<_GenerateCoachNotesButton> createState() => _GenerateCoachNotesButtonState();
+}
+
+class _GenerateCoachNotesButtonState extends ConsumerState<_GenerateCoachNotesButton> {
+  bool _generating = false;
+
+  Future<void> _generate() async {
+    setState(() => _generating = true);
+    final l10n = AppLocalizations.of(context)!;
+    final apiKey = (await ref.read(apiKeysProvider.notifier).ensureGeminiApiKey()).trim();
+    if (!mounted) return;
+    if (apiKey.isEmpty) {
+      setState(() => _generating = false);
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(l10n.nutritionGeminiKeyMissing)));
+      return;
+    }
+
+    final setsByExercise = <int, List<WorkoutSetWithExercise>>{};
+    for (final entry in widget.sets) {
+      setsByExercise.putIfAbsent(entry.exercise.id, () => []).add(entry);
+    }
+    final hasPr = setsByExercise.keys.any((exerciseId) {
+      final allSets = ref.read(exerciseSetsProvider(exerciseId)).value;
+      final best = allSets != null ? computeOneRepMax(allSets) : null;
+      if (best == null) return false;
+      final sessionSetIds = setsByExercise[exerciseId]!.map((e) => e.set.id).toSet();
+      return sessionSetIds.contains(best.set.id);
+    });
+
+    final languageName = Localizations.localeOf(context).languageCode == 'sr' ? 'Serbian' : 'English';
+    final succeeded = await ref.read(activeWorkoutControllerProvider).generateAiSummary(
+          sessionId: widget.sessionId,
+          apiKey: apiKey,
+          languageName: languageName,
+          hasPr: hasPr,
+        );
+    if (!mounted) return;
+    setState(() => _generating = false);
+    if (!succeeded) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(l10n.generateCoachNotesFailed)));
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.colors;
+    final l10n = AppLocalizations.of(context)!;
+    if (_generating) {
+      return Row(
+        children: [
+          const SizedBox(width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2)),
+          const SizedBox(width: AppSpacing.md),
+          Text(l10n.aiWorkoutSummaryGenerating,
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: c.textSecondary)),
+        ],
+      );
+    }
+    return OutlinedButton.icon(
+      onPressed: _generate,
+      icon: const Icon(Icons.auto_awesome_outlined, size: 18),
+      label: Text(l10n.generateCoachNotesAction),
+    );
   }
 }

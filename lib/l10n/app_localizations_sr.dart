@@ -168,6 +168,25 @@ class AppLocalizationsSr extends AppLocalizations {
       'Još jedan trening u banci. Doslednost pobeđuje.';
 
   @override
+  String get homeCompletedMsg4 =>
+      'Trening završen. Danas nema šta više da se dokazuje.';
+
+  @override
+  String get homeCompletedMsg5 =>
+      'Gotovo je za danas. Sad neka mišići rade svoje.';
+
+  @override
+  String get homeCompletedMsg6 => 'Posao je upisan. Jedi dobro, spavaj dobro.';
+
+  @override
+  String get homeCompletedMsg7 =>
+      'Današnja kućica je štiklirana. Sutra je sledeće.';
+
+  @override
+  String get homeCompletedMsg8 =>
+      'Gotovo za danas. Oporavak je tu gde se dešava napredak.';
+
+  @override
   String get homeTodoMsg1 => 'Danas još nije ulogovan trening.';
 
   @override
@@ -177,6 +196,22 @@ class AppLocalizationsSr extends AppLocalizations {
   String get homeTodoMsg3 => 'Još ništa nije ulogovano. Dan nije gotov.';
 
   @override
+  String get homeTodoMsg4 => 'Teretana nikud ne beži. Idi po svoje.';
+
+  @override
+  String get homeTodoMsg5 => 'Sat otkucava. Današnji trening još čeka.';
+
+  @override
+  String get homeTodoMsg6 =>
+      'Ni izgovori još nisu ulogovani. Hajde da to rešimo.';
+
+  @override
+  String get homeTodoMsg7 => 'Danas je prazna strana. Napiši nešto na nju.';
+
+  @override
+  String get homeTodoMsg8 => 'Još ima vremena da se dan iskoristi.';
+
+  @override
   String get homeRestMsg1 => 'Dan odmora. Oporavak je deo posla.';
 
   @override
@@ -184,6 +219,23 @@ class AppLocalizationsSr extends AppLocalizations {
 
   @override
   String get homeRestMsg3 => 'Dan odmora zabeležen. Vrati se jači.';
+
+  @override
+  String get homeRestMsg4 => 'Danas nema treninga, i tako treba da bude.';
+
+  @override
+  String get homeRestMsg5 => 'Odmor je isplaniran, ne opcion. Uživaj u njemu.';
+
+  @override
+  String get homeRestMsg6 =>
+      'Slobodan dan. Telo se obnavlja dok se ti opuštaš.';
+
+  @override
+  String get homeRestMsg7 => 'Planiran odmor. Sutra opet ideš.';
+
+  @override
+  String get homeRestMsg8 =>
+      'Današnji zadatak je da ne radiš ništa. Uradi to kako treba.';
 
   @override
   String get homeMarkRestDayButton => 'Danas je dan odmora';
@@ -1104,6 +1156,13 @@ class AppLocalizationsSr extends AppLocalizations {
 
   @override
   String get aiWorkoutSummaryGenerating => 'Razmišlja…';
+
+  @override
+  String get generateCoachNotesAction => 'Generiši belešku trenera';
+
+  @override
+  String get generateCoachNotesFailed =>
+      'Nije uspelo generisanje rezimea — probaj ponovo za malo.';
 
   @override
   String get nutritionTrendsTitle => 'Trendovi ishrane';

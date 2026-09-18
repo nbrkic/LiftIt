@@ -49,12 +49,15 @@ class ActiveWorkoutController {
 
   Future<void> finishWorkout(int sessionId) => _db.finishWorkoutSession(sessionId);
 
-  // Fire-and-forget from the caller's side by design: called without
-  // `await` right after finishing a workout, so it never holds up the
-  // completion UI. Any failure (no key, offline, Gemini error) is swallowed
-  // — the session just ends up with no summary, same as before this
-  // feature existed.
-  Future<void> generateAiSummary({
+  // Fire-and-forget from the *end-of-workout* caller's side by design:
+  // called without `await` right after finishing a workout, so it never
+  // holds up the completion UI. The manual retry button in history does
+  // await this, which is exactly why it returns whether it actually
+  // succeeded rather than leaving the caller to re-read the session
+  // afterwards — the row's watch stream can lag a beat behind the write
+  // that just landed, so checking `aiSummary != null` right away can read
+  // stale (still-null) state even though the write already succeeded.
+  Future<bool> generateAiSummary({
     required int sessionId,
     required String apiKey,
     required String languageName,
@@ -62,9 +65,9 @@ class ActiveWorkoutController {
   }) async {
     try {
       final session = await _db.watchSessionById(sessionId).first;
-      if (session?.endedAt == null) return;
+      if (session?.endedAt == null) return false;
       final sets = await _db.getSetsForSession(sessionId);
-      if (sets.isEmpty) return;
+      if (sets.isEmpty) return false;
 
       final volume =
           sets.where((s) => !s.set.isWarmup).fold(0.0, (sum, s) => sum + s.set.weight * s.set.reps);
@@ -98,8 +101,10 @@ class ActiveWorkoutController {
       );
       final summary = await GeminiService().generateText(prompt, apiKey);
       await _db.setSessionAiSummary(sessionId, summary);
+      return true;
     } catch (e) {
       debugPrint('[WorkoutSummary] failed to generate summary for session $sessionId: $e');
+      return false;
     }
   }
 }

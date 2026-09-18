@@ -380,6 +380,36 @@ abstract class AppLocalizations {
   /// **'Another session banked. Consistency wins.'**
   String get homeCompletedMsg3;
 
+  /// No description provided for @homeCompletedMsg4.
+  ///
+  /// In en, this message translates to:
+  /// **'Session complete. Nothing left to prove today.'**
+  String get homeCompletedMsg4;
+
+  /// No description provided for @homeCompletedMsg5.
+  ///
+  /// In en, this message translates to:
+  /// **'That\'s a wrap. Let the muscles do their thing now.'**
+  String get homeCompletedMsg5;
+
+  /// No description provided for @homeCompletedMsg6.
+  ///
+  /// In en, this message translates to:
+  /// **'Work\'s in the books. Eat well, sleep well.'**
+  String get homeCompletedMsg6;
+
+  /// No description provided for @homeCompletedMsg7.
+  ///
+  /// In en, this message translates to:
+  /// **'Today\'s box is checked. On to tomorrow.'**
+  String get homeCompletedMsg7;
+
+  /// No description provided for @homeCompletedMsg8.
+  ///
+  /// In en, this message translates to:
+  /// **'Done for the day. Recovery is where the gains happen.'**
+  String get homeCompletedMsg8;
+
   /// No description provided for @homeTodoMsg1.
   ///
   /// In en, this message translates to:
@@ -398,6 +428,36 @@ abstract class AppLocalizations {
   /// **'Nothing logged yet. The day\'s not over.'**
   String get homeTodoMsg3;
 
+  /// No description provided for @homeTodoMsg4.
+  ///
+  /// In en, this message translates to:
+  /// **'The gym isn\'t going anywhere. Get after it.'**
+  String get homeTodoMsg4;
+
+  /// No description provided for @homeTodoMsg5.
+  ///
+  /// In en, this message translates to:
+  /// **'Clock\'s ticking. Today\'s session is still waiting.'**
+  String get homeTodoMsg5;
+
+  /// No description provided for @homeTodoMsg6.
+  ///
+  /// In en, this message translates to:
+  /// **'No excuses logged yet either. Let\'s fix that.'**
+  String get homeTodoMsg6;
+
+  /// No description provided for @homeTodoMsg7.
+  ///
+  /// In en, this message translates to:
+  /// **'Today\'s a blank page. Write something on it.'**
+  String get homeTodoMsg7;
+
+  /// No description provided for @homeTodoMsg8.
+  ///
+  /// In en, this message translates to:
+  /// **'Still time to make today count.'**
+  String get homeTodoMsg8;
+
   /// No description provided for @homeRestMsg1.
   ///
   /// In en, this message translates to:
@@ -415,6 +475,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Rest day noted. Come back stronger.'**
   String get homeRestMsg3;
+
+  /// No description provided for @homeRestMsg4.
+  ///
+  /// In en, this message translates to:
+  /// **'No training today, and that\'s exactly right.'**
+  String get homeRestMsg4;
+
+  /// No description provided for @homeRestMsg5.
+  ///
+  /// In en, this message translates to:
+  /// **'Rest is programmed, not optional. Enjoy it.'**
+  String get homeRestMsg5;
+
+  /// No description provided for @homeRestMsg6.
+  ///
+  /// In en, this message translates to:
+  /// **'Off day. The body rebuilds while you relax.'**
+  String get homeRestMsg6;
+
+  /// No description provided for @homeRestMsg7.
+  ///
+  /// In en, this message translates to:
+  /// **'Scheduled rest. Tomorrow you go again.'**
+  String get homeRestMsg7;
+
+  /// No description provided for @homeRestMsg8.
+  ///
+  /// In en, this message translates to:
+  /// **'Today\'s job is doing nothing. Do it well.'**
+  String get homeRestMsg8;
 
   /// No description provided for @homeMarkRestDayButton.
   ///
@@ -2083,6 +2173,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Thinking it over…'**
   String get aiWorkoutSummaryGenerating;
+
+  /// No description provided for @generateCoachNotesAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Generate coach\'s notes'**
+  String get generateCoachNotesAction;
+
+  /// No description provided for @generateCoachNotesFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t generate a summary — try again in a bit.'**
+  String get generateCoachNotesFailed;
 
   /// No description provided for @nutritionTrendsTitle.
   ///

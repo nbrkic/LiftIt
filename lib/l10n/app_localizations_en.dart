@@ -167,6 +167,24 @@ class AppLocalizationsEn extends AppLocalizations {
   String get homeCompletedMsg3 => 'Another session banked. Consistency wins.';
 
   @override
+  String get homeCompletedMsg4 =>
+      'Session complete. Nothing left to prove today.';
+
+  @override
+  String get homeCompletedMsg5 =>
+      'That\'s a wrap. Let the muscles do their thing now.';
+
+  @override
+  String get homeCompletedMsg6 => 'Work\'s in the books. Eat well, sleep well.';
+
+  @override
+  String get homeCompletedMsg7 => 'Today\'s box is checked. On to tomorrow.';
+
+  @override
+  String get homeCompletedMsg8 =>
+      'Done for the day. Recovery is where the gains happen.';
+
+  @override
   String get homeTodoMsg1 => 'No session logged yet today.';
 
   @override
@@ -176,6 +194,22 @@ class AppLocalizationsEn extends AppLocalizations {
   String get homeTodoMsg3 => 'Nothing logged yet. The day\'s not over.';
 
   @override
+  String get homeTodoMsg4 => 'The gym isn\'t going anywhere. Get after it.';
+
+  @override
+  String get homeTodoMsg5 =>
+      'Clock\'s ticking. Today\'s session is still waiting.';
+
+  @override
+  String get homeTodoMsg6 => 'No excuses logged yet either. Let\'s fix that.';
+
+  @override
+  String get homeTodoMsg7 => 'Today\'s a blank page. Write something on it.';
+
+  @override
+  String get homeTodoMsg8 => 'Still time to make today count.';
+
+  @override
   String get homeRestMsg1 => 'Rest day. Recovery is part of the work.';
 
   @override
@@ -183,6 +217,21 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get homeRestMsg3 => 'Rest day noted. Come back stronger.';
+
+  @override
+  String get homeRestMsg4 => 'No training today, and that\'s exactly right.';
+
+  @override
+  String get homeRestMsg5 => 'Rest is programmed, not optional. Enjoy it.';
+
+  @override
+  String get homeRestMsg6 => 'Off day. The body rebuilds while you relax.';
+
+  @override
+  String get homeRestMsg7 => 'Scheduled rest. Tomorrow you go again.';
+
+  @override
+  String get homeRestMsg8 => 'Today\'s job is doing nothing. Do it well.';
 
   @override
   String get homeMarkRestDayButton => 'Today\'s a rest day';
@@ -1097,6 +1146,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get aiWorkoutSummaryGenerating => 'Thinking it over…';
+
+  @override
+  String get generateCoachNotesAction => 'Generate coach\'s notes';
+
+  @override
+  String get generateCoachNotesFailed =>
+      'Couldn\'t generate a summary — try again in a bit.';
 
   @override
   String get nutritionTrendsTitle => 'Nutrition Trends';

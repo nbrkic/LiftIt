@@ -63,13 +63,40 @@ class HomeScreen extends ConsumerWidget {
       dayMessage = l10n.workoutInProgressLabel;
       dotColor = c.violet;
     } else if (hasWorkoutToday) {
-      dayMessage = _pickOfTheDay([l10n.homeCompletedMsg1, l10n.homeCompletedMsg2, l10n.homeCompletedMsg3]);
+      dayMessage = _pickOfTheDay([
+        l10n.homeCompletedMsg1,
+        l10n.homeCompletedMsg2,
+        l10n.homeCompletedMsg3,
+        l10n.homeCompletedMsg4,
+        l10n.homeCompletedMsg5,
+        l10n.homeCompletedMsg6,
+        l10n.homeCompletedMsg7,
+        l10n.homeCompletedMsg8,
+      ]);
       dotColor = c.violet;
     } else if (isRestDayToday) {
-      dayMessage = _pickOfTheDay([l10n.homeRestMsg1, l10n.homeRestMsg2, l10n.homeRestMsg3]);
+      dayMessage = _pickOfTheDay([
+        l10n.homeRestMsg1,
+        l10n.homeRestMsg2,
+        l10n.homeRestMsg3,
+        l10n.homeRestMsg4,
+        l10n.homeRestMsg5,
+        l10n.homeRestMsg6,
+        l10n.homeRestMsg7,
+        l10n.homeRestMsg8,
+      ]);
       dotColor = c.textSecondary;
     } else {
-      dayMessage = _pickOfTheDay([l10n.homeTodoMsg1, l10n.homeTodoMsg2, l10n.homeTodoMsg3]);
+      dayMessage = _pickOfTheDay([
+        l10n.homeTodoMsg1,
+        l10n.homeTodoMsg2,
+        l10n.homeTodoMsg3,
+        l10n.homeTodoMsg4,
+        l10n.homeTodoMsg5,
+        l10n.homeTodoMsg6,
+        l10n.homeTodoMsg7,
+        l10n.homeTodoMsg8,
+      ]);
       dotColor = c.violetLight;
     }
 
